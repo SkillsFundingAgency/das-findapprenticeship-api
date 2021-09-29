@@ -47,26 +47,8 @@
         "sharedBackEndSubnetResourceId": {
             "type": "string"
         },
-        "sharedSQlServerName": {
-            "type": "string"
-        },
         "backEndAccessRestrictions": {
             "type": "array"
-        },
-        "elasticPoolName": {
-            "defaultValue": "",
-            "type": "string"
-        },
-        "databaseSkuName": {
-            "type": "string",
-            "defaultValue": "S0"
-        },
-        "databaseTier": {
-            "type": "string",
-            "defaultValue": "Standard"
-        },
-        "logAnalyticsWorkspaceName": {
-            "type": "string"
         }
     },
     "variables": {
@@ -74,7 +56,6 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "apiAppServiceName": "[concat(variables('resourceNamePrefix'), 'api-as')]",
-        "databaseName": "[concat(variables('resourceNamePrefix'),'-db')]",
         "configNames": "SFA.DAS.FindApprenticeship.Api"
     },
     "resources": [
@@ -206,45 +187,6 @@
                     }
                 }
             }
-        },
-        {
-            "apiVersion": "2020-06-01",
-            "name": "sql-database",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'sql-database.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "databaseName": {
-                        "value": "[variables('databaseName')]"
-                    },
-                    "sqlServerName": {
-                        "value": "[parameters('sharedSQlServerName')]"
-                    },
-                    "elasticPoolName": {
-                        "value": "[parameters('elasticPoolName')]"
-                    },
-                    "databaseSkuName": {
-                        "value": "[parameters('databaseSkuName')]"
-                    },
-                    "databaseTier": {
-                        "value": "[parameters('databaseTier')]"
-                    },
-                    "logAnalyticsSubscriptionId": {
-                        "value": "[subscription().subscriptionId]"
-                    },
-                    "logAnalyticsResourceGroup": {
-                        "value": "[parameters('sharedManagementResourceGroup')]"
-                    },
-                    "logAnalyticsWorkspaceName": {
-                        "value": "[parameters('logAnalyticsWorkspaceName')]"
-                    }
-                }
-            }
         }
     ],
     "outputs": {
@@ -255,10 +197,6 @@
         "ApiAppServiceName": {
             "type": "string",
             "value": "[variables('apiAppServiceName')]"
-        },
-        "DatabaseName": {
-            "type": "string",
-            "value": "[variables('databaseName')]"
         }
     }
 }
