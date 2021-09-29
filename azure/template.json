@@ -56,7 +56,7 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "apiAppServiceName": "[concat(variables('resourceNamePrefix'), 'api-as')]",
-        "configNames": "SFA.DAS.FindApprenticeship.Api"
+        "configNames": "SFA.DAS.FindApprenticeships.Api"
     },
     "resources": [
         {
