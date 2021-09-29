@@ -180,6 +180,10 @@
                                     "value": "[variables('configNames')]"
                                 },
                                 {
+                                    "name": "Version",
+                                    "value": "1.0"
+                                },
+                                {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                                     "value": "[reference('application-insights').outputs.InstrumentationKey.value]"
                                 },
