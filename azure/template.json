@@ -67,9 +67,6 @@
         },
         "logAnalyticsWorkspaceName": {
             "type": "string"
-        },
-        "sharedServiceBusName": {
-            "type": "string"
         }
     },
     "variables": {
@@ -247,34 +244,6 @@
                         "value": "[parameters('logAnalyticsWorkspaceName')]"
                     }
                 }
-            }
-        },
-        {
-            "apiVersion": "2020-06-01",
-            "name": "[concat('role-assignments-', copyIndex())]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'role-assignments/role-assignment-service-bus.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "principalId": {
-                        "value": "[createArray(reference('api-app-service').outputs.managedServiceIdentityId.value, reference('api-app-service').outputs.stagingManagedServiceIdentityId.value)[copyIndex()]]"
-                    },
-                    "assignmentType": {
-                        "value": "ServiceBusOwner"
-                    },
-                    "resourceName": {
-                        "value": "[parameters('sharedServiceBusName')]"
-                    }
-                }
-            },
-            "copy": {
-                "name": "role-assignments",
-                "count": 2
             }
         }
     ],
