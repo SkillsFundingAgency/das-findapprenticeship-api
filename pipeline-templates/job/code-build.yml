@@ -15,6 +15,11 @@ jobs:
     - template: azure-pipelines-templates/build/step/gitversion.yml@das-platform-building-blocks
 
     - template: azure-pipelines-templates/build/step/app-build.yml@das-platform-building-blocks
+      parameters:
+        SonarCloud: true
+        SonarCloudProjectKey: SkillsFundingAgency_das-findapprenticeship-api
+
+    - template: azure-pipelines-templates/build/step/app-build.yml@das-platform-building-blocks
 
     - template: azure-pipelines-templates/build/step/dependency-check.yml@das-platform-building-blocks
 
