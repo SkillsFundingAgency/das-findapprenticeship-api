@@ -5,15 +5,15 @@ trigger:
       - "*"
 
 variables:
-- name: SolutionBaseName
-  value: SFA.DAS.FindApprenticeships.Api
-- name: BuildConfiguration
-  value: release
-- name: BuildPlatform
-  value: any cpu
-- group: RELEASE Management Resources
-- group: RELEASE das-findingapprenticeship-api
- 
+  - name: SolutionBaseName
+    value: SFA.DAS.FindApprenticeships.Api
+  - name: BuildConfiguration
+    value: release
+  - name: BuildPlatform
+    value: any cpu
+  - group: RELEASE Management Resources
+  - group: RELEASE das-findingapprenticeship-api
+
 resources:
   repositories:
   - repository: self
@@ -34,6 +34,12 @@ resources:
     branch: master
 
 stages:
+- stage: Build
+  jobs:
+  - template: pipeline-templates/job/code-build.yml
+    parameters:
+      SolutionBaseName: $(SolutionBaseName)
+
 - stage: Deploy_AT
   dependsOn: Build
   displayName: Deploy to AT
