@@ -55,7 +55,7 @@
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
-        "apiAppServiceName": "[concat(variables('resourceNamePrefix'), 'api-as')]",
+        "apiAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
         "configNames": "SFA.DAS.FindApprenticeships.Api"
     },
     "resources": [
