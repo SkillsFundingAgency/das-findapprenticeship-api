@@ -1,11 +1,16 @@
 parameters:
   SolutionBaseName:
-  BuildConfiguration:
+  
 
 jobs:
 - job: CodeBuild
+  pool:
+    name: DAS - Continuous Integration Agents
+    demands: LATEST_DOTNET_VERSION -equals 3.1
   variables:
   - group: BUILD Management Resources
+  workspace:
+    clean: all
   steps:
     - template: azure-pipelines-templates/build/step/gitversion.yml@das-platform-building-blocks
 
