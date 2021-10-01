@@ -25,7 +25,7 @@ jobs:
     inputs:
       command: publish
       publishWebProjects: false #set to false as this setting (which defaults to true) will parse the entire repo for web projects
-      projects: src/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.csproj
+      projects: src/SFA.DAS.FAA.Api/SFA.DAS.FAA.Api.csproj
       arguments: -o $(build.artifactstagingdirectory)/publish -c release --no-build
 
   - task: CopyFiles@2
