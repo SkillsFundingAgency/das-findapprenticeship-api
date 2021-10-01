@@ -6,7 +6,7 @@ trigger:
 
 variables:
   - name: SolutionBaseName
-    value: SFA.DAS.FindApprenticeships.Api
+    value: SFA.DAS.FAA.Api
   - name: BuildConfiguration
     value: release
   - name: BuildPlatform
@@ -19,7 +19,7 @@ resources:
   - repository: self
   - repository: das-platform-building-blocks
     type: github
-    
+
     name: SkillsFundingAgency/das-platform-building-blocks
     ref: refs/tags/0.4.0
     endpoint: SkillsFundingAgency
