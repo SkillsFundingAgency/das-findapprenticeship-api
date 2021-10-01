@@ -13,7 +13,7 @@ jobs:
   steps:
   - template: azure-pipelines-templates/build/step/gitversion.yml@das-platform-building-blocks
 
-  # Disabled while framework projects remain in the repo
+  # Disabling the below tasks while waiting for the src code to get merged -- delete this comment when you enable the tasks.
   # - template: azure-pipelines-templates/build/step/app-build.yml@das-platform-building-blocks
   #   parameters:
   #     SonarCloud: true

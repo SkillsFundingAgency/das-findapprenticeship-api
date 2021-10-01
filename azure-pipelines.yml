@@ -19,6 +19,7 @@ resources:
   - repository: self
   - repository: das-platform-building-blocks
     type: github
+    
     name: SkillsFundingAgency/das-platform-building-blocks
     ref: refs/tags/0.4.0
     endpoint: SkillsFundingAgency
@@ -50,5 +51,29 @@ stages:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: AT
+      ServiceConnection: SFA-DAS-DevTest-ARM
+
+- stage: Deploy_TEST
+  dependsOn: Build
+  displayName: Deploy to TEST
+  variables:
+  - group: DevTest Management Resources
+  - group: TEST DevTest Shared Resources
+  jobs:
+  - template: pipeline-templates/job/deploy.yml
+    parameters:
+      Environment: TEST
+      ServiceConnection: SFA-DAS-DevTest-ARM
+
+- stage: Deploy_TEST2
+  dependsOn: Build
+  displayName: Deploy to TEST2
+  variables:
+  - group: DevTest Management Resources
+  - group: TEST2 DevTest Shared Resources
+  jobs:
+  - template: pipeline-templates/job/deploy.yml
+    parameters:
+      Environment: TEST2
       ServiceConnection: SFA-DAS-DevTest-ARM
     
