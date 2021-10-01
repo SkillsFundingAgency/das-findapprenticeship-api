@@ -1,0 +1,57 @@
+{
+  "from": "{startingDocumentIndex}",
+  "query": {
+    "bool": {
+      "should": [],
+      "must_not": [
+        {
+          "match": {
+            "status": "3"
+          }
+        },
+        {
+          "match": {
+            "status": "4"
+          }
+        }
+      ],
+      "must": [
+        {
+          "term": {
+            "indexedProviderId": {
+              "value": "{providerId}"
+            }
+          }
+        },
+        {
+          "multi_match": {
+            "query": "{searchTerm}",
+            "type": "phrase_prefix",
+            "fields": [
+              "accountLegalEntityName",
+              "courseDescription"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "size": "{pageItemCount}",
+  "sort": [
+    {
+      "accountLegalEntityName.keyword": {
+        "order": "asc"
+      }
+    },
+    {
+      "courseTitle.keyword": {
+        "order": "asc"
+      }
+    },
+    {
+      "reservationPeriod.keyword": {
+        "order": "desc"
+      }
+    }
+  ]
+}

@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.FAA.Api", "SFA.DAS.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.FAA.Domain", "SFA.DAS.FAA.Domain\SFA.DAS.FAA.Domain.csproj", "{806148B5-0C7B-4155-B66E-F8CE98CE36DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.FAA.Data", "SFA.DAS.FAA.Data\SFA.DAS.FAA.Data.csproj", "{E39B9002-EF61-452B-BD45-FBDBEA07B966}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{806148B5-0C7B-4155-B66E-F8CE98CE36DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{806148B5-0C7B-4155-B66E-F8CE98CE36DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{806148B5-0C7B-4155-B66E-F8CE98CE36DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E39B9002-EF61-452B-BD45-FBDBEA07B966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E39B9002-EF61-452B-BD45-FBDBEA07B966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E39B9002-EF61-452B-BD45-FBDBEA07B966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E39B9002-EF61-452B-BD45-FBDBEA07B966}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4ED22491-E112-4A28-AD35-B189917F9665} = {F85E3315-28E3-4348-ABE5-E3E6634205E5}

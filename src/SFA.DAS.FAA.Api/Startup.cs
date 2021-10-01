@@ -66,6 +66,9 @@ namespace SFA.DAS.FAA.Api
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
             
+            //services.AddElasticSearch(_configuration);
+            services.AddSingleton(new FindApprenticeshipsApiEnvironment(_configuration["Environment"]));
+            
             if (!ConfigurationIsLocalOrDev())
             {
                 var azureAdConfiguration = _configuration
@@ -142,7 +145,7 @@ namespace SFA.DAS.FAA.Api
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "api/{controller=Vacancies}/{action=Index}/{id?}");
+                    pattern: "api/{controller=Vacancies}/{action=Get}/{id?}");
             });
         }
         

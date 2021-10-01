@@ -18,10 +18,10 @@ namespace SFA.DAS.FAA.Api.Controllers
         
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Index(string id)
+        public async Task<IActionResult> Get(string id)
         {
             await Task.CompletedTask;
-            return Ok(new {ok = "index ok"});
+            return Ok(new {ok = "get ok"});
         }
 
         [HttpGet]
