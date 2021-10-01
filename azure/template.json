@@ -60,7 +60,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2021-04-01",
+            "apiVersion": "2021-05-01",
             "name": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/resourceGroups",
             "location": "[parameters('resourceGroupLocation')]",
@@ -68,7 +68,7 @@
             "properties": {}
         },
         {
-            "apiVersion": "2021-04-01",
+            "apiVersion": "2021-05-01",
             "name": "api-app-service-certificate",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
@@ -95,7 +95,7 @@
             ]
         },
         {
-            "apiVersion": "2021-04-01",
+            "apiVersion": "2021-05-01",
             "name": "api-application-insights",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
@@ -119,7 +119,7 @@
             ]
         },
         {
-            "apiVersion": "2021-04-01",
+            "apiVersion": "2021-05-01",
             "name": "api-app-service",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
