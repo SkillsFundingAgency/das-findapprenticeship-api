@@ -12,7 +12,7 @@ variables:
   - name: BuildPlatform
     value: any cpu
   - group: RELEASE Management Resources
-  - group: RELEASE das-findingapprenticeship-api
+  - group: RELEASE das-findapprenticeship-api
 
 resources:
   repositories:
