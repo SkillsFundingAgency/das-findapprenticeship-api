@@ -1,0 +1,336 @@
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Elasticsearch.Net;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.FAA.Data.Repository;
+using SFA.DAS.FAA.Data.UnitTests.Extensions;
+using SFA.DAS.FAA.Domain.Configuration;
+using SFA.DAS.FAA.Domain.Interfaces;
+
+namespace SFA.DAS.FAA.Data.UnitTests.Repository
+{
+    public class WhenFindingApprenticeshipVacancies
+    {
+        private const string ExpectedEnvironmentName = "test";
+
+        private Mock<IElasticLowLevelClient> _mockClient;
+        private FindApprenticeshipsApiEnvironment _apiEnvironment;
+        private ApprenticeshipVacancySearchRepository _repository;
+        private Mock<IElasticSearchQueries> _mockElasticSearchQueries;
+
+        [SetUp]
+        public void Init()
+        {
+            _mockClient = new Mock<IElasticLowLevelClient>();
+            _mockElasticSearchQueries = new Mock<IElasticSearchQueries>();
+            _apiEnvironment = new FindApprenticeshipsApiEnvironment(ExpectedEnvironmentName);
+            _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockElasticSearchQueries.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
+
+            var searchReponse =
+                @"{""took"":33,""timed_out"":false,""_shards"":{""total"":1,""successful"":1,""skipped"":0,""failed"":0},
+                    ""hits"":{""total"":{""value"":3,""relation"":""eq""},""max_score"":null,""hits"":[{""_index"":
+                    ""test-faa-apprenticeships.2021-10-08-14-30"",""_type"":""_doc"",""_id"":
+                    ""1000006648"",""_score"":1.0,""_source"":{          
+                        ""id"" : 1000006648,
+                        ""title"" : ""dbcMgHEgpl_14Jul2020_10014932357 apprenticeship"",
+                        ""startDate"" : ""2020-10-18T00:00:00Z"",
+                        ""closingDate"" : ""2020-09-17T00:00:00Z"",
+                        ""postedDate"" : ""2020-07-14T10:06:25.8640000Z"",
+                        ""employerName"" : ""ESFA LTD"",
+                        ""providerName"" : ""BALTIC TRAINING SERVICES LIMITED"",
+                        ""description"" : ""VyNpryuzIdktcJVjqJgxXpSFuwdrkqJRYCqEriOCbfZefEcOMO"",
+                        ""numberOfPositions"" : 2,
+                        ""isPositiveAboutDisability"" : false,
+                        ""isEmployerAnonymous"" : false,
+                        ""vacancyLocationType"" : ""NonNational"",
+                        ""location"" : {
+                            ""lon"" : -3.169768,
+                            ""lat"" : 55.970099
+                        },
+                        ""apprenticeshipLevel"" : ""Intermediate"",
+                        ""vacancyReference"" : ""1000006648"",
+                        ""category"" : ""Retail and Commercial Enterprise"",
+                        ""categoryCode"" : ""SSAT1.HBY"",
+                        ""subCategory"" : ""Butchery > Abattoir worker"",
+                        ""subCategoryCode"" : ""STDSEC.5"",
+                        ""workingWeek"" : ""hIxfvstIfxOZrDC"",
+                        ""wageType"" : 3,
+                        ""wageText"" : ""£8,049.60 to £14,976.00"",
+                        ""wageUnit"" : 4,
+                        ""hoursPerWeek"" : 40.0,
+                        ""standardLarsCode"" : 274,
+                        ""isDisabilityConfident"" : false,
+                        ""ukprn"" : 10019026
+                }}]}}";
+
+            _mockClient.Setup(c =>
+                    c.SearchAsync<StringResponse>(
+                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        It.IsAny<PostData>(),
+                        It.IsAny<SearchRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(searchReponse));
+
+            _mockClient.Setup(c =>
+                    c.CountAsync<StringResponse>(
+                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        It.IsAny<PostData>(),
+                        It.IsAny<CountRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(@"{""count"":10}"));
+
+            _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(string.Empty);
+            _mockElasticSearchQueries.Setup(x => x.GetAllVacanciesQuery).Returns(string.Empty);
+            _mockElasticSearchQueries.Setup(x => x.LastIndexSearchQuery).Returns(string.Empty);
+            _mockElasticSearchQueries.Setup(x => x.GetVacancyCountQuery).Returns(string.Empty);
+        }
+
+        [Test]
+        public async Task ThenWillLookupTotalReservationForProviderCount()
+        {
+            //Arrange
+            var expectedQuery = "test query {providerId}";
+            _mockElasticSearchQueries.Setup(x => x.GetVacancyCountQuery).Returns(expectedQuery);
+
+            //Act
+            await _repository.Find(10, "10", 1, 1);
+
+            //Assert
+            _mockClient.Verify(c =>
+                c.CountAsync<StringResponse>(
+                    _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                    It.Is<PostData>(pd => 
+                        pd.GetRequestString().Equals("test query 10")),
+                    It.IsAny<CountRequestParameters>(),
+                    It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ThenWillSearchInTheLatestReservationsIndexUsingTheProviderSearchTerm()
+        {
+            //Arrange
+            var expectedSearchTerm = "test";
+            var expectedProviderId = 1001;
+            ushort pageNumber = 1;
+            ushort pageItemSize = 2;
+
+            var searchQueryTemplate = "{searchTerm} - {providerId} - {startingDocumentIndex} - {pageItemCount}";
+            var expectedQuery = $"{expectedSearchTerm} - {expectedProviderId} - 0 - {pageItemSize}";
+
+            _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(searchQueryTemplate);
+
+            //Act
+            await _repository.Find(expectedProviderId, expectedSearchTerm, pageNumber, pageItemSize);
+
+            //Assert
+            _mockClient.Verify(c =>
+                c.SearchAsync<StringResponse>(
+                    _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                    It.Is<PostData>(pd => 
+                        pd.GetRequestString().Equals(expectedQuery)),
+                    It.IsAny<SearchRequestParameters>(),
+                    It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ThenWillSearchInTheLatestReservationsIndexWithoutASearchTerm()
+        {
+            //Arrange
+            var expectedProviderId = 1001;
+            ushort pageNumber = 1;
+            ushort pageItemSize = 2;
+
+            var searchQueryTemplate = "{providerId} - {startingDocumentIndex} - {pageItemCount}";
+            var expectedQuery = $"{expectedProviderId} - 0 - {pageItemSize}";
+
+            _mockElasticSearchQueries.Setup(x => x.GetAllVacanciesQuery).Returns(searchQueryTemplate);
+
+            //Act
+            await _repository.Find(expectedProviderId, string.Empty, pageNumber, pageItemSize);
+
+            //Assert
+            _mockClient.Verify(c =>
+                c.SearchAsync<StringResponse>(
+                    _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                    It.Is<PostData>(pd => 
+                        pd.GetRequestString().Equals(expectedQuery)),
+                    It.IsAny<SearchRequestParameters>(),
+                    It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ThenWillNotSearchReservationsIfLookUpIsEmpty()
+        {
+            //Arrange
+            var indexLookUpResponse =
+                @"{""took"":0,""timed_out"":false,""_shards"":{""total"":0,""successful"":1,""skipped"":0,""failed"":0},
+                ""hits"":{""total"":{""value"":0,""relation"":""eq""},""max_score"":null,""hits"":[]}}";
+
+            _mockClient.Setup(c =>
+                    c.SearchAsync<StringResponse>(
+                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        It.IsAny<PostData>(),
+                        It.IsAny<SearchRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(indexLookUpResponse));
+
+            //Act
+            await _repository.Find(10, "10", 1, 1);
+
+            //Assert
+            _mockClient.Verify(c =>
+                c.SearchAsync<StringResponse>(
+                    It.Is<string>(s => !s.Equals(_repository.GetCurrentApprenticeshipVacanciesIndex())),
+                    It.IsAny<PostData>(),
+                    It.IsAny<SearchRequestParameters>(),
+                    It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ThenWillNotSearchReservationsIfLatestReservationIndexHasNoName()
+        {
+            //Act
+            await _repository.Find(10, "10", 1, 1);
+
+            //Assert
+            _mockClient.Verify(c =>
+                c.SearchAsync<StringResponse>(
+                    It.Is<string>(s => !s.Equals(_repository.GetCurrentApprenticeshipVacanciesIndex())),
+                    It.IsAny<PostData>(),
+                    It.IsAny<SearchRequestParameters>(),
+                    It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ThenWillReturnReservationsFoundWithEmptySearch()
+        {
+            //Act
+            var results = await _repository.Find(2, string.Empty, 1, 1);
+
+            //Assert
+            Assert.AreEqual(3, results.TotalReservations);
+            Assert.AreEqual(1, results.Reservations.Count());
+
+            var vacancy = results.Reservations.First();
+
+            Assert.AreEqual("1000006648", vacancy.Id);
+            //todo: other vacancy fields
+        }
+
+        [Test]
+        public async Task ThenWillReturnReservationsFoundWithSearchTerm()
+        {
+            //Act
+            var results = await _repository.Find(2, "Test", 1, 1);
+
+            //Assert
+            Assert.AreEqual(3, results.TotalReservations);
+            Assert.AreEqual(1, results.Reservations.Count());
+
+            var vacancy = results.Reservations.First();
+
+            Assert.AreEqual("1000006648", vacancy.Id);
+            //todo: other vacancy fields
+        }
+
+        [Test]
+        public async Task ThenWillReturnEmptyResultIfReservationIndexLookupReturnInvalidResponse()
+        {
+            //Arrange
+            _mockClient.Setup(c =>
+                    c.SearchAsync<StringResponse>(
+                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        It.IsAny<PostData>(),
+                        It.IsAny<SearchRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(""));
+
+            //Act
+            var result = await _repository.Find(1, string.Empty, 1, 10);
+
+            //Assert
+            Assert.IsNotNull(result?.Reservations);
+            Assert.IsEmpty(result.Reservations);
+            Assert.AreEqual(0, result.TotalReservations);
+        }
+
+        [Test]
+        public async Task ThenWillReturnEmptyResultIfReservationIndexRequestReturnsInvalidResponse()
+        {
+            //Arrange
+            _mockClient.Setup(c =>
+                    c.SearchAsync<StringResponse>(
+                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        It.IsAny<PostData>(),
+                        It.IsAny<SearchRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(""));
+
+            //Act
+            var result = await _repository.Find(1, string.Empty, 1, 10);
+
+            //Assert
+            Assert.IsNotNull(result?.Reservations);
+            Assert.IsEmpty(result.Reservations);
+            Assert.AreEqual(0, result.TotalReservations);
+        }
+
+        [Test]
+        public async Task ThenWillReturnEmptyResultIfReservationIndexLookupReturnFailedResponse()
+        {
+            //Arrange
+            var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1},""hits"":{""total"":
+            {""value"":0,""relation"":""eq""},""max_score"":null,""hits"":[]}}";
+
+            _mockClient.Setup(c =>
+                    c.SearchAsync<StringResponse>(
+                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        It.IsAny<PostData>(),
+                        It.IsAny<SearchRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(response));
+
+            //Act
+            var result = await _repository.Find(1, string.Empty, 1, 10);
+
+            //Assert
+            Assert.IsNotNull(result?.Reservations);
+            Assert.IsEmpty(result.Reservations);
+            Assert.AreEqual(0, result.TotalReservations);
+
+            _mockClient.Verify(c =>
+                c.SearchAsync<StringResponse>(
+                    It.Is<string>(s => !s.Equals(_repository.GetCurrentApprenticeshipVacanciesIndex())),
+                    It.IsAny<PostData>(),
+                    It.IsAny<SearchRequestParameters>(),
+                    It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ThenWillReturnEmptyResultIfReservationIndexRequestReturnsFailedResponse()
+        {
+            //Arrange
+            var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1},""hits"":{""total"":
+            {""value"":0,""relation"":""eq""},""max_score"":null,""hits"":[]}}";
+
+            _mockClient.Setup(c =>
+                    c.SearchAsync<StringResponse>(
+                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        It.IsAny<PostData>(),
+                        It.IsAny<SearchRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(response));
+
+            //Act
+            var result = await _repository.Find(1, string.Empty, 1, 10);
+
+            //Assert
+            Assert.IsNotNull(result?.Reservations);
+            Assert.IsEmpty(result.Reservations);
+            Assert.AreEqual(0, result.TotalReservations);
+        }
+    }
+}

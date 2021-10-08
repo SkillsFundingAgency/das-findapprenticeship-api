@@ -12,10 +12,7 @@
         <PackageReference Include="NUnit" Version="3.13.1" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
         <PackageReference Include="coverlet.collector" Version="3.0.2" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Repository" />
+        <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="3.0.169" />
     </ItemGroup>
 
     <ItemGroup>

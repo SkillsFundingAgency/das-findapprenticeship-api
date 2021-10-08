@@ -13,14 +13,15 @@ using SFA.DAS.FAA.Domain.Interfaces;
 
 namespace SFA.DAS.FAA.Data.Repository
 {
-    public class VacancyIndexRepository : IVacancyIndexRepository
+    public class ApprenticeshipVacancySearchRepository : IVacancyIndexRepository
     {
         private readonly IElasticLowLevelClient _client;
         private readonly FindApprenticeshipsApiEnvironment _environment;
         private readonly IElasticSearchQueries _elasticQueries;
-        private readonly ILogger<VacancyIndexRepository> _logger;
+        private readonly ILogger<ApprenticeshipVacancySearchRepository> _logger;
+        private const string IndexName = "-faa-apprenticeships";
 
-        public VacancyIndexRepository(IElasticLowLevelClient client, FindApprenticeshipsApiEnvironment environment, IElasticSearchQueries elasticQueries, ILogger<VacancyIndexRepository> logger)
+        public ApprenticeshipVacancySearchRepository(IElasticLowLevelClient client, FindApprenticeshipsApiEnvironment environment, IElasticSearchQueries elasticQueries, ILogger<ApprenticeshipVacancySearchRepository> logger)
         {
             _client = client;
             _environment = environment;
@@ -28,14 +29,34 @@ namespace SFA.DAS.FAA.Data.Repository
             _logger = logger;
         }
 
+        public string GetCurrentApprenticeshipVacanciesIndex() => _environment.EnvironmentName + IndexName;
+        
+        public async Task<bool> PingAsync()
+        {
+            var index = GetCurrentApprenticeshipVacanciesIndex();
+
+            var pingResponse = await _client.CountAsync<StringResponse>(
+                index, 
+                PostData.String(""), 
+                new CountRequestParameters(), 
+                CancellationToken.None);
+
+            if (!pingResponse.Success)
+            {
+                _logger.LogDebug($"Elastic search ping failed: {pingResponse.DebugInformation ?? "no information available"}");
+            }
+
+            return pingResponse.Success;
+        }
+
         public async Task<IndexedVacancySearchResult> Find(
             long providerId, string searchTerm, ushort pageNumber, ushort pageItemCount)
         {
             _logger.LogInformation("Starting reservation search");
 
-            var reservationIndex = await GetCurrentReservationIndex();
+            var reservationIndex = GetCurrentApprenticeshipVacanciesIndex();
 
-            if (string.IsNullOrWhiteSpace(reservationIndex?.Name))
+            if (string.IsNullOrWhiteSpace(reservationIndex))
             {
                 _logger.LogWarning("Searching failed. Latest Reservation index does not have a name value");
 
@@ -45,7 +66,7 @@ namespace SFA.DAS.FAA.Data.Repository
             var startingDocumentIndex = (ushort) (pageNumber < 2 ? 0 : (pageNumber - 1) * pageItemCount);
 
             var elasticSearchResult = await GetSearchResult(
-                providerId, searchTerm, pageItemCount, startingDocumentIndex, reservationIndex.Name);
+                providerId, searchTerm, pageItemCount, startingDocumentIndex, reservationIndex);
 
             if (elasticSearchResult == null)
             {
@@ -55,7 +76,7 @@ namespace SFA.DAS.FAA.Data.Repository
 
             _logger.LogDebug("Searching complete, returning search results");
 
-            var totalRecordCount = await GetSearchResultCount(reservationIndex.Name, providerId);
+            var totalRecordCount = await GetSearchResultCount(reservationIndex, providerId);
             
             var searchResult =  new IndexedVacancySearchResult
             {
@@ -82,41 +103,6 @@ namespace SFA.DAS.FAA.Data.Repository
             var searchResult = JsonConvert.DeserializeObject<ElasticResponse<VacancyIndex>>(jsonResponse.Body);
 
             return searchResult;
-        }
-
-        public async Task<bool> PingAsync()
-        {
-            var index = await GetCurrentReservationIndex();
-
-            var pingResponse = await _client.CountAsync<StringResponse>(index.Name, PostData.String(""), new CountRequestParameters(), CancellationToken.None);
-
-            if (!pingResponse.Success)
-            {
-                _logger.LogDebug($"Elastic search ping failed: {pingResponse.DebugInformation ?? "no information available"}");
-            }
-
-            return pingResponse.Success;
-        }
-
-        public async Task<IndexRegistryEntry> GetCurrentReservationIndex()
-        {
-            var data = PostData.String(_elasticQueries.LastIndexSearchQuery);
-
-            _logger.LogDebug("Getting latest reservation index name");
-
-            var response = await _client.SearchAsync<StringResponse>(
-                _environment.EnvironmentName + _elasticQueries.VacancyIndexLookupName, data);
-
-            var elasticResponse = JsonConvert.DeserializeObject<ElasticResponse<IndexRegistryEntry>>(response.Body);
-
-            if (elasticResponse?.Items != null && elasticResponse.Items.Any())
-            {
-                return elasticResponse.Items.First();
-            }
-
-            _logger.LogWarning("Searching failed. Could not find any reservation index names to search");
-
-            return null;
         }
 
         private string GetReservationCountForProviderQuery(long providerId)

@@ -6,7 +6,7 @@ namespace SFA.DAS.FAA.Domain.Interfaces
     public interface IVacancyIndexRepository
     {
         Task<bool> PingAsync();
-        Task<IndexRegistryEntry> GetCurrentReservationIndex();
+        string GetCurrentApprenticeshipVacanciesIndex();
         Task<IndexedVacancySearchResult> Find(
             long providerId, string searchTerm, ushort pageNumber, 
             ushort pageItemCount);
