@@ -53,8 +53,7 @@ namespace SFA.DAS.FAA.Data.Repository
             return pingResponse.Success;
         }
 
-        public async Task<ApprenticeshipSearchResponse> Find(
-            long providerId, string searchTerm, ushort pageNumber, ushort pageItemCount)
+        public async Task<ApprenticeshipSearchResponse> Find( string searchTerm, ushort pageNumber, ushort pageItemCount)
         {
             _logger.LogInformation("Starting reservation search");
 
@@ -70,7 +69,7 @@ namespace SFA.DAS.FAA.Data.Repository
             var startingDocumentIndex = (ushort) (pageNumber < 2 ? 0 : (pageNumber - 1) * pageItemCount);
 
             var elasticSearchResult = await GetSearchResult(
-                providerId, searchTerm, pageItemCount, startingDocumentIndex, reservationIndex);
+                searchTerm, pageItemCount, startingDocumentIndex, reservationIndex);
 
             if (elasticSearchResult == null)
             {
@@ -80,7 +79,7 @@ namespace SFA.DAS.FAA.Data.Repository
 
             _logger.LogDebug("Searching complete, returning search results");
 
-            var totalRecordCount = await GetSearchResultCount(reservationIndex, providerId);
+            var totalRecordCount = await GetSearchResultCount(reservationIndex);
             
             var searchResult =  new ApprenticeshipSearchResponse
             {
@@ -92,12 +91,12 @@ namespace SFA.DAS.FAA.Data.Repository
         }
 
         private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
-            long providerId, string searchTerm, ushort pageItemCount,
+            string searchTerm, ushort pageItemCount,
             ushort startingDocumentIndex, string reservationIndexName)
         {
             var request = string.IsNullOrEmpty(searchTerm) ?
-                GetReservationsSearchString(startingDocumentIndex, pageItemCount, providerId) :
-                GetReservationsSearchString(startingDocumentIndex, pageItemCount, providerId, searchTerm);
+                GetReservationsSearchString(startingDocumentIndex, pageItemCount) :
+                GetReservationsSearchString(startingDocumentIndex, pageItemCount, searchTerm);
 
             _logger.LogDebug($"Searching with search term: {searchTerm}");
 
@@ -109,38 +108,29 @@ namespace SFA.DAS.FAA.Data.Repository
             return searchResult;
         }
 
-        private string GetReservationCountForProviderQuery(long providerId)
-        {
-            return _elasticQueries.GetVacancyCountQuery.Replace("{providerId}", providerId.ToString());
-        }
-
         private string GetReservationsSearchString(
-            ushort startingDocumentIndex, ushort pageItemCount, long providerId)
+            ushort startingDocumentIndex, ushort pageItemCount)
         {
             var query = _elasticQueries.GetAllVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
-            query = query.Replace("{providerId}", providerId.ToString());
             query = query.Replace("{pageItemCount}", pageItemCount.ToString());
 
             return query;
         }
 
         private string GetReservationsSearchString(
-            ushort startingDocumentIndex, ushort pageItemCount, long providerId, string searchTerm)
+            ushort startingDocumentIndex, ushort pageItemCount, string searchTerm)
         {
             var query = _elasticQueries.FindVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
-            query = query.Replace("{providerId}", providerId.ToString());
             query = query.Replace("{pageItemCount}", pageItemCount.ToString());
             query = query.Replace("{searchTerm}", searchTerm);
 
             return query;
         }
 
-        private async Task<int> GetSearchResultCount(string reservationIndexName, long providerId)
+        private async Task<int> GetSearchResultCount(string reservationIndexName)
         {
-            var query = GetReservationCountForProviderQuery(providerId);
-
             var jsonResponse = await _client.CountAsync<StringResponse>(reservationIndexName,
-                PostData.String(query));
+                PostData.String(_elasticQueries.GetVacancyCountQuery));
 
             var result = JsonConvert.DeserializeObject<ElasticCountResponse>(jsonResponse.Body);
 
