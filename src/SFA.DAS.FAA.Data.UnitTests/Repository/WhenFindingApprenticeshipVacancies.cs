@@ -92,7 +92,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillLookupTotalReservationForProviderCount()
+        public async Task Then_Will_Lookup_Total_ApprenticeshipVacancies()
         {
             //Arrange
             var expectedQuery = "test query {providerId}";
@@ -112,7 +112,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillSearchInTheLatestReservationsIndexUsingTheProviderSearchTerm()
+        public async Task Then_Will_Search_Latest_ApprenticeshipVacanciesIndex_Using_SearchTerm()
         {
             //Arrange
             var expectedSearchTerm = "test";
@@ -139,7 +139,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillSearchInTheLatestReservationsIndexWithoutASearchTerm()
+        public async Task Then_Will_Search_Latest_ApprenticeshipVacanciesIndex_Without_A_SearchTerm()
         {
             //Arrange
             var expectedProviderId = 1001;
@@ -165,7 +165,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillNotSearchReservationsIfLookUpIsEmpty()
+        public async Task Then_Will_Not_Search_ApprenticeshipVacancies_If_LookUp_Is_Empty()
         {
             //Arrange
             var indexLookUpResponse =
@@ -193,7 +193,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillNotSearchReservationsIfLatestReservationIndexHasNoName()
+        public async Task Then_Will_Not_Search_ApprenticeshipVacancies_If_Latest_ApprenticeshipVacanciesIndex_Has_No_Name()
         {
             //Act
             await _repository.Find(10, "10", 1, 1);
@@ -208,7 +208,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillReturnReservationsFoundWithEmptySearch()
+        public async Task Then_Will_Return_ApprenticeshipVacancies_Found_With_Empty_Search()
         {
             //Act
             var results = await _repository.Find(2, string.Empty, 1, 1);
@@ -248,7 +248,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillReturnReservationsFoundWithSearchTerm()
+        public async Task Then_Will_Return_ApprenticeshipVacancies_Found_With_SearchTerm()
         {
             //Act
             var results = await _repository.Find(2, "Test", 1, 1);
@@ -288,7 +288,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillReturnEmptyResultIfReservationIndexLookupReturnInvalidResponse()
+        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Lookup_Return_Invalid_Response()
         {
             //Arrange
             _mockClient.Setup(c =>
@@ -309,7 +309,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillReturnEmptyResultIfReservationIndexRequestReturnsInvalidResponse()
+        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Invalid_Response()
         {
             //Arrange
             _mockClient.Setup(c =>
@@ -330,7 +330,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillReturnEmptyResultIfReservationIndexLookupReturnFailedResponse()
+        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Lookup_Return_Failed_Response()
         {
             //Arrange
             var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1},""hits"":{""total"":
@@ -361,7 +361,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task ThenWillReturnEmptyResultIfReservationIndexRequestReturnsFailedResponse()
+        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Failed_Response()
         {
             //Arrange
             var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1},""hits"":{""total"":
