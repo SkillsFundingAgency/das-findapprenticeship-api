@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
@@ -9,6 +10,7 @@ using NUnit.Framework;
 using SFA.DAS.FAA.Data.Repository;
 using SFA.DAS.FAA.Data.UnitTests.Extensions;
 using SFA.DAS.FAA.Domain.Configuration;
+using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 
 namespace SFA.DAS.FAA.Data.UnitTests.Repository
@@ -217,7 +219,32 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var vacancy = results.ApprenticeshipVacancies.First();
             vacancy.Id.Should().Be(1000006648);
             vacancy.Title.Should().Be("dbcMgHEgpl_14Jul2020_10014932357 apprenticeship");
-            //todo: other vacancy fields
+            vacancy.StartDate.Date.Should().Be(DateTime.Parse("2020-10-18T00:00:00Z").Date);
+            vacancy.ClosingDate.Date.Should().Be(DateTime.Parse("2020-09-17T00:00:00Z").Date);
+            vacancy.PostedDate.Date.Should().Be(DateTime.Parse("2020-07-14T10:06:25.8640000Z").Date);
+            vacancy.EmployerName.Should().Be("ESFA LTD");
+            vacancy.ProviderName.Should().Be("BALTIC TRAINING SERVICES LIMITED");
+            vacancy.Description.Should().Be("VyNpryuzIdktcJVjqJgxXpSFuwdrkqJRYCqEriOCbfZefEcOMO");
+            vacancy.NumberOfPositions.Should().Be(2);
+            vacancy.IsPositiveAboutDisability.Should().BeFalse();
+            vacancy.IsEmployerAnonymous.Should().BeFalse();
+            vacancy.VacancyLocationType.Should().Be(VacancyLocationType.NonNational);
+            vacancy.Location.lon.Should().Be(-3.169768);
+            vacancy.Location.lat.Should().Be(55.970099);
+            vacancy.ApprenticeshipLevel.Should().Be(ApprenticeshipLevel.Intermediate);
+            vacancy.VacancyReference.Should().Be("1000006648");
+            vacancy.Category.Should().Be("Retail and Commercial Enterprise");
+            vacancy.CategoryCode.Should().Be("SSAT1.HBY");
+            vacancy.SubCategory.Should().Be("Butchery > Abattoir worker");
+            vacancy.SubCategoryCode.Should().Be("STDSEC.5");
+            vacancy.WorkingWeek.Should().Be("hIxfvstIfxOZrDC");
+            vacancy.WageType.Should().Be(3);
+            vacancy.WageText.Should().Be("£8,049.60 to £14,976.00");
+            vacancy.WageUnit.Should().Be(4);
+            vacancy.HoursPerWeek.Should().Be(40.0M);
+            vacancy.StandardLarsCode.Should().Be(274);
+            vacancy.IsDisabilityConfident.Should().BeFalse();
+            vacancy.Ukprn.Should().Be(10019026);
         }
 
         [Test]
@@ -232,7 +259,32 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var vacancy = results.ApprenticeshipVacancies.First();
             vacancy.Id.Should().Be(1000006648);
             vacancy.Title.Should().Be("dbcMgHEgpl_14Jul2020_10014932357 apprenticeship");
-            //todo: other vacancy fields
+            vacancy.StartDate.Date.Should().Be(DateTime.Parse("2020-10-18T00:00:00Z").Date);
+            vacancy.ClosingDate.Date.Should().Be(DateTime.Parse("2020-09-17T00:00:00Z").Date);
+            vacancy.PostedDate.Date.Should().Be(DateTime.Parse("2020-07-14T10:06:25.8640000Z").Date);
+            vacancy.EmployerName.Should().Be("ESFA LTD");
+            vacancy.ProviderName.Should().Be("BALTIC TRAINING SERVICES LIMITED");
+            vacancy.Description.Should().Be("VyNpryuzIdktcJVjqJgxXpSFuwdrkqJRYCqEriOCbfZefEcOMO");
+            vacancy.NumberOfPositions.Should().Be(2);
+            vacancy.IsPositiveAboutDisability.Should().BeFalse();
+            vacancy.IsEmployerAnonymous.Should().BeFalse();
+            vacancy.VacancyLocationType.Should().Be(VacancyLocationType.NonNational);
+            vacancy.Location.lon.Should().Be(-3.169768);
+            vacancy.Location.lat.Should().Be(55.970099);
+            vacancy.ApprenticeshipLevel.Should().Be(ApprenticeshipLevel.Intermediate);
+            vacancy.VacancyReference.Should().Be("1000006648");
+            vacancy.Category.Should().Be("Retail and Commercial Enterprise");
+            vacancy.CategoryCode.Should().Be("SSAT1.HBY");
+            vacancy.SubCategory.Should().Be("Butchery > Abattoir worker");
+            vacancy.SubCategoryCode.Should().Be("STDSEC.5");
+            vacancy.WorkingWeek.Should().Be("hIxfvstIfxOZrDC");
+            vacancy.WageType.Should().Be(3);
+            vacancy.WageText.Should().Be("£8,049.60 to £14,976.00");
+            vacancy.WageUnit.Should().Be(4);
+            vacancy.HoursPerWeek.Should().Be(40.0M);
+            vacancy.StandardLarsCode.Should().Be(274);
+            vacancy.IsDisabilityConfident.Should().BeFalse();
+            vacancy.Ukprn.Should().Be(10019026);
         }
 
         [Test]
