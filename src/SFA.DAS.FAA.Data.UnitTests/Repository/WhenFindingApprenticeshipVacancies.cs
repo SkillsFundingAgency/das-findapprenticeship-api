@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -211,12 +212,11 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var results = await _repository.Find(2, string.Empty, 1, 1);
 
             //Assert
-            Assert.AreEqual(3, results.TotalReservations);
-            Assert.AreEqual(1, results.Reservations.Count());
-
-            var vacancy = results.Reservations.First();
-
-            Assert.AreEqual("1000006648", vacancy.Id);
+            results.TotalApprenticeshipVacancies.Should().Be(3);
+            results.ApprenticeshipVacancies.Count().Should().Be(1);
+            var vacancy = results.ApprenticeshipVacancies.First();
+            vacancy.Id.Should().Be(1000006648);
+            vacancy.Title.Should().Be("dbcMgHEgpl_14Jul2020_10014932357 apprenticeship");
             //todo: other vacancy fields
         }
 
@@ -227,12 +227,11 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var results = await _repository.Find(2, "Test", 1, 1);
 
             //Assert
-            Assert.AreEqual(3, results.TotalReservations);
-            Assert.AreEqual(1, results.Reservations.Count());
-
-            var vacancy = results.Reservations.First();
-
-            Assert.AreEqual("1000006648", vacancy.Id);
+            Assert.AreEqual(3, results.TotalApprenticeshipVacancies);
+            Assert.AreEqual(1, results.ApprenticeshipVacancies.Count());
+            var vacancy = results.ApprenticeshipVacancies.First();
+            vacancy.Id.Should().Be(1000006648);
+            vacancy.Title.Should().Be("dbcMgHEgpl_14Jul2020_10014932357 apprenticeship");
             //todo: other vacancy fields
         }
 
@@ -252,9 +251,9 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var result = await _repository.Find(1, string.Empty, 1, 10);
 
             //Assert
-            Assert.IsNotNull(result?.Reservations);
-            Assert.IsEmpty(result.Reservations);
-            Assert.AreEqual(0, result.TotalReservations);
+            Assert.IsNotNull(result?.ApprenticeshipVacancies);
+            Assert.IsEmpty(result.ApprenticeshipVacancies);
+            Assert.AreEqual(0, result.TotalApprenticeshipVacancies);
         }
 
         [Test]
@@ -273,9 +272,9 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var result = await _repository.Find(1, string.Empty, 1, 10);
 
             //Assert
-            Assert.IsNotNull(result?.Reservations);
-            Assert.IsEmpty(result.Reservations);
-            Assert.AreEqual(0, result.TotalReservations);
+            Assert.IsNotNull(result?.ApprenticeshipVacancies);
+            Assert.IsEmpty(result.ApprenticeshipVacancies);
+            Assert.AreEqual(0, result.TotalApprenticeshipVacancies);
         }
 
         [Test]
@@ -297,9 +296,9 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var result = await _repository.Find(1, string.Empty, 1, 10);
 
             //Assert
-            Assert.IsNotNull(result?.Reservations);
-            Assert.IsEmpty(result.Reservations);
-            Assert.AreEqual(0, result.TotalReservations);
+            Assert.IsNotNull(result?.ApprenticeshipVacancies);
+            Assert.IsEmpty(result.ApprenticeshipVacancies);
+            Assert.AreEqual(0, result.TotalApprenticeshipVacancies);
 
             _mockClient.Verify(c =>
                 c.SearchAsync<StringResponse>(
@@ -328,9 +327,9 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var result = await _repository.Find(1, string.Empty, 1, 10);
 
             //Assert
-            Assert.IsNotNull(result?.Reservations);
-            Assert.IsEmpty(result.Reservations);
-            Assert.AreEqual(0, result.TotalReservations);
+            Assert.IsNotNull(result?.ApprenticeshipVacancies);
+            Assert.IsEmpty(result.ApprenticeshipVacancies);
+            Assert.AreEqual(0, result.TotalApprenticeshipVacancies);
         }
     }
 }

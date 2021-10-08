@@ -21,7 +21,11 @@ namespace SFA.DAS.FAA.Data.Repository
         private readonly ILogger<ApprenticeshipVacancySearchRepository> _logger;
         private const string IndexName = "-faa-apprenticeships";
 
-        public ApprenticeshipVacancySearchRepository(IElasticLowLevelClient client, FindApprenticeshipsApiEnvironment environment, IElasticSearchQueries elasticQueries, ILogger<ApprenticeshipVacancySearchRepository> logger)
+        public ApprenticeshipVacancySearchRepository(
+            IElasticLowLevelClient client, 
+            FindApprenticeshipsApiEnvironment environment, 
+            IElasticSearchQueries elasticQueries, 
+            ILogger<ApprenticeshipVacancySearchRepository> logger)
         {
             _client = client;
             _environment = environment;
@@ -49,7 +53,7 @@ namespace SFA.DAS.FAA.Data.Repository
             return pingResponse.Success;
         }
 
-        public async Task<IndexedVacancySearchResult> Find(
+        public async Task<ApprenticeshipSearchResponse> Find(
             long providerId, string searchTerm, ushort pageNumber, ushort pageItemCount)
         {
             _logger.LogInformation("Starting reservation search");
@@ -60,7 +64,7 @@ namespace SFA.DAS.FAA.Data.Repository
             {
                 _logger.LogWarning("Searching failed. Latest Reservation index does not have a name value");
 
-                return new IndexedVacancySearchResult();
+                return new ApprenticeshipSearchResponse();
             }
 
             var startingDocumentIndex = (ushort) (pageNumber < 2 ? 0 : (pageNumber - 1) * pageItemCount);
@@ -71,23 +75,23 @@ namespace SFA.DAS.FAA.Data.Repository
             if (elasticSearchResult == null)
             {
                 _logger.LogWarning("Searching failed. Elastic search response could not be de-serialised");
-                return new IndexedVacancySearchResult();
+                return new ApprenticeshipSearchResponse();
             }
 
             _logger.LogDebug("Searching complete, returning search results");
 
             var totalRecordCount = await GetSearchResultCount(reservationIndex, providerId);
             
-            var searchResult =  new IndexedVacancySearchResult
+            var searchResult =  new ApprenticeshipSearchResponse
             {
-               Reservations = elasticSearchResult.Items,
-               TotalReservations = (uint) elasticSearchResult.hits.total.value
+               ApprenticeshipVacancies = elasticSearchResult.Items,
+               TotalApprenticeshipVacancies = (uint) elasticSearchResult.hits.total.value
             };
 
             return searchResult;
         }
 
-        private async Task<ElasticResponse<VacancyIndex>> GetSearchResult(
+        private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
             long providerId, string searchTerm, ushort pageItemCount,
             ushort startingDocumentIndex, string reservationIndexName)
         {
@@ -100,7 +104,7 @@ namespace SFA.DAS.FAA.Data.Repository
             var jsonResponse =
                 await _client.SearchAsync<StringResponse>(reservationIndexName, PostData.String(request));
 
-            var searchResult = JsonConvert.DeserializeObject<ElasticResponse<VacancyIndex>>(jsonResponse.Body);
+            var searchResult = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
             return searchResult;
         }
