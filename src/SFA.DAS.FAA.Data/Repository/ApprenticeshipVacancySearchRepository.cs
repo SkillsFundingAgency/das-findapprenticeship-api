@@ -53,7 +53,7 @@ namespace SFA.DAS.FAA.Data.Repository
             return pingResponse.Success;
         }
 
-        public async Task<ApprenticeshipSearchResponse> Find( string searchTerm, ushort pageNumber, ushort pageItemCount)
+        public async Task<ApprenticeshipSearchResponse> Find( string searchTerm, int pageNumber, int pageItemCount)
         {
             _logger.LogInformation("Starting reservation search");
 
@@ -91,8 +91,8 @@ namespace SFA.DAS.FAA.Data.Repository
         }
 
         private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
-            string searchTerm, ushort pageItemCount,
-            ushort startingDocumentIndex, string reservationIndexName)
+            string searchTerm, int pageItemCount,
+            int startingDocumentIndex, string reservationIndexName)
         {
             var request = string.IsNullOrEmpty(searchTerm) ?
                 GetReservationsSearchString(startingDocumentIndex, pageItemCount) :
@@ -109,7 +109,7 @@ namespace SFA.DAS.FAA.Data.Repository
         }
 
         private string GetReservationsSearchString(
-            ushort startingDocumentIndex, ushort pageItemCount)
+            int startingDocumentIndex, int pageItemCount)
         {
             var query = _elasticQueries.GetAllVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
             query = query.Replace("{pageItemCount}", pageItemCount.ToString());
@@ -118,7 +118,7 @@ namespace SFA.DAS.FAA.Data.Repository
         }
 
         private string GetReservationsSearchString(
-            ushort startingDocumentIndex, ushort pageItemCount, string searchTerm)
+            int startingDocumentIndex, int pageItemCount, string searchTerm)
         {
             var query = _elasticQueries.FindVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
             query = query.Replace("{pageItemCount}", pageItemCount.ToString());

@@ -9,7 +9,7 @@ namespace SFA.DAS.FAA.Domain.Interfaces
         string GetCurrentApprenticeshipVacanciesIndex();
         Task<ApprenticeshipSearchResponse> Find(
             string searchTerm, 
-            ushort pageNumber, 
-            ushort pageItemCount);
+            int pageNumber, 
+            int pageItemCount);
     }
 }
