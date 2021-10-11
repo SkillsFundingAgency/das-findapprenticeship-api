@@ -21,6 +21,7 @@ using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.FAA.Api.AppStart;
+using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Configuration;
 
 namespace SFA.DAS.FAA.Api
@@ -88,7 +89,7 @@ namespace SFA.DAS.FAA.Api
                 services.AddHealthChecks();
             }
             
-            services.AddMediatR(typeof(Application.Class1).Assembly);
+            services.AddMediatR(typeof(SearchApprenticeshipVacanciesQuery).Assembly);
             services.AddServiceRegistration();
             
             services
