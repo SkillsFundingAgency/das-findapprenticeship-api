@@ -91,11 +91,11 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             _mockElasticSearchQueries.Setup(x => x.GetVacancyCountQuery).Returns(string.Empty);
         }
 
-        [Test, Ignore("in prog")]
+        [Test]
         public async Task Then_Will_Lookup_Total_ApprenticeshipVacancies()
         {
             //Arrange
-            var expectedQuery = "test query {searchTerm}";
+            var expectedQuery = "test query";
             _mockElasticSearchQueries.Setup(x => x.GetVacancyCountQuery).Returns(expectedQuery);
 
             //Act
@@ -106,7 +106,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 c.CountAsync<StringResponse>(
                     _repository.GetCurrentApprenticeshipVacanciesIndex(),
                     It.Is<PostData>(pd => 
-                        pd.GetRequestString().Equals("test query 10")),
+                        pd.GetRequestString().Equals(expectedQuery)),
                     It.IsAny<CountRequestParameters>(),
                     It.IsAny<CancellationToken>()), Times.Once);
         }
