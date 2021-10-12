@@ -66,8 +66,12 @@ namespace SFA.DAS.FAA.Api
             services.AddSingleton(cfg => cfg.GetService<IOptions<FindApprenticeshipsApiConfiguration>>().Value);
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
+
+            var apiConfig = _configuration
+                .GetSection("FindApprenticeshipsApi")
+                .Get<FindApprenticeshipsApiConfiguration>();
             
-            //services.AddElasticSearch(_configuration);
+            services.AddElasticSearch(apiConfig);
             services.AddSingleton(new FindApprenticeshipsApiEnvironment(_configuration["Environment"]));
             
             if (!ConfigurationIsLocalOrDev())
