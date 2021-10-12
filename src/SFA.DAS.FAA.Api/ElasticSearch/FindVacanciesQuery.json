@@ -1,56 +1,30 @@
 {
-  "from": "{startingDocumentIndex}",
+  "from": "{pageNumber}",
   "query": {
     "bool": {
       "should": [],
-      "must_not": [
-        {
-          "match": {
-            "status": "3"
-          }
-        },
-        {
-          "match": {
-            "status": "4"
-          }
-        }
-      ],
+      "must_not": [],
       "must": [
-        {
-          "term": {
-            "indexedProviderId": {
-              "value": "{providerId}"
-            }
-          }
-        },
         {
           "multi_match": {
             "query": "{searchTerm}",
             "type": "phrase_prefix",
             "fields": [
-              "accountLegalEntityName",
-              "courseDescription"
+              "title",
+              "employerName",
+              "providerName",
+              "description"
             ]
           }
         }
       ]
     }
   },
-  "size": "{pageItemCount}",
+  "size": "{pageSize}",
   "sort": [
     {
-      "accountLegalEntityName.keyword": {
+      "closingDate": {
         "order": "asc"
-      }
-    },
-    {
-      "courseTitle.keyword": {
-        "order": "asc"
-      }
-    },
-    {
-      "reservationPeriod.keyword": {
-        "order": "desc"
       }
     }
   ]
