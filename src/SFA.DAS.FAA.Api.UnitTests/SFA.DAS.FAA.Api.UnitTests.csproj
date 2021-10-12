@@ -15,4 +15,9 @@
         <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="3.0.169" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SFA.DAS.FAA.Api\SFA.DAS.FAA.Api.csproj" />
+      <ProjectReference Include="..\SFA.DAS.FAA.Domain\SFA.DAS.FAA.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
