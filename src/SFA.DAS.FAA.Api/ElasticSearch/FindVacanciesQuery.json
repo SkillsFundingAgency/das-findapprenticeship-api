@@ -1,5 +1,5 @@
 {
-  "from": "{pageNumber}",
+  "from": "{startingDocumentIndex}",
   "query": {
     "bool": {
       "should": [],

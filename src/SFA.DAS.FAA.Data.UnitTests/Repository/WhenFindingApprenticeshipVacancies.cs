@@ -87,7 +87,6 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(string.Empty);
             _mockElasticSearchQueries.Setup(x => x.GetAllVacanciesQuery).Returns(string.Empty);
-            _mockElasticSearchQueries.Setup(x => x.LastIndexSearchQuery).Returns(string.Empty);
             _mockElasticSearchQueries.Setup(x => x.GetVacancyCountQuery).Returns(string.Empty);
         }
 
@@ -117,15 +116,15 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Arrange
             var expectedSearchTerm = "test";
             ushort pageNumber = 1;
-            ushort pageItemSize = 2;
+            ushort pageSize = 2;
 
-            var searchQueryTemplate = "{searchTerm} - {startingDocumentIndex} - {pageItemCount}";
-            var expectedQuery = $"{expectedSearchTerm} - 0 - {pageItemSize}";
+            var searchQueryTemplate = "{searchTerm} - {startingDocumentIndex} - {pageSize}";
+            var expectedQuery = $"{expectedSearchTerm} - 0 - {pageSize}";
 
             _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(searchQueryTemplate);
 
             //Act
-            await _repository.Find(expectedSearchTerm, pageNumber, pageItemSize);
+            await _repository.Find(expectedSearchTerm, pageNumber, pageSize);
 
             //Assert
             _mockClient.Verify(c =>
@@ -142,15 +141,15 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         {
             //Arrange
             ushort pageNumber = 1;
-            ushort pageItemSize = 2;
+            ushort pageSize = 2;
 
-            var searchQueryTemplate = "{startingDocumentIndex} - {pageItemCount}";
-            var expectedQuery = $"0 - {pageItemSize}";
+            var searchQueryTemplate = "{startingDocumentIndex} - {pageSize}";
+            var expectedQuery = $"0 - {pageSize}";
 
             _mockElasticSearchQueries.Setup(x => x.GetAllVacanciesQuery).Returns(searchQueryTemplate);
 
             //Act
-            await _repository.Find(string.Empty, pageNumber, pageItemSize);
+            await _repository.Find(string.Empty, pageNumber, pageSize);
 
             //Assert
             _mockClient.Verify(c =>

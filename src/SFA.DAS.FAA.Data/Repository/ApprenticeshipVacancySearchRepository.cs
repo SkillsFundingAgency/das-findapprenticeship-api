@@ -55,13 +55,13 @@ namespace SFA.DAS.FAA.Data.Repository
 
         public async Task<ApprenticeshipSearchResponse> Find( string searchTerm, int pageNumber, int pageSize)
         {
-            _logger.LogInformation("Starting reservation search");
+            _logger.LogInformation("Starting vacancy search");
 
-            var reservationIndex = GetCurrentApprenticeshipVacanciesIndex();
+            var vacanciesIndex = GetCurrentApprenticeshipVacanciesIndex();
 
-            if (string.IsNullOrWhiteSpace(reservationIndex))
+            if (string.IsNullOrWhiteSpace(vacanciesIndex))
             {
-                _logger.LogWarning("Searching failed. Latest Reservation index does not have a name value");
+                _logger.LogWarning("Searching failed. Latest Apprenticeship Vacancy index does not have a name value");
 
                 return new ApprenticeshipSearchResponse();
             }
@@ -69,7 +69,7 @@ namespace SFA.DAS.FAA.Data.Repository
             var startingDocumentIndex = (ushort) (pageNumber < 2 ? 0 : (pageNumber - 1) * pageSize);
 
             var elasticSearchResult = await GetSearchResult(
-                searchTerm, pageSize, startingDocumentIndex, reservationIndex);
+                searchTerm, pageSize, startingDocumentIndex, vacanciesIndex);
 
             if (elasticSearchResult == null)
             {
@@ -79,7 +79,7 @@ namespace SFA.DAS.FAA.Data.Repository
 
             _logger.LogDebug("Searching complete, returning search results");
 
-            var totalRecordCount = await GetSearchResultCount(reservationIndex);
+            var totalRecordCount = await GetSearchResultCount(vacanciesIndex);
             
             var searchResult =  new ApprenticeshipSearchResponse
             {
@@ -91,17 +91,17 @@ namespace SFA.DAS.FAA.Data.Repository
         }
 
         private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
-            string searchTerm, int pageItemCount,
-            int startingDocumentIndex, string reservationIndexName)
+            string searchTerm, int pageSize,
+            int startingDocumentIndex, string vacancyIndexName)
         {
             var request = string.IsNullOrEmpty(searchTerm) ?
-                GetSearchString(startingDocumentIndex, pageItemCount) :
-                GetSearchString(startingDocumentIndex, pageItemCount, searchTerm);
+                GetSearchString(startingDocumentIndex, pageSize) :
+                GetSearchString(startingDocumentIndex, pageSize, searchTerm);
 
             _logger.LogDebug($"Searching with search term: {searchTerm}");
 
             var jsonResponse =
-                await _client.SearchAsync<StringResponse>(reservationIndexName, PostData.String(request));
+                await _client.SearchAsync<StringResponse>(vacancyIndexName, PostData.String(request));
 
             var searchResult = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
@@ -109,19 +109,19 @@ namespace SFA.DAS.FAA.Data.Repository
         }
 
         private string GetSearchString(
-            int startingDocumentIndex, int pageItemCount)
+            int startingDocumentIndex, int pageSize)
         {
             var query = _elasticQueries.GetAllVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
-            query = query.Replace("{pageItemCount}", pageItemCount.ToString());
+            query = query.Replace("{pageSize}", pageSize.ToString());
 
             return query;
         }
 
         private string GetSearchString(
-            int startingDocumentIndex, int pageItemCount, string searchTerm)
+            int startingDocumentIndex, int pageSize, string searchTerm)
         {
             var query = _elasticQueries.FindVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
-            query = query.Replace("{pageItemCount}", pageItemCount.ToString());
+            query = query.Replace("{pageSize}", pageSize.ToString());
             query = query.Replace("{searchTerm}", searchTerm);
 
             return query;
