@@ -26,7 +26,10 @@ namespace SFA.DAS.FAA.Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> Search()
+        public async Task<IActionResult> Search(
+            string searchTerm,
+            int pageNumber,
+            int pageSize)
         {
             await Task.CompletedTask;
             return Ok(new {ok = "search ok"});
