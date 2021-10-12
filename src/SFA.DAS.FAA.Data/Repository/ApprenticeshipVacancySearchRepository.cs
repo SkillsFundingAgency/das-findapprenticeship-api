@@ -53,7 +53,7 @@ namespace SFA.DAS.FAA.Data.Repository
             return pingResponse.Success;
         }
 
-        public async Task<ApprenticeshipSearchResponse> Find( string searchTerm, int pageNumber, int pageItemCount)
+        public async Task<ApprenticeshipSearchResponse> Find( string searchTerm, int pageNumber, int pageSize)
         {
             _logger.LogInformation("Starting reservation search");
 
@@ -66,10 +66,10 @@ namespace SFA.DAS.FAA.Data.Repository
                 return new ApprenticeshipSearchResponse();
             }
 
-            var startingDocumentIndex = (ushort) (pageNumber < 2 ? 0 : (pageNumber - 1) * pageItemCount);
+            var startingDocumentIndex = (ushort) (pageNumber < 2 ? 0 : (pageNumber - 1) * pageSize);
 
             var elasticSearchResult = await GetSearchResult(
-                searchTerm, pageItemCount, startingDocumentIndex, reservationIndex);
+                searchTerm, pageSize, startingDocumentIndex, reservationIndex);
 
             if (elasticSearchResult == null)
             {
@@ -84,7 +84,7 @@ namespace SFA.DAS.FAA.Data.Repository
             var searchResult =  new ApprenticeshipSearchResponse
             {
                ApprenticeshipVacancies = elasticSearchResult.Items,
-               TotalApprenticeshipVacancies = (uint) elasticSearchResult.hits.total.value
+               TotalApprenticeshipVacancies = elasticSearchResult.hits.total.value
             };
 
             return searchResult;

@@ -4,12 +4,7 @@ namespace SFA.DAS.FAA.Domain.Entities
 {
     public class ApprenticeshipSearchResponse
     {
-        public ApprenticeshipSearchResponse()
-        {
-            ApprenticeshipVacancies = new ApprenticeshipSearchItem[0];
-        }
-
-        public IEnumerable<ApprenticeshipSearchItem> ApprenticeshipVacancies { get; set; }
-        public uint TotalApprenticeshipVacancies { get; set; }
+        public IEnumerable<ApprenticeshipSearchItem> ApprenticeshipVacancies { get; set; } = new List<ApprenticeshipSearchItem>();
+        public int TotalApprenticeshipVacancies { get; set; }
     }
 }

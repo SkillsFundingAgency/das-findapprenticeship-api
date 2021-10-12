@@ -4,6 +4,8 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
 {
     public class SearchApprenticeshipVacanciesQuery : IRequest<SearchApprenticeshipVacanciesResult>
     {
-        
+        public string SearchTerm { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
     }
 }
