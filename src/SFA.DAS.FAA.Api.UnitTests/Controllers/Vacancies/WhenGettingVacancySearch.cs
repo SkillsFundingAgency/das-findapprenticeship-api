@@ -6,14 +6,17 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
 {
     public class WhenGettingVacancySearch
     {
+        [Test, MoqAutoData]
         public async Task Then_Gets_Search_Result_From_Mediator(
             string searchTerm,
             int pageNumber,
