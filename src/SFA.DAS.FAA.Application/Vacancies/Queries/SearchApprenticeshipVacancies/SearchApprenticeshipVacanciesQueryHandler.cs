@@ -21,7 +21,8 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
             return new SearchApprenticeshipVacanciesResult
             {
                 ApprenticeshipVacancies = searchResult.ApprenticeshipVacancies,
-                TotalFound = searchResult.TotalFound
+                TotalFound = searchResult.TotalFound,
+                Total = searchResult.Total
             };
         }
     }

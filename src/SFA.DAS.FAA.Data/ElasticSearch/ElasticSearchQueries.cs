@@ -7,13 +7,13 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
     {
         public string FindVacanciesQuery { get; }
         public string GetAllVacanciesQuery { get; }
-        public string GetVacancyCountQuery { get; }
+        public string GetVacanciesCountQuery { get; }
 
         public ElasticSearchQueries()
         {
             FindVacanciesQuery = File.ReadAllText("ElasticSearch/FindVacanciesQuery.json");
             GetAllVacanciesQuery = File.ReadAllText("ElasticSearch/GetAllVacanciesQuery.json");
-            GetVacancyCountQuery = File.ReadAllText("ElasticSearch/GetVacanciesCountQuery.json");
+            GetVacanciesCountQuery = File.ReadAllText("ElasticSearch/GetVacanciesCountQuery.json");
         }
     }
 }

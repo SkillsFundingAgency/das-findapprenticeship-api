@@ -4,6 +4,6 @@
     {
         string FindVacanciesQuery { get; }
         string GetAllVacanciesQuery { get; }
-        string GetVacancyCountQuery { get; }
+        string GetVacanciesCountQuery { get; }
     }
 }

@@ -87,7 +87,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(string.Empty);
             _mockElasticSearchQueries.Setup(x => x.GetAllVacanciesQuery).Returns(string.Empty);
-            _mockElasticSearchQueries.Setup(x => x.GetVacancyCountQuery).Returns(string.Empty);
+            _mockElasticSearchQueries.Setup(x => x.GetVacanciesCountQuery).Returns(string.Empty);
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         {
             //Arrange
             var expectedQuery = "test query";
-            _mockElasticSearchQueries.Setup(x => x.GetVacancyCountQuery).Returns(expectedQuery);
+            _mockElasticSearchQueries.Setup(x => x.GetVacanciesCountQuery).Returns(expectedQuery);
 
             //Act
             await _repository.Find("10", 1, 1);

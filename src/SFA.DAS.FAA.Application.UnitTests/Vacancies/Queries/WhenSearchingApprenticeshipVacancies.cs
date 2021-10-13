@@ -32,6 +32,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             result.ApprenticeshipVacancies
                 .Should().BeEquivalentTo(responseFromRepository.ApprenticeshipVacancies);
             result.TotalFound.Should().Be(responseFromRepository.TotalFound);
+            result.Total.Should().Be(responseFromRepository.Total);
         }
     }
 }
