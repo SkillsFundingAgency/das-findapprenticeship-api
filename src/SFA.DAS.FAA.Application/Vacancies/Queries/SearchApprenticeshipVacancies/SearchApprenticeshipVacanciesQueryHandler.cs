@@ -16,7 +16,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
         
         public async Task<SearchApprenticeshipVacanciesResult> Handle(SearchApprenticeshipVacanciesQuery request, CancellationToken cancellationToken)
         {
-            var searchResult = await _vacancyIndexRepository.Find(request.SearchTerm, request.PageNumber, request.PageSize);
+            var searchResult = await _vacancyIndexRepository.Find(null, request.PageNumber, request.PageSize);
 
             return new SearchApprenticeshipVacanciesResult
             {

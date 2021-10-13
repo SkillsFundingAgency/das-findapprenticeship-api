@@ -30,13 +30,11 @@ namespace SFA.DAS.FAA.Api.Controllers
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> Search(
-            //string searchTerm,
             int pageNumber = 1,
             int pageSize = 10)
         {
             var result = await _mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
-                //SearchTerm = searchTerm, 
                 PageNumber = pageNumber, 
                 PageSize = pageSize
             });

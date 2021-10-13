@@ -8,7 +8,7 @@ namespace SFA.DAS.FAA.Domain.Interfaces
         Task<bool> PingAsync();
         string GetCurrentApprenticeshipVacanciesIndex();
         Task<ApprenticeshipSearchResponse> Find(
-            string searchTerm, 
+            string searchTerm,
             int pageNumber, 
             int pageSize);
     }

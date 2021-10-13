@@ -22,7 +22,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
         {
             mockVacancyIndexRepository
                 .Setup(repository => repository.Find(
-                    query.SearchTerm, 
+                    null,
                     query.PageNumber, 
                     query.PageSize))
                 .ReturnsAsync(responseFromRepository);

@@ -18,7 +18,6 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_Search_Result_From_Mediator(
-            string searchTerm,
             int pageNumber,
             int pageSize,
             SearchApprenticeshipVacanciesResult mediatorResult,
@@ -28,13 +27,12 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<SearchApprenticeshipVacanciesQuery>(query =>
-                        //query.SearchTerm == searchTerm &&
                         query.PageNumber == pageNumber &&
                         query.PageSize == pageSize), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mediatorResult);
 
-            var result = await controller.Search(/*searchTerm,*/ pageNumber, pageSize) as OkObjectResult;
+            var result = await controller.Search(pageNumber, pageSize) as OkObjectResult;
 
             result.Should().NotBeNull();
             result.StatusCode.Should().Be((int) HttpStatusCode.OK);

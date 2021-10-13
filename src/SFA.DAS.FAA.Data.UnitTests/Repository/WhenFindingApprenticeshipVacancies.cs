@@ -98,7 +98,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             _mockElasticSearchQueries.Setup(x => x.GetVacanciesCountQuery).Returns(expectedQuery);
 
             //Act
-            await _repository.Find("10", 1, 1);
+            await _repository.Find("hjk", 1, 1);
 
             //Assert
             _mockClient.Verify(c =>
