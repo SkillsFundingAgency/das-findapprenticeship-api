@@ -14,7 +14,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
     {
         private const string IndexName = "test-faa-apprenticeships";
         private Mock<IElasticLowLevelClient> _mockClient;
-        private FindApprenticeshipsApiEnvironment _apiEnvironment;
+        private ElasticEnvironment _apiEnvironment;
         private ApprenticeshipVacancySearchRepository _repository;
         private Mock<IElasticSearchQueries> _mockElasticSearchQueries;
         
@@ -23,7 +23,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         {
             _mockClient = new Mock<IElasticLowLevelClient>();
             _mockElasticSearchQueries = new Mock<IElasticSearchQueries>();
-            _apiEnvironment = new FindApprenticeshipsApiEnvironment("test");
+            _apiEnvironment = new ElasticEnvironment("test");
             _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockElasticSearchQueries.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
         }
 

@@ -18,7 +18,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         public void Then_Returns_Alias_Based_On_Environment()
         {
             //arrange
-            var apiEnvironment = new FindApprenticeshipsApiEnvironment("test");
+            var apiEnvironment = new ElasticEnvironment("test");
             var repository = new ApprenticeshipVacancySearchRepository(
                 Mock.Of<IElasticLowLevelClient>(), 
                 apiEnvironment, 
@@ -29,7 +29,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var index = repository.GetCurrentApprenticeshipVacanciesIndex();
 
             //Assert
-            index.Should().Be(apiEnvironment.EnvironmentName + "-faa-apprenticeships");
+            index.Should().Be(apiEnvironment.Prefix + "-faa-apprenticeships");
         }
     }
 }

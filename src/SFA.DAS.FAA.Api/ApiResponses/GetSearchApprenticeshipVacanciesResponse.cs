@@ -6,9 +6,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 {
     public class GetSearchApprenticeshipVacanciesResponse
     {
-        public IEnumerable<GetApprenticeshipVacancyResponse> ApprenticeshipVacancies { get; set; }
-        public int TotalFound { get; set; }
         public int Total { get; set; }
+        public int TotalFound { get; set; }
+        public IEnumerable<GetApprenticeshipVacancyResponse> ApprenticeshipVacancies { get; set; }
 
         public static implicit operator GetSearchApprenticeshipVacanciesResponse(SearchApprenticeshipVacanciesResult source)
         {

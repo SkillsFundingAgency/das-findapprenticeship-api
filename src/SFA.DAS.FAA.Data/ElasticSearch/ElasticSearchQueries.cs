@@ -5,7 +5,6 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
 {
     public class ElasticSearchQueries : IElasticSearchQueries
     {
-        public string VacancyIndexLookupName => "-vacancies-index-registry";
         public string FindVacanciesQuery { get; }
         public string GetAllVacanciesQuery { get; }
         public string GetVacancyCountQuery { get; }
@@ -14,7 +13,7 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
         {
             FindVacanciesQuery = File.ReadAllText("ElasticSearch/FindVacanciesQuery.json");
             GetAllVacanciesQuery = File.ReadAllText("ElasticSearch/GetAllVacanciesQuery.json");
-            GetVacancyCountQuery = File.ReadAllText("ElasticSearch/GetVacancyCountQuery.json");
+            GetVacancyCountQuery = File.ReadAllText("ElasticSearch/GetVacanciesCountQuery.json");
         }
     }
 }

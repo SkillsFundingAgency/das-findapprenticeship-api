@@ -20,7 +20,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         private const string ExpectedEnvironmentName = "test";
 
         private Mock<IElasticLowLevelClient> _mockClient;
-        private FindApprenticeshipsApiEnvironment _apiEnvironment;
+        private ElasticEnvironment _apiEnvironment;
         private ApprenticeshipVacancySearchRepository _repository;
         private Mock<IElasticSearchQueries> _mockElasticSearchQueries;
 
@@ -29,7 +29,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         {
             _mockClient = new Mock<IElasticLowLevelClient>();
             _mockElasticSearchQueries = new Mock<IElasticSearchQueries>();
-            _apiEnvironment = new FindApprenticeshipsApiEnvironment(ExpectedEnvironmentName);
+            _apiEnvironment = new ElasticEnvironment(ExpectedEnvironmentName);
             _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockElasticSearchQueries.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
 
             var searchReponse =
@@ -211,7 +211,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var results = await _repository.Find(string.Empty, 1, 1);
 
             //Assert
-            results.TotalApprenticeshipVacancies.Should().Be(3);
+            results.TotalFound.Should().Be(3);
             results.ApprenticeshipVacancies.Count().Should().Be(1);
             var vacancy = results.ApprenticeshipVacancies.First();
             vacancy.Id.Should().Be(1000006648);
@@ -251,7 +251,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var results = await _repository.Find("Test", 1, 1);
 
             //Assert
-            Assert.AreEqual(3, results.TotalApprenticeshipVacancies);
+            Assert.AreEqual(3, results.TotalFound);
             Assert.AreEqual(1, results.ApprenticeshipVacancies.Count());
             var vacancy = results.ApprenticeshipVacancies.First();
             vacancy.Id.Should().Be(1000006648);
@@ -302,7 +302,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
             Assert.IsEmpty(result.ApprenticeshipVacancies);
-            Assert.AreEqual(0, result.TotalApprenticeshipVacancies);
+            Assert.AreEqual(0, result.TotalFound);
         }
 
         [Test]
@@ -323,7 +323,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
             Assert.IsEmpty(result.ApprenticeshipVacancies);
-            Assert.AreEqual(0, result.TotalApprenticeshipVacancies);
+            Assert.AreEqual(0, result.TotalFound);
         }
 
         [Test]
@@ -347,7 +347,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
             Assert.IsEmpty(result.ApprenticeshipVacancies);
-            Assert.AreEqual(0, result.TotalApprenticeshipVacancies);
+            Assert.AreEqual(0, result.TotalFound);
 
             _mockClient.Verify(c =>
                 c.SearchAsync<StringResponse>(
@@ -378,7 +378,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
             Assert.IsEmpty(result.ApprenticeshipVacancies);
-            Assert.AreEqual(0, result.TotalApprenticeshipVacancies);
+            Assert.AreEqual(0, result.TotalFound);
         }
     }
 }

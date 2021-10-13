@@ -16,14 +16,14 @@ namespace SFA.DAS.FAA.Data.Repository
     public class ApprenticeshipVacancySearchRepository : IVacancyIndexRepository
     {
         private readonly IElasticLowLevelClient _client;
-        private readonly FindApprenticeshipsApiEnvironment _environment;
+        private readonly ElasticEnvironment _environment;
         private readonly IElasticSearchQueries _elasticQueries;
         private readonly ILogger<ApprenticeshipVacancySearchRepository> _logger;
         private const string IndexName = "-faa-apprenticeships";
 
         public ApprenticeshipVacancySearchRepository(
             IElasticLowLevelClient client, 
-            FindApprenticeshipsApiEnvironment environment, 
+            ElasticEnvironment environment, 
             IElasticSearchQueries elasticQueries, 
             ILogger<ApprenticeshipVacancySearchRepository> logger)
         {
@@ -33,7 +33,7 @@ namespace SFA.DAS.FAA.Data.Repository
             _logger = logger;
         }
 
-        public string GetCurrentApprenticeshipVacanciesIndex() => _environment.EnvironmentName + IndexName;
+        public string GetCurrentApprenticeshipVacanciesIndex() => _environment.Prefix + IndexName;
         
         public async Task<bool> PingAsync()
         {
@@ -66,7 +66,7 @@ namespace SFA.DAS.FAA.Data.Repository
                 return new ApprenticeshipSearchResponse();
             }
 
-            var startingDocumentIndex = (ushort) (pageNumber < 2 ? 0 : (pageNumber - 1) * pageSize);
+            var startingDocumentIndex = pageNumber < 2 ? 0 : (pageNumber - 1) * pageSize;
 
             var elasticSearchResult = await GetSearchResult(
                 searchTerm, pageSize, startingDocumentIndex, vacanciesIndex);
@@ -84,7 +84,7 @@ namespace SFA.DAS.FAA.Data.Repository
             var searchResult =  new ApprenticeshipSearchResponse
             {
                ApprenticeshipVacancies = elasticSearchResult.Items,
-               TotalApprenticeshipVacancies = elasticSearchResult.hits.total.value
+               TotalFound = elasticSearchResult.hits.total.value
             };
 
             return searchResult;

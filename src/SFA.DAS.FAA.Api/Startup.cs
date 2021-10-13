@@ -66,13 +66,18 @@ namespace SFA.DAS.FAA.Api
             services.AddSingleton(cfg => cfg.GetService<IOptions<FindApprenticeshipsApiConfiguration>>().Value);
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
+            
+#if DEBUG
+            services.AddSingleton(new ElasticEnvironment("TEST"));
+#else
+            services.AddSingleton(new ElasticEnvironment(_configuration["Environment"]));
+#endif
 
             var apiConfig = _configuration
                 .GetSection("FindApprenticeshipsApi")
                 .Get<FindApprenticeshipsApiConfiguration>();
             
             services.AddElasticSearch(apiConfig);
-            services.AddSingleton(new FindApprenticeshipsApiEnvironment(_configuration["Environment"]));
             
             if (!ConfigurationIsLocalOrDev())
             {
@@ -87,7 +92,7 @@ namespace SFA.DAS.FAA.Api
 
                 services.AddAuthentication(azureAdConfiguration, policies);
             }
-            
+
             if (_configuration["Environment"] != "DEV")
             {
                 services.AddHealthChecks();
