@@ -1,0 +1,9 @@
+﻿{
+  "from": "0",
+  "query": {
+    "match": {
+      "vacancyReference": "{vacancyReference}"
+    }
+  },
+  "size": "1"
+}

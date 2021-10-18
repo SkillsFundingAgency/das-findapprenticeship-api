@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,7 +14,7 @@ using SFA.DAS.FAA.Domain.Interfaces;
 
 namespace SFA.DAS.FAA.Data.Repository
 {
-    public class ApprenticeshipVacancySearchRepository : IVacancyIndexRepository
+    public class ApprenticeshipVacancySearchRepository : IVacancySearchRepository
     {
         private readonly IElasticLowLevelClient _client;
         private readonly ElasticEnvironment _environment;
@@ -53,7 +54,12 @@ namespace SFA.DAS.FAA.Data.Repository
             return pingResponse.Success;
         }
 
-        public async Task<ApprenticeshipSearchResponse> Find( string searchTerm, int pageNumber, int pageSize)
+        public async Task<ApprenticeshipSearchItem> Get(string vacancyReference)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ApprenticeshipSearchResponse> Find(string searchTerm, int pageNumber, int pageSize)
         {
             _logger.LogInformation("Starting vacancy search");
 
