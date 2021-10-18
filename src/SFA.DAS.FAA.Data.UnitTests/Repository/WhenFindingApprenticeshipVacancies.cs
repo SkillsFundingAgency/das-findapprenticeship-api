@@ -18,6 +18,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
     public class WhenFindingApprenticeshipVacancies
     {
         private const string ExpectedEnvironmentName = "test";
+        private const string IndexName = "-faa-apprenticeships";
 
         private Mock<IElasticLowLevelClient> _mockClient;
         private ElasticEnvironment _apiEnvironment;
@@ -71,7 +72,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
-                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        $"{_apiEnvironment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
@@ -79,7 +80,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockClient.Setup(c =>
                     c.CountAsync<StringResponse>(
-                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        $"{_apiEnvironment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<CountRequestParameters>(),
                         It.IsAny<CancellationToken>()))
@@ -103,7 +104,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Assert
             _mockClient.Verify(c =>
                 c.CountAsync<StringResponse>(
-                    _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                    $"{_apiEnvironment.Prefix}{IndexName}",
                     It.Is<PostData>(pd => 
                         pd.GetRequestString().Equals(expectedQuery)),
                     It.IsAny<CountRequestParameters>(),
@@ -129,7 +130,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Assert
             _mockClient.Verify(c =>
                 c.SearchAsync<StringResponse>(
-                    _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                    $"{_apiEnvironment.Prefix}{IndexName}",
                     It.Is<PostData>(pd => 
                         pd.GetRequestString().Equals(expectedQuery)),
                     It.IsAny<SearchRequestParameters>(),
@@ -154,7 +155,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Assert
             _mockClient.Verify(c =>
                 c.SearchAsync<StringResponse>(
-                    _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                    $"{_apiEnvironment.Prefix}{IndexName}",
                     It.Is<PostData>(pd => 
                         pd.GetRequestString().Equals(expectedQuery)),
                     It.IsAny<SearchRequestParameters>(),
@@ -171,7 +172,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
-                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        $"{_apiEnvironment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
@@ -183,7 +184,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Assert
             _mockClient.Verify(c =>
                 c.SearchAsync<StringResponse>(
-                    It.Is<string>(s => !s.Equals(_repository.GetCurrentApprenticeshipVacanciesIndex())),
+                    It.Is<string>(s => !s.Equals($"{_apiEnvironment.Prefix}{IndexName}")),
                     It.IsAny<PostData>(),
                     It.IsAny<SearchRequestParameters>(),
                     It.IsAny<CancellationToken>()), Times.Never);
@@ -198,7 +199,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Assert
             _mockClient.Verify(c =>
                 c.SearchAsync<StringResponse>(
-                    It.Is<string>(s => !s.Equals(_repository.GetCurrentApprenticeshipVacanciesIndex())),
+                    It.Is<string>(s => !s.Equals($"{_apiEnvironment.Prefix}{IndexName}")),
                     It.IsAny<PostData>(),
                     It.IsAny<SearchRequestParameters>(),
                     It.IsAny<CancellationToken>()), Times.Never);
@@ -290,7 +291,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Arrange
             _mockClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
-                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        $"{_apiEnvironment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
@@ -311,7 +312,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Arrange
             _mockClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
-                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        $"{_apiEnvironment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
@@ -335,7 +336,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
-                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        $"{_apiEnvironment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
@@ -351,7 +352,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockClient.Verify(c =>
                 c.SearchAsync<StringResponse>(
-                    It.Is<string>(s => !s.Equals(_repository.GetCurrentApprenticeshipVacanciesIndex())),
+                    It.Is<string>(s => !s.Equals($"{_apiEnvironment.Prefix}{IndexName}")),
                     It.IsAny<PostData>(),
                     It.IsAny<SearchRequestParameters>(),
                     It.IsAny<CancellationToken>()), Times.Never);
@@ -366,7 +367,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
-                        _repository.GetCurrentApprenticeshipVacanciesIndex(),
+                        $"{_apiEnvironment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))

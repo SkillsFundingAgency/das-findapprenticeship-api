@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
@@ -34,7 +31,7 @@ namespace SFA.DAS.FAA.Data.Repository
             _logger = logger;
         }
 
-        public string GetCurrentApprenticeshipVacanciesIndex() => _environment.Prefix + IndexName;
+        private string GetCurrentApprenticeshipVacanciesIndex() => _environment.Prefix + IndexName;
         
         public async Task<bool> PingAsync()
         {
