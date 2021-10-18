@@ -1,0 +1,18 @@
+{
+  "from": "{startingDocumentIndex}",
+  "query": {
+    "bool": {
+      "should": [],
+      "must_not": [],
+      "must": []
+    }
+  },
+  "size": "{pageSize}",
+  "sort": [
+    {
+      "closingDate": {
+        "order": "asc"
+      }
+    }
+  ]
+}
