@@ -95,6 +95,7 @@ stages:
   variables:
   - group: Prod Management Resources
   - group: Prod Shared Resources
+  - group: PROD das-findapprenticeship-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
