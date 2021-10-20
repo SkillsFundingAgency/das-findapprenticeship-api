@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
@@ -53,7 +54,15 @@ namespace SFA.DAS.FAA.Data.Repository
 
         public async Task<ApprenticeshipSearchItem> Get(string vacancyReference)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation($"Starting get vacancy [{vacancyReference}]");
+            
+            var query = _elasticQueries.FindVacanciesQuery.Replace("{vacancyReference}", vacancyReference);
+            var jsonResponse = await _client.SearchAsync<StringResponse>(GetCurrentApprenticeshipVacanciesIndex(), PostData.String(query));
+            var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
+            
+            _logger.LogInformation($"Found [{responseBody.hits.total.value}] hits for vacancy [{vacancyReference}]");
+            
+            return responseBody.Items.SingleOrDefault();
         }
 
         public async Task<ApprenticeshipSearchResponse> Find(string searchTerm, int pageNumber, int pageSize)

@@ -33,7 +33,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             _apiEnvironment = new ElasticEnvironment(ExpectedEnvironmentName);
             _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockElasticSearchQueries.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
 
-            var searchReponse =
+            var searchResponse =
                 @"{""took"":33,""timed_out"":false,""_shards"":{""total"":1,""successful"":1,""skipped"":0,""failed"":0},
                     ""hits"":{""total"":{""value"":3,""relation"":""eq""},""max_score"":null,""hits"":[{""_index"":
                     ""test-faa-apprenticeships.2021-10-08-14-30"",""_type"":""_doc"",""_id"":
@@ -76,7 +76,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse(searchReponse));
+                .ReturnsAsync(new StringResponse(searchResponse));
 
             _mockClient.Setup(c =>
                     c.CountAsync<StringResponse>(
