@@ -56,7 +56,7 @@ namespace SFA.DAS.FAA.Data.Repository
         {
             _logger.LogInformation($"Starting get vacancy [{vacancyReference}]");
             
-            var query = _elasticQueries.FindVacanciesQuery.Replace("{vacancyReference}", vacancyReference);
+            var query = _elasticQueries.GetVacancyQuery.Replace("{vacancyReference}", vacancyReference);
             var jsonResponse = await _client.SearchAsync<StringResponse>(GetCurrentApprenticeshipVacanciesIndex(), PostData.String(query));
             var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
             
