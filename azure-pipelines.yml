@@ -112,4 +112,3 @@ stages:
     parameters:
       Environment: MO
       ServiceConnection: SFA-ASM-ModelOffice-ARM
-
