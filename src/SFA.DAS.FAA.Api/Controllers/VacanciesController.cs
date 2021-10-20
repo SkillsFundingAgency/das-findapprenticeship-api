@@ -29,6 +29,11 @@ namespace SFA.DAS.FAA.Api.Controllers
                 VacancyReference = vacancyReference
             });
 
+            if (result.ApprenticeshipVacancy == null)
+            {
+                return NotFound();
+            }
+
             var apiResponse = (GetApprenticeshipVacancyResponse) result.ApprenticeshipVacancy;
             
             return Ok(apiResponse);

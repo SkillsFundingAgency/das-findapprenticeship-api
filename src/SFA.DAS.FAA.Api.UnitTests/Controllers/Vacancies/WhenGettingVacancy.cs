@@ -38,5 +38,24 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             apiModel.Should().NotBeNull();
             apiModel.Should().BeEquivalentTo((GetApprenticeshipVacancyResponse)mediatorResult.ApprenticeshipVacancy);
         }
+        
+        [Test, MoqAutoData]
+        public async Task And_Null_From_Mediator_Then_Returns_NotFound(
+            string vacancyReference,
+            [Frozen] Mock<IMediator> mockMediator,
+            [Greedy] VacanciesController controller)
+        {
+            mockMediator
+                .Setup(mediator => mediator.Send(
+                    It.Is<GetApprenticeshipVacancyQuery>(query =>
+                        query.VacancyReference == vacancyReference), 
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetApprenticeshipVacancyResult());
+
+            var result = await controller.Get(vacancyReference) as NotFoundResult;
+
+            result.Should().NotBeNull();
+            result.StatusCode.Should().Be((int) HttpStatusCode.NotFound);
+        }
     }
 }
