@@ -65,14 +65,13 @@ namespace SFA.DAS.FAA.Data.Repository
             return responseBody.Items.SingleOrDefault();
         }
 
-        public async Task<ApprenticeshipSearchResponse> Find(string searchTerm, int pageNumber, int pageSize, int? ukprn = null)
+        public async Task<ApprenticeshipSearchResponse> Find(int pageNumber, int pageSize, int? ukprn = null)
         {
             _logger.LogInformation("Starting vacancy search");
 
             var startingDocumentIndex = StartingDocumentIndex(pageNumber, pageSize);
 
-            var elasticSearchResult = await GetSearchResult(
-                searchTerm, pageSize, startingDocumentIndex, null);
+            var elasticSearchResult = await GetSearchResult(pageSize, startingDocumentIndex, null);
 
             if (elasticSearchResult == null)
             {
@@ -100,25 +99,20 @@ namespace SFA.DAS.FAA.Data.Repository
         }
 
         private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
-            string searchTerm, int pageSize,
-            int startingDocumentIndex, int? ukprn)
+            int pageSize,
+            int startingDocumentIndex, 
+            int? ukprn)
         {
             var parameters = new Dictionary<string, object>
             {
                 {nameof(pageSize), pageSize},
-                {nameof(startingDocumentIndex), startingDocumentIndex},
-                {nameof(searchTerm), searchTerm}
+                {nameof(startingDocumentIndex), startingDocumentIndex}
             };
             //if (ukprn.HasValue) parameters.Add(nameof(ukprn), ukprn.Value);
             
-            var request = string.IsNullOrEmpty(searchTerm) ?
-                _elasticQueries.GetAllVacanciesQuery.ReplaceParameters(parameters) :
-                _elasticQueries.FindVacanciesQuery.ReplaceParameters(parameters);
+            var request = _elasticQueries.FindVacanciesQuery.ReplaceParameters(parameters);
 
-            _logger.LogDebug($"Searching with search term: {searchTerm}");
-
-            var jsonResponse =
-                await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(request));
+            var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(request));
 
             var searchResult = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 

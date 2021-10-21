@@ -52,7 +52,6 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
 
             _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(string.Empty);
-            _mockElasticSearchQueries.Setup(x => x.GetAllVacanciesQuery).Returns(string.Empty);
             _mockElasticSearchQueries.Setup(x => x.GetVacanciesCountQuery).Returns(string.Empty);
         }
 
@@ -64,7 +63,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             _mockElasticSearchQueries.Setup(x => x.GetVacanciesCountQuery).Returns(expectedQuery);
 
             //Act
-            await _repository.Find("hjk", 1, 1);
+            await _repository.Find(1, 1);
 
             //Assert
             _mockClient.Verify(c =>
@@ -77,33 +76,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task Then_Will_Search_Latest_ApprenticeshipVacanciesIndex_Using_SearchTerm()
-        {
-            //Arrange
-            var expectedSearchTerm = "test";
-            ushort pageNumber = 1;
-            ushort pageSize = 2;
-
-            var searchQueryTemplate = "{searchTerm} - {startingDocumentIndex} - {pageSize}";
-            var expectedQuery = $"{expectedSearchTerm} - 0 - {pageSize}";
-
-            _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(searchQueryTemplate);
-
-            //Act
-            await _repository.Find(expectedSearchTerm, pageNumber, pageSize);
-
-            //Assert
-            _mockClient.Verify(c =>
-                c.SearchAsync<StringResponse>(
-                    $"{_apiEnvironment.Prefix}{IndexName}",
-                    It.Is<PostData>(pd => 
-                        pd.GetRequestString().Equals(expectedQuery)),
-                    It.IsAny<SearchRequestParameters>(),
-                    It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Test]
-        public async Task Then_Will_Search_Latest_ApprenticeshipVacanciesIndex_Without_A_SearchTerm()
+        public async Task Then_Will_Search_Latest_ApprenticeshipVacanciesIndex()
         {
             //Arrange
             ushort pageNumber = 1;
@@ -112,10 +85,10 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var searchQueryTemplate = "{startingDocumentIndex} - {pageSize}";
             var expectedQuery = $"0 - {pageSize}";
 
-            _mockElasticSearchQueries.Setup(x => x.GetAllVacanciesQuery).Returns(searchQueryTemplate);
+            _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(searchQueryTemplate);
 
             //Act
-            await _repository.Find(string.Empty, pageNumber, pageSize);
+            await _repository.Find(pageNumber, pageSize);
 
             //Assert
             _mockClient.Verify(c =>
@@ -136,7 +109,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .Items.First();
             
             //Act
-            var results = await _repository.Find(string.Empty, 1, 1);
+            var results = await _repository.Find(1, 1);
 
             //Assert
             results.Total.Should().Be(10);
@@ -155,7 +128,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .Items.First();
             
             //Act
-            var results = await _repository.Find("Test", 1, 1);
+            var results = await _repository.Find(1, 1);
 
             //Assert
             results.Total.Should().Be(10);
@@ -178,7 +151,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(""));
 
             //Act
-            var result = await _repository.Find(string.Empty, 1, 10);
+            var result = await _repository.Find(1, 10);
 
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
@@ -202,7 +175,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(response));
 
             //Act
-            var result = await _repository.Find(string.Empty, 1, 10);
+            var result = await _repository.Find(1, 10);
 
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
