@@ -2,16 +2,8 @@
   "from": "{startingDocumentIndex}",
   "query": {
     "bool": {
-      "should": [],
-      "must_not": [],
       "must": [
-        {
-          "term": {
-            "ukprn": {
-              "value" : "{ukprn}"
-            }
-          }
-        }
+        {mustConditions}
       ]
     }
   },

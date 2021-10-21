@@ -103,12 +103,13 @@ namespace SFA.DAS.FAA.Data.Repository
             int startingDocumentIndex, 
             int? ukprn)
         {
+            var mustConditions = BuildMustConditions(ukprn);
             var parameters = new Dictionary<string, object>
             {
                 {nameof(pageSize), pageSize},
-                {nameof(startingDocumentIndex), startingDocumentIndex}
+                {nameof(startingDocumentIndex), startingDocumentIndex},
+                {nameof(mustConditions), mustConditions}
             };
-            //if (ukprn.HasValue) parameters.Add(nameof(ukprn), ukprn.Value);
             
             var request = _elasticQueries.FindVacanciesQuery.ReplaceParameters(parameters);
 
@@ -117,6 +118,14 @@ namespace SFA.DAS.FAA.Data.Repository
             var searchResult = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
             return searchResult;
+        }
+
+        private string BuildMustConditions(int? ukprn)
+        {
+            var filters = string.Empty;
+            if (ukprn.HasValue)
+                filters += @$"{{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}";
+            return filters;
         }
 
         private async Task<int> GetTotal()
