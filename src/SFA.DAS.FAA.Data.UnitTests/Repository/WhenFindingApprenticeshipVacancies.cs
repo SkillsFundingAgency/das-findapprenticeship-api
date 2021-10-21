@@ -163,49 +163,6 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task Then_Will_Not_Search_ApprenticeshipVacancies_If_LookUp_Is_Empty()
-        {
-            //Arrange
-            var indexLookUpResponse =
-                @"{""took"":0,""timed_out"":false,""_shards"":{""total"":0,""successful"":1,""skipped"":0,""failed"":0},
-                ""hits"":{""total"":{""value"":0,""relation"":""eq""},""max_score"":null,""hits"":[]}}";
-
-            _mockClient.Setup(c =>
-                    c.SearchAsync<StringResponse>(
-                        $"{_apiEnvironment.Prefix}{IndexName}",
-                        It.IsAny<PostData>(),
-                        It.IsAny<SearchRequestParameters>(),
-                        It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse(indexLookUpResponse));
-
-            //Act
-            await _repository.Find("10", 1, 1);
-
-            //Assert
-            _mockClient.Verify(c =>
-                c.SearchAsync<StringResponse>(
-                    It.Is<string>(s => !s.Equals($"{_apiEnvironment.Prefix}{IndexName}")),
-                    It.IsAny<PostData>(),
-                    It.IsAny<SearchRequestParameters>(),
-                    It.IsAny<CancellationToken>()), Times.Never);
-        }
-
-        [Test]
-        public async Task Then_Will_Not_Search_ApprenticeshipVacancies_If_Latest_ApprenticeshipVacanciesIndex_Has_No_Name()
-        {
-            //Act
-            await _repository.Find("10", 1, 1);
-
-            //Assert
-            _mockClient.Verify(c =>
-                c.SearchAsync<StringResponse>(
-                    It.Is<string>(s => !s.Equals($"{_apiEnvironment.Prefix}{IndexName}")),
-                    It.IsAny<PostData>(),
-                    It.IsAny<SearchRequestParameters>(),
-                    It.IsAny<CancellationToken>()), Times.Never);
-        }
-
-        [Test]
         public async Task Then_Will_Return_ApprenticeshipVacancies_Found_With_Empty_Search()
         {
             //Act
@@ -286,27 +243,6 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Lookup_Return_Invalid_Response()
-        {
-            //Arrange
-            _mockClient.Setup(c =>
-                    c.SearchAsync<StringResponse>(
-                        $"{_apiEnvironment.Prefix}{IndexName}",
-                        It.IsAny<PostData>(),
-                        It.IsAny<SearchRequestParameters>(),
-                        It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse(""));
-
-            //Act
-            var result = await _repository.Find(string.Empty, 1, 10);
-
-            //Assert
-            Assert.IsNotNull(result?.ApprenticeshipVacancies);
-            Assert.IsEmpty(result.ApprenticeshipVacancies);
-            Assert.AreEqual(0, result.TotalFound);
-        }
-
-        [Test]
         public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Invalid_Response()
         {
             //Arrange
@@ -325,37 +261,6 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
             Assert.IsEmpty(result.ApprenticeshipVacancies);
             Assert.AreEqual(0, result.TotalFound);
-        }
-
-        [Test]
-        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Lookup_Return_Failed_Response()
-        {
-            //Arrange
-            var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1},""hits"":{""total"":
-            {""value"":0,""relation"":""eq""},""max_score"":null,""hits"":[]}}";
-
-            _mockClient.Setup(c =>
-                    c.SearchAsync<StringResponse>(
-                        $"{_apiEnvironment.Prefix}{IndexName}",
-                        It.IsAny<PostData>(),
-                        It.IsAny<SearchRequestParameters>(),
-                        It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse(response));
-
-            //Act
-            var result = await _repository.Find(string.Empty, 1, 10);
-
-            //Assert
-            Assert.IsNotNull(result?.ApprenticeshipVacancies);
-            Assert.IsEmpty(result.ApprenticeshipVacancies);
-            Assert.AreEqual(0, result.TotalFound);
-
-            _mockClient.Verify(c =>
-                c.SearchAsync<StringResponse>(
-                    It.Is<string>(s => !s.Equals($"{_apiEnvironment.Prefix}{IndexName}")),
-                    It.IsAny<PostData>(),
-                    It.IsAny<SearchRequestParameters>(),
-                    It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
