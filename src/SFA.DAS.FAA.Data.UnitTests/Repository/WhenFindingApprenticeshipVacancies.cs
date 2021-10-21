@@ -6,7 +6,9 @@ using Elasticsearch.Net;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using SFA.DAS.FAA.Data.ElasticSearch;
 using SFA.DAS.FAA.Data.Repository;
 using SFA.DAS.FAA.Data.UnitTests.Extensions;
 using SFA.DAS.FAA.Domain.Configuration;
@@ -24,6 +26,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         private ElasticEnvironment _apiEnvironment;
         private ApprenticeshipVacancySearchRepository _repository;
         private Mock<IElasticSearchQueries> _mockElasticSearchQueries;
+        private static string _searchResponse;
 
         [SetUp]
         public void Init()
@@ -33,8 +36,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             _apiEnvironment = new ElasticEnvironment(ExpectedEnvironmentName);
             _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockElasticSearchQueries.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
 
-            var searchResponse =
-                @"{""took"":33,""timed_out"":false,""_shards"":{""total"":1,""successful"":1,""skipped"":0,""failed"":0},
+            _searchResponse = @"{""took"":33,""timed_out"":false,""_shards"":{""total"":1,""successful"":1,""skipped"":0,""failed"":0},
                     ""hits"":{""total"":{""value"":3,""relation"":""eq""},""max_score"":null,""hits"":[{""_index"":
                     ""test-faa-apprenticeships.2021-10-08-14-30"",""_type"":""_doc"",""_id"":
                     ""1000006648"",""_score"":1.0,""_source"":{          
@@ -76,7 +78,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse(searchResponse));
+                .ReturnsAsync(new StringResponse(_searchResponse));
 
             _mockClient.Setup(c =>
                     c.CountAsync<StringResponse>(
@@ -165,6 +167,11 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         [Test]
         public async Task Then_Will_Return_ApprenticeshipVacancies_Found_With_Empty_Search()
         {
+            //arrange
+            var expectedVacancy = JsonConvert
+                .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(_searchResponse)
+                .Items.First();
+            
             //Act
             var results = await _repository.Find(string.Empty, 1, 1);
 
@@ -172,39 +179,17 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             results.TotalFound.Should().Be(3);
             results.ApprenticeshipVacancies.Count().Should().Be(1);
             var vacancy = results.ApprenticeshipVacancies.First();
-            vacancy.Id.Should().Be(1000006648);
-            vacancy.Title.Should().Be("dbcMgHEgpl_14Jul2020_10014932357 apprenticeship");
-            vacancy.StartDate.Date.Should().Be(DateTime.Parse("2020-10-18T00:00:00Z").Date);
-            vacancy.ClosingDate.Date.Should().Be(DateTime.Parse("2020-09-17T00:00:00Z").Date);
-            vacancy.PostedDate.Date.Should().Be(DateTime.Parse("2020-07-14T10:06:25.8640000Z").Date);
-            vacancy.EmployerName.Should().Be("ESFA LTD");
-            vacancy.ProviderName.Should().Be("BALTIC TRAINING SERVICES LIMITED");
-            vacancy.Description.Should().Be("VyNpryuzIdktcJVjqJgxXpSFuwdrkqJRYCqEriOCbfZefEcOMO");
-            vacancy.NumberOfPositions.Should().Be(2);
-            vacancy.IsPositiveAboutDisability.Should().BeFalse();
-            vacancy.IsEmployerAnonymous.Should().BeFalse();
-            vacancy.VacancyLocationType.Should().Be(VacancyLocationType.NonNational);
-            vacancy.Location.lon.Should().Be(-3.169768);
-            vacancy.Location.lat.Should().Be(55.970099);
-            vacancy.ApprenticeshipLevel.Should().Be(ApprenticeshipLevel.Intermediate);
-            vacancy.VacancyReference.Should().Be("1000006648");
-            vacancy.Category.Should().Be("Retail and Commercial Enterprise");
-            vacancy.CategoryCode.Should().Be("SSAT1.HBY");
-            vacancy.SubCategory.Should().Be("Butchery > Abattoir worker");
-            vacancy.SubCategoryCode.Should().Be("STDSEC.5");
-            vacancy.WorkingWeek.Should().Be("hIxfvstIfxOZrDC");
-            vacancy.WageType.Should().Be(3);
-            vacancy.WageText.Should().Be("£8,049.60 to £14,976.00");
-            vacancy.WageUnit.Should().Be(4);
-            vacancy.HoursPerWeek.Should().Be(40.0M);
-            vacancy.StandardLarsCode.Should().Be(274);
-            vacancy.IsDisabilityConfident.Should().BeFalse();
-            vacancy.Ukprn.Should().Be(10019026);
+            vacancy.Should().BeEquivalentTo(expectedVacancy);
         }
 
         [Test]
         public async Task Then_Will_Return_ApprenticeshipVacancies_Found_With_SearchTerm()
         {
+            //arrange
+            var expectedVacancy = JsonConvert
+                .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(_searchResponse)
+                .Items.First();
+            
             //Act
             var results = await _repository.Find("Test", 1, 1);
 
@@ -212,34 +197,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             Assert.AreEqual(3, results.TotalFound);
             Assert.AreEqual(1, results.ApprenticeshipVacancies.Count());
             var vacancy = results.ApprenticeshipVacancies.First();
-            vacancy.Id.Should().Be(1000006648);
-            vacancy.Title.Should().Be("dbcMgHEgpl_14Jul2020_10014932357 apprenticeship");
-            vacancy.StartDate.Date.Should().Be(DateTime.Parse("2020-10-18T00:00:00Z").Date);
-            vacancy.ClosingDate.Date.Should().Be(DateTime.Parse("2020-09-17T00:00:00Z").Date);
-            vacancy.PostedDate.Date.Should().Be(DateTime.Parse("2020-07-14T10:06:25.8640000Z").Date);
-            vacancy.EmployerName.Should().Be("ESFA LTD");
-            vacancy.ProviderName.Should().Be("BALTIC TRAINING SERVICES LIMITED");
-            vacancy.Description.Should().Be("VyNpryuzIdktcJVjqJgxXpSFuwdrkqJRYCqEriOCbfZefEcOMO");
-            vacancy.NumberOfPositions.Should().Be(2);
-            vacancy.IsPositiveAboutDisability.Should().BeFalse();
-            vacancy.IsEmployerAnonymous.Should().BeFalse();
-            vacancy.VacancyLocationType.Should().Be(VacancyLocationType.NonNational);
-            vacancy.Location.lon.Should().Be(-3.169768);
-            vacancy.Location.lat.Should().Be(55.970099);
-            vacancy.ApprenticeshipLevel.Should().Be(ApprenticeshipLevel.Intermediate);
-            vacancy.VacancyReference.Should().Be("1000006648");
-            vacancy.Category.Should().Be("Retail and Commercial Enterprise");
-            vacancy.CategoryCode.Should().Be("SSAT1.HBY");
-            vacancy.SubCategory.Should().Be("Butchery > Abattoir worker");
-            vacancy.SubCategoryCode.Should().Be("STDSEC.5");
-            vacancy.WorkingWeek.Should().Be("hIxfvstIfxOZrDC");
-            vacancy.WageType.Should().Be(3);
-            vacancy.WageText.Should().Be("£8,049.60 to £14,976.00");
-            vacancy.WageUnit.Should().Be(4);
-            vacancy.HoursPerWeek.Should().Be(40.0M);
-            vacancy.StandardLarsCode.Should().Be(274);
-            vacancy.IsDisabilityConfident.Should().BeFalse();
-            vacancy.Ukprn.Should().Be(10019026);
+            vacancy.Should().BeEquivalentTo(expectedVacancy);
         }
 
         [Test]
