@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Elasticsearch.Net;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SFA.DAS.FAA.Data.ElasticSearch;
+using SFA.DAS.FAA.Data.Extensions;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
@@ -70,7 +72,7 @@ namespace SFA.DAS.FAA.Data.Repository
             var startingDocumentIndex = StartingDocumentIndex(pageNumber, pageSize);
 
             var elasticSearchResult = await GetSearchResult(
-                searchTerm, pageSize, startingDocumentIndex);
+                searchTerm, pageSize, startingDocumentIndex, null);
 
             if (elasticSearchResult == null)
             {
@@ -99,11 +101,19 @@ namespace SFA.DAS.FAA.Data.Repository
 
         private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
             string searchTerm, int pageSize,
-            int startingDocumentIndex)
+            int startingDocumentIndex, int? ukprn)
         {
+            var parameters = new Dictionary<string, object>
+            {
+                {nameof(pageSize), pageSize},
+                {nameof(startingDocumentIndex), startingDocumentIndex},
+                {nameof(searchTerm), searchTerm}
+            };
+            //if (ukprn.HasValue) parameters.Add(nameof(ukprn), ukprn.Value);
+            
             var request = string.IsNullOrEmpty(searchTerm) ?
-                GetSearchString(startingDocumentIndex, pageSize) :
-                GetSearchString(startingDocumentIndex, pageSize, searchTerm);
+                _elasticQueries.GetAllVacanciesQuery.ReplaceParameters(parameters) :
+                _elasticQueries.FindVacanciesQuery.ReplaceParameters(parameters);
 
             _logger.LogDebug($"Searching with search term: {searchTerm}");
 
@@ -113,25 +123,6 @@ namespace SFA.DAS.FAA.Data.Repository
             var searchResult = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
             return searchResult;
-        }
-
-        private string GetSearchString(
-            int startingDocumentIndex, int pageSize)
-        {
-            var query = _elasticQueries.GetAllVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
-            query = query.Replace("{pageSize}", pageSize.ToString());
-
-            return query;
-        }
-
-        private string GetSearchString(
-            int startingDocumentIndex, int pageSize, string searchTerm)
-        {
-            var query = _elasticQueries.FindVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
-            query = query.Replace("{pageSize}", pageSize.ToString());
-            query = query.Replace("{searchTerm}", searchTerm);
-
-            return query;
         }
 
         private async Task<int> GetTotal()
