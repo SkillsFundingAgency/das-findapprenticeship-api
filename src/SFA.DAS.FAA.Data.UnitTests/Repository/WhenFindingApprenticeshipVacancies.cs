@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
@@ -101,26 +100,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         }
 
         [Test]
-        public async Task Then_Will_Return_ApprenticeshipVacancies_Found_With_Empty_Search()
-        {
-            //arrange
-            var expectedVacancy = JsonConvert
-                .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(FakeElasticResponses.MoreThanOneHitResponse)
-                .Items.First();
-            
-            //Act
-            var results = await _repository.Find(1, 1);
-
-            //Assert
-            results.Total.Should().Be(10);
-            results.TotalFound.Should().Be(2);
-            results.ApprenticeshipVacancies.Count().Should().Be(2);
-            var vacancy = results.ApprenticeshipVacancies.First();
-            vacancy.Should().BeEquivalentTo(expectedVacancy);
-        }
-
-        [Test]
-        public async Task Then_Will_Return_ApprenticeshipVacancies_Found_With_SearchTerm()
+        public async Task Then_Will_Return_ApprenticeshipVacancies_Found()
         {
             //arrange
             var expectedVacancy = JsonConvert
