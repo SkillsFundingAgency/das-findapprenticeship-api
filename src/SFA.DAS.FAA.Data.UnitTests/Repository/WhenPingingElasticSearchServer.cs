@@ -16,15 +16,17 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         private Mock<IElasticLowLevelClient> _mockClient;
         private ElasticEnvironment _apiEnvironment;
         private ApprenticeshipVacancySearchRepository _repository;
-        private Mock<IElasticSearchQueries> _mockElasticSearchQueries;
         
         [SetUp]
         public void Init()
         {
             _mockClient = new Mock<IElasticLowLevelClient>();
-            _mockElasticSearchQueries = new Mock<IElasticSearchQueries>();
             _apiEnvironment = new ElasticEnvironment("test");
-            _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockElasticSearchQueries.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
+            _repository = new ApprenticeshipVacancySearchRepository(
+                _mockClient.Object, 
+                _apiEnvironment, 
+                Mock.Of<IElasticSearchQueryBuilder>(), 
+                Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
         }
 
         [Test]

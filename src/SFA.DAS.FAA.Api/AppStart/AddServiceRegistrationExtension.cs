@@ -13,6 +13,7 @@ namespace SFA.DAS.FAA.Api.AppStart
         public static void AddServiceRegistration(this IServiceCollection services)
         {
             services.AddTransient<IElasticSearchQueries, ElasticSearchQueries>();
+            services.AddTransient<IElasticSearchQueryBuilder, ElasticSearchQueryBuilder>();
             services.AddTransient<IVacancySearchRepository, ApprenticeshipVacancySearchRepository>();
         }
         

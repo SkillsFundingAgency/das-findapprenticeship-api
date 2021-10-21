@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using Elasticsearch.Net;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -24,15 +25,15 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         private Mock<IElasticLowLevelClient> _mockClient;
         private ElasticEnvironment _apiEnvironment;
         private ApprenticeshipVacancySearchRepository _repository;
-        private Mock<IElasticSearchQueries> _mockElasticSearchQueries;
+        private Mock<IElasticSearchQueryBuilder> _mockQueryBuilder;
 
         [SetUp]
         public void Init()
         {
             _mockClient = new Mock<IElasticLowLevelClient>();
-            _mockElasticSearchQueries = new Mock<IElasticSearchQueries>();
+            _mockQueryBuilder = new Mock<IElasticSearchQueryBuilder>();
             _apiEnvironment = new ElasticEnvironment(ExpectedEnvironmentName);
-            _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockElasticSearchQueries.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
+            _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockQueryBuilder.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
 
             _mockClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
@@ -50,41 +51,47 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
 
-            _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(string.Empty);
-            _mockElasticSearchQueries.Setup(x => x.GetVacanciesCountQuery).Returns(string.Empty);
+            _mockQueryBuilder
+                .Setup(x => x.BuildFindVacanciesQuery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int?>()))
+                .Returns(string.Empty);
+            _mockQueryBuilder.Setup(x => x.BuildGetVacanciesCountQuery()).Returns(string.Empty);
         }
 
-        [Test]
-        public async Task Then_Will_Lookup_Total_ApprenticeshipVacancies()
+        [Test, AutoData]
+        public async Task Then_Will_Lookup_Total_ApprenticeshipVacancies(
+            int pageNumber, 
+            int pageSize, 
+            string countQuery)
         {
             //Arrange
-            var expectedQuery = "test query";
-            _mockElasticSearchQueries.Setup(x => x.GetVacanciesCountQuery).Returns(expectedQuery);
+            _mockQueryBuilder
+                .Setup(x => x.BuildGetVacanciesCountQuery())
+                .Returns(countQuery);
 
             //Act
-            await _repository.Find(1, 1);
+            await _repository.Find(pageNumber, pageSize);
 
             //Assert
             _mockClient.Verify(c =>
                 c.CountAsync<StringResponse>(
                     $"{_apiEnvironment.Prefix}{IndexName}",
                     It.Is<PostData>(pd => 
-                        pd.GetRequestString().Equals(expectedQuery)),
+                        pd.GetRequestString().Equals(countQuery)),
                     It.IsAny<CountRequestParameters>(),
                     It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Test]
-        public async Task Then_Will_Search_Latest_ApprenticeshipVacanciesIndex()
+        [Test, AutoData]
+        public async Task Then_Will_Search_Latest_ApprenticeshipVacanciesIndex(
+            int pageNumber, 
+            int pageSize, 
+            string query)
         {
             //Arrange
-            ushort pageNumber = 1;
-            ushort pageSize = 2;
-
-            var searchQueryTemplate = "{startingDocumentIndex} - {pageSize}";
-            var expectedQuery = $"0 - {pageSize}";
-
-            _mockElasticSearchQueries.Setup(x => x.FindVacanciesQuery).Returns(searchQueryTemplate);
+    
+            _mockQueryBuilder
+                .Setup(x => x.BuildFindVacanciesQuery(pageNumber, pageSize, null))
+                .Returns(query);
 
             //Act
             await _repository.Find(pageNumber, pageSize);
@@ -94,7 +101,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 c.SearchAsync<StringResponse>(
                     $"{_apiEnvironment.Prefix}{IndexName}",
                     It.Is<PostData>(pd => 
-                        pd.GetRequestString().Equals(expectedQuery)),
+                        pd.GetRequestString().Equals(query)),
                     It.IsAny<SearchRequestParameters>(),
                     It.IsAny<CancellationToken>()), Times.Once);
         }
