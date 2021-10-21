@@ -26,7 +26,6 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         private ElasticEnvironment _apiEnvironment;
         private ApprenticeshipVacancySearchRepository _repository;
         private Mock<IElasticSearchQueries> _mockElasticSearchQueries;
-        private static string _searchResponse;
 
         [SetUp]
         public void Init()
@@ -36,49 +35,13 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             _apiEnvironment = new ElasticEnvironment(ExpectedEnvironmentName);
             _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockElasticSearchQueries.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
 
-            _searchResponse = @"{""took"":33,""timed_out"":false,""_shards"":{""total"":1,""successful"":1,""skipped"":0,""failed"":0},
-                    ""hits"":{""total"":{""value"":3,""relation"":""eq""},""max_score"":null,""hits"":[{""_index"":
-                    ""test-faa-apprenticeships.2021-10-08-14-30"",""_type"":""_doc"",""_id"":
-                    ""1000006648"",""_score"":1.0,""_source"":{          
-                        ""id"" : 1000006648,
-                        ""title"" : ""dbcMgHEgpl_14Jul2020_10014932357 apprenticeship"",
-                        ""startDate"" : ""2020-10-18T00:00:00Z"",
-                        ""closingDate"" : ""2020-09-17T00:00:00Z"",
-                        ""postedDate"" : ""2020-07-14T10:06:25.8640000Z"",
-                        ""employerName"" : ""ESFA LTD"",
-                        ""providerName"" : ""BALTIC TRAINING SERVICES LIMITED"",
-                        ""description"" : ""VyNpryuzIdktcJVjqJgxXpSFuwdrkqJRYCqEriOCbfZefEcOMO"",
-                        ""numberOfPositions"" : 2,
-                        ""isPositiveAboutDisability"" : false,
-                        ""isEmployerAnonymous"" : false,
-                        ""vacancyLocationType"" : ""NonNational"",
-                        ""location"" : {
-                            ""lon"" : -3.169768,
-                            ""lat"" : 55.970099
-                        },
-                        ""apprenticeshipLevel"" : ""Intermediate"",
-                        ""vacancyReference"" : ""1000006648"",
-                        ""category"" : ""Retail and Commercial Enterprise"",
-                        ""categoryCode"" : ""SSAT1.HBY"",
-                        ""subCategory"" : ""Butchery > Abattoir worker"",
-                        ""subCategoryCode"" : ""STDSEC.5"",
-                        ""workingWeek"" : ""hIxfvstIfxOZrDC"",
-                        ""wageType"" : 3,
-                        ""wageText"" : ""£8,049.60 to £14,976.00"",
-                        ""wageUnit"" : 4,
-                        ""hoursPerWeek"" : 40.0,
-                        ""standardLarsCode"" : 274,
-                        ""isDisabilityConfident"" : false,
-                        ""ukprn"" : 10019026
-                }}]}}";
-
             _mockClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
                         $"{_apiEnvironment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse(_searchResponse));
+                .ReturnsAsync(new StringResponse(FakeElasticResponses.MoreThanOneHitResponse));
 
             _mockClient.Setup(c =>
                     c.CountAsync<StringResponse>(
@@ -169,15 +132,16 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         {
             //arrange
             var expectedVacancy = JsonConvert
-                .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(_searchResponse)
+                .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(FakeElasticResponses.MoreThanOneHitResponse)
                 .Items.First();
             
             //Act
             var results = await _repository.Find(string.Empty, 1, 1);
 
             //Assert
-            results.TotalFound.Should().Be(3);
-            results.ApprenticeshipVacancies.Count().Should().Be(1);
+            results.Total.Should().Be(10);
+            results.TotalFound.Should().Be(2);
+            results.ApprenticeshipVacancies.Count().Should().Be(2);
             var vacancy = results.ApprenticeshipVacancies.First();
             vacancy.Should().BeEquivalentTo(expectedVacancy);
         }
@@ -187,15 +151,16 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         {
             //arrange
             var expectedVacancy = JsonConvert
-                .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(_searchResponse)
+                .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(FakeElasticResponses.MoreThanOneHitResponse)
                 .Items.First();
             
             //Act
             var results = await _repository.Find("Test", 1, 1);
 
             //Assert
-            Assert.AreEqual(3, results.TotalFound);
-            Assert.AreEqual(1, results.ApprenticeshipVacancies.Count());
+            results.Total.Should().Be(10);
+            results.TotalFound.Should().Be(2);
+            results.ApprenticeshipVacancies.Count().Should().Be(2);
             var vacancy = results.ApprenticeshipVacancies.First();
             vacancy.Should().BeEquivalentTo(expectedVacancy);
         }
