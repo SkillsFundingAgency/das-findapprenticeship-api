@@ -85,16 +85,17 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         public async Task Then_Will_Search_Latest_ApprenticeshipVacanciesIndex(
             int pageNumber, 
             int pageSize, 
+            string accountPublicHashedId,
             string query)
         {
             //Arrange
     
             _mockQueryBuilder
-                .Setup(x => x.BuildFindVacanciesQuery(pageNumber, pageSize, null, null))
+                .Setup(x => x.BuildFindVacanciesQuery(pageNumber, pageSize, null, accountPublicHashedId))
                 .Returns(query);
 
             //Act
-            await _repository.Find(pageNumber, pageSize);
+            await _repository.Find(pageNumber, pageSize, null, accountPublicHashedId);
 
             //Assert
             _mockClient.Verify(c =>

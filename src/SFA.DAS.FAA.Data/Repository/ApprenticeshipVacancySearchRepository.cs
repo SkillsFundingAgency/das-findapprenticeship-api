@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SFA.DAS.FAA.Data.ElasticSearch;
-using SFA.DAS.FAA.Data.Extensions;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
@@ -66,11 +63,11 @@ namespace SFA.DAS.FAA.Data.Repository
             return responseBody.Items.SingleOrDefault();
         }
 
-        public async Task<ApprenticeshipSearchResponse> Find(int pageNumber, int pageSize, int? ukprn = null)
+        public async Task<ApprenticeshipSearchResponse> Find(int pageNumber, int pageSize, int? ukprn = null, string accountPublicHashedId = null)
         {
             _logger.LogInformation("Starting vacancy search");
             
-            var elasticSearchResult = await GetSearchResult(pageSize, pageNumber, ukprn);
+            var elasticSearchResult = await GetSearchResult(pageSize, pageNumber, ukprn, accountPublicHashedId);
 
             if (elasticSearchResult == null)
             {
@@ -95,9 +92,10 @@ namespace SFA.DAS.FAA.Data.Repository
         private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
             int pageSize,
             int pageNumber, 
-            int? ukprn)
+            int? ukprn,
+            string accountPublicHashedId)
         {
-            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn);
+            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId);
             var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
             var searchResult = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 

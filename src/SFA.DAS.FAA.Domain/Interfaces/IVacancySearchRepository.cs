@@ -10,6 +10,7 @@ namespace SFA.DAS.FAA.Domain.Interfaces
         Task<ApprenticeshipSearchResponse> Find(
             int pageNumber, 
             int pageSize, 
-            int? ukprn = null);
+            int? ukprn = null,
+            string accountPublicHashedId = null);
     }
 }
