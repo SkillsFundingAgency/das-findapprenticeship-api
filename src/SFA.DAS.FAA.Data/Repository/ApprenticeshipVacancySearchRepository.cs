@@ -67,9 +67,11 @@ namespace SFA.DAS.FAA.Data.Repository
         {
             _logger.LogInformation("Starting vacancy search");
             
-            var elasticSearchResult = await GetSearchResult(pageSize, pageNumber, ukprn, accountPublicHashedId);
+            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId);
+            var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
+            var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
-            if (elasticSearchResult == null)
+            if (responseBody == null)
             {
                 _logger.LogWarning("Searching failed. Elastic search response could not be de-serialised");
                 return new ApprenticeshipSearchResponse();
@@ -81,23 +83,10 @@ namespace SFA.DAS.FAA.Data.Repository
             
             var searchResult =  new ApprenticeshipSearchResponse
             {
-               ApprenticeshipVacancies = elasticSearchResult.Items,
-               TotalFound = elasticSearchResult.hits.total.value,
+               ApprenticeshipVacancies = responseBody.Items,
+               TotalFound = responseBody.hits.total.value,
                Total = totalRecordCount
             };
-
-            return searchResult;
-        }
-
-        private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
-            int pageSize,
-            int pageNumber, 
-            int? ukprn,
-            string accountPublicHashedId)
-        {
-            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId);
-            var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
-            var searchResult = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
             return searchResult;
         }
