@@ -52,7 +52,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
 
             _mockQueryBuilder
-                .Setup(x => x.BuildFindVacanciesQuery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int?>()))
+                .Setup(x => x.BuildFindVacanciesQuery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int?>(),It.IsAny<string>()))
                 .Returns(string.Empty);
             _mockQueryBuilder.Setup(x => x.BuildGetVacanciesCountQuery()).Returns(string.Empty);
         }
@@ -90,7 +90,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             //Arrange
     
             _mockQueryBuilder
-                .Setup(x => x.BuildFindVacanciesQuery(pageNumber, pageSize, null))
+                .Setup(x => x.BuildFindVacanciesQuery(pageNumber, pageSize, null, null))
                 .Returns(query);
 
             //Act

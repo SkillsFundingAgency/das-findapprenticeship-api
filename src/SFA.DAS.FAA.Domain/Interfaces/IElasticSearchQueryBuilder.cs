@@ -2,7 +2,7 @@ namespace SFA.DAS.FAA.Domain.Interfaces
 {
     public interface IElasticSearchQueryBuilder
     {
-        string BuildFindVacanciesQuery(int pageNumber, int pageSize, int? ukprn);
+        string BuildFindVacanciesQuery(int pageNumber, int pageSize, int? ukprn, string accountPublicHashedId = null);
         string BuildGetVacanciesCountQuery();
         string BuildGetVacancyQuery(string vacancyReference);
     }

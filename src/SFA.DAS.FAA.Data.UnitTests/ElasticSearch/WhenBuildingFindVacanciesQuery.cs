@@ -68,5 +68,50 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             //ass
             query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }} ]");
         }
+        
+        
+        [Test, MoqAutoData]
+        public void And_AccountId_HasValue_Then_Adds_Must_Condition(
+            int pageNumber, 
+            int pageSize, 
+            int ukprn,
+            string accountPublicHashedId,
+            [Frozen] Mock<IElasticSearchQueries> mockQueries,
+            ElasticSearchQueryBuilder queryBuilder)
+        {
+            //arr
+            mockQueries
+                .Setup(queries => queries.FindVacanciesQuery)
+                .Returns(@"{""must"": [ {mustConditions} ] }");
+            
+            //act
+            var query = queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, null, accountPublicHashedId);
+
+            //ass
+            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }} ]");
+        }
+        
+        
+        
+        [Test, MoqAutoData]
+        public void And_Ukprn_And_AccountId_HasValue_Then_Adds_Must_Condition(
+            int pageNumber, 
+            int pageSize, 
+            int ukprn,
+            string accountPublicHashedId,
+            [Frozen] Mock<IElasticSearchQueries> mockQueries,
+            ElasticSearchQueryBuilder queryBuilder)
+        {
+            //arr
+            mockQueries
+                .Setup(queries => queries.FindVacanciesQuery)
+                .Returns(@"{""must"": [ {mustConditions} ] }");
+            
+            //act
+            var query = queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId);
+
+            //ass
+            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}, {{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }} ]");
+        }
     }
 }

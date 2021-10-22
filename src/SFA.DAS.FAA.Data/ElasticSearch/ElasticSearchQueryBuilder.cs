@@ -13,10 +13,10 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             _elasticSearchQueries = elasticSearchQueries;
         }
         
-        public string BuildFindVacanciesQuery(int pageNumber, int pageSize, int? ukprn)
+        public string BuildFindVacanciesQuery(int pageNumber, int pageSize, int? ukprn, string accountPublicHashedId = null)
         {
             var startingDocumentIndex = pageNumber < 2 ? 0 : (pageNumber - 1) * pageSize;
-            var mustConditions = BuildMustConditions(ukprn);
+            var mustConditions = BuildMustConditions(ukprn, accountPublicHashedId);
             var parameters = new Dictionary<string, object>
             {
                 {nameof(pageSize), pageSize},
@@ -39,11 +39,19 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             return _elasticSearchQueries.GetVacancyQuery;
         }
         
-        private string BuildMustConditions(int? ukprn)
+        private string BuildMustConditions(int? ukprn, string accountPublicHashedId)
         {
             var filters = string.Empty;
             if (ukprn.HasValue)
                 filters += @$"{{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}";
+            if (!string.IsNullOrEmpty(accountPublicHashedId))
+            {
+                if (!string.IsNullOrEmpty(filters))
+                {
+                    filters += ", ";
+                }
+                filters += @$"{{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }}";
+            }
             return filters;
         }
     }
