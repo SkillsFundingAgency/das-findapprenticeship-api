@@ -43,14 +43,14 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
         {
             var filters = string.Empty;
             if (ukprn.HasValue)
-                filters += @$"{{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}";
+                filters += @$"{{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}}}";
             if (!string.IsNullOrEmpty(accountPublicHashedId))
             {
                 if (!string.IsNullOrEmpty(filters))
                 {
                     filters += ", ";
                 }
-                filters += @$"{{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }}";
+                filters += @$"{{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }}}}";
             }
             return filters;
         }

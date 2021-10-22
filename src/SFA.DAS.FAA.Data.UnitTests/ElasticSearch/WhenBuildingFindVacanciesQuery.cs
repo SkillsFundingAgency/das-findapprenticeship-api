@@ -66,7 +66,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             var query = queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn);
 
             //ass
-            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }} ]");
+            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}}} ]");
         }
         
         
@@ -88,7 +88,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             var query = queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, null, accountPublicHashedId);
 
             //ass
-            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }} ]");
+            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }}}} ]");
         }
         
         
@@ -111,7 +111,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             var query = queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId);
 
             //ass
-            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}, {{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }} ]");
+            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}}}, {{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }}}} ]");
         }
     }
 }
