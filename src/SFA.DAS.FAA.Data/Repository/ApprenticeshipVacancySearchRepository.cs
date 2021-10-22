@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SFA.DAS.FAA.Data.ElasticSearch;
-using SFA.DAS.FAA.Data.Extensions;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
@@ -70,9 +67,11 @@ namespace SFA.DAS.FAA.Data.Repository
         {
             _logger.LogInformation("Starting vacancy search");
             
-            var elasticSearchResult = await GetSearchResult(pageSize, pageNumber, ukprn);
+            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn);
+            var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
+            var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
-            if (elasticSearchResult == null)
+            if (responseBody == null)
             {
                 _logger.LogWarning("Searching failed. Elastic search response could not be de-serialised");
                 return new ApprenticeshipSearchResponse();
@@ -84,22 +83,10 @@ namespace SFA.DAS.FAA.Data.Repository
             
             var searchResult =  new ApprenticeshipSearchResponse
             {
-               ApprenticeshipVacancies = elasticSearchResult.Items,
-               TotalFound = elasticSearchResult.hits.total.value,
+               ApprenticeshipVacancies = responseBody.Items,
+               TotalFound = responseBody.hits.total.value,
                Total = totalRecordCount
             };
-
-            return searchResult;
-        }
-
-        private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
-            int pageSize,
-            int pageNumber, 
-            int? ukprn)
-        {
-            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn);
-            var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
-            var searchResult = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
             return searchResult;
         }
