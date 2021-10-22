@@ -20,6 +20,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
         public async Task Then_Gets_Search_Result_From_Mediator(
             int pageNumber,
             int pageSize,
+            int ukprn,
             string accountPublicHashedId,
             SearchApprenticeshipVacanciesResult mediatorResult,
             [Frozen] Mock<IMediator> mockMediator,
@@ -29,11 +30,13 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
                 .Setup(mediator => mediator.Send(
                     It.Is<SearchApprenticeshipVacanciesQuery>(query =>
                         query.PageNumber == pageNumber &&
-                        query.PageSize == pageSize && query.AccountPublicHashedId == accountPublicHashedId), 
+                        query.PageSize == pageSize && 
+                        query.Ukprn == ukprn && 
+                        query.AccountPublicHashedId == accountPublicHashedId), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mediatorResult);
 
-            var result = await controller.Search(pageNumber, pageSize, accountPublicHashedId) as OkObjectResult;
+            var result = await controller.Search(pageNumber, pageSize, ukprn, accountPublicHashedId) as OkObjectResult;
 
             result.Should().NotBeNull();
             result.StatusCode.Should().Be((int) HttpStatusCode.OK);
