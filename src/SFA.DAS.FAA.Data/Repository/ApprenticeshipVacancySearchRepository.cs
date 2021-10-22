@@ -84,7 +84,7 @@ namespace SFA.DAS.FAA.Data.Repository
             var searchResult =  new ApprenticeshipSearchResponse
             {
                ApprenticeshipVacancies = responseBody.Items,
-               TotalFound = responseBody.hits.total.value,
+               TotalFound = responseBody.hits?.total?.value ?? 0,
                Total = totalRecordCount
             };
 

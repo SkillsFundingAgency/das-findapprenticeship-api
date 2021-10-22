@@ -147,6 +147,30 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             Assert.AreEqual(0, result.TotalFound);
         }
 
+        
+        [Test]
+        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_No_results()
+        {
+            //Arrange
+            var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1}}";
+
+            _mockClient.Setup(c =>
+                    c.SearchAsync<StringResponse>(
+                        $"{_apiEnvironment.Prefix}{IndexName}",
+                        It.IsAny<PostData>(),
+                        It.IsAny<SearchRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(response));
+
+            //Act
+            var result = await _repository.Find(1, 10);
+
+            //Assert
+            Assert.IsNotNull(result?.ApprenticeshipVacancies);
+            Assert.IsEmpty(result.ApprenticeshipVacancies);
+            Assert.AreEqual(0, result.TotalFound);
+        }
+        
         [Test]
         public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Failed_Response()
         {
