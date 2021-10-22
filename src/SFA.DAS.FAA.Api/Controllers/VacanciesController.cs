@@ -38,12 +38,14 @@ namespace SFA.DAS.FAA.Api.Controllers
         [Route("")]
         public async Task<IActionResult> Search(
             int pageNumber = 1,
-            int pageSize = 10)
+            int pageSize = 10,
+            string accountPublicHashedId = null)
         {
             var result = await _mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
                 PageNumber = pageNumber, 
-                PageSize = pageSize
+                PageSize = pageSize,
+                AccountPublicHashedId = accountPublicHashedId
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse) result;
