@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
 using Elasticsearch.Net;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -10,7 +9,6 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.FAA.Data.ElasticSearch;
 using SFA.DAS.FAA.Data.Repository;
-using SFA.DAS.FAA.Data.UnitTests.Extensions;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
@@ -57,56 +55,6 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             _mockQueryBuilder.Setup(x => x.BuildGetVacanciesCountQuery()).Returns(string.Empty);
         }
 
-        [Test, AutoData]
-        public async Task Then_Will_Lookup_Total_ApprenticeshipVacancies(
-            int pageNumber, 
-            int pageSize, 
-            string countQuery)
-        {
-            //Arrange
-            _mockQueryBuilder
-                .Setup(x => x.BuildGetVacanciesCountQuery())
-                .Returns(countQuery);
-
-            //Act
-            await _repository.Find(pageNumber, pageSize);
-
-            //Assert
-            _mockClient.Verify(c =>
-                c.CountAsync<StringResponse>(
-                    $"{_apiEnvironment.Prefix}{IndexName}",
-                    It.Is<PostData>(pd => 
-                        pd.GetRequestString().Equals(countQuery)),
-                    It.IsAny<CountRequestParameters>(),
-                    It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Test, AutoData]
-        public async Task Then_Will_Search_Latest_ApprenticeshipVacanciesIndex(
-            int pageNumber, 
-            int pageSize, 
-            string accountPublicHashedId,
-            string query)
-        {
-            //Arrange
-    
-            _mockQueryBuilder
-                .Setup(x => x.BuildFindVacanciesQuery(pageNumber, pageSize, null, accountPublicHashedId))
-                .Returns(query);
-
-            //Act
-            await _repository.Find(pageNumber, pageSize, null, accountPublicHashedId);
-
-            //Assert
-            _mockClient.Verify(c =>
-                c.SearchAsync<StringResponse>(
-                    $"{_apiEnvironment.Prefix}{IndexName}",
-                    It.Is<PostData>(pd => 
-                        pd.GetRequestString().Equals(query)),
-                    It.IsAny<SearchRequestParameters>(),
-                    It.IsAny<CancellationToken>()), Times.Once);
-        }
-
         [Test]
         public async Task Then_Will_Return_ApprenticeshipVacancies_Found()
         {
@@ -146,7 +94,6 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             Assert.IsEmpty(result.ApprenticeshipVacancies);
             Assert.AreEqual(0, result.TotalFound);
         }
-
         
         [Test]
         public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_No_results()
