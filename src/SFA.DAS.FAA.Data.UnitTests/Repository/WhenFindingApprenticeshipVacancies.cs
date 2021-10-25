@@ -52,7 +52,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
 
             _mockQueryBuilder
-                .Setup(x => x.BuildFindVacanciesQuery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int?>(),It.IsAny<string>()))
+                .Setup(x => x.BuildFindVacanciesQuery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int?>(),It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(string.Empty);
             _mockQueryBuilder.Setup(x => x.BuildGetVacanciesCountQuery()).Returns(string.Empty);
         }
@@ -86,16 +86,17 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             int pageNumber, 
             int pageSize, 
             string accountPublicHashedId,
+            string accountLegalEntityPublicHashedId,
             string query)
         {
             //Arrange
     
             _mockQueryBuilder
-                .Setup(x => x.BuildFindVacanciesQuery(pageNumber, pageSize, null, accountPublicHashedId))
+                .Setup(x => x.BuildFindVacanciesQuery(pageNumber, pageSize, null, accountPublicHashedId, accountLegalEntityPublicHashedId))
                 .Returns(query);
 
             //Act
-            await _repository.Find(pageNumber, pageSize, null, accountPublicHashedId);
+            await _repository.Find(pageNumber, pageSize, null, accountPublicHashedId, accountLegalEntityPublicHashedId);
 
             //Assert
             _mockClient.Verify(c =>

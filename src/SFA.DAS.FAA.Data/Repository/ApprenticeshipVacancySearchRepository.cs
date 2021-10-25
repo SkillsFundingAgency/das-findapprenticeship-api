@@ -63,11 +63,11 @@ namespace SFA.DAS.FAA.Data.Repository
             return responseBody.Items.SingleOrDefault();
         }
 
-        public async Task<ApprenticeshipSearchResponse> Find(int pageNumber, int pageSize, int? ukprn = null, string accountPublicHashedId = null)
+        public async Task<ApprenticeshipSearchResponse> Find(int pageNumber, int pageSize, int? ukprn = null, string accountPublicHashedId = null, string accountLegalEntityPublicHashedId = null)
         {
             _logger.LogInformation("Starting vacancy search");
             
-            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId);
+            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId, accountLegalEntityPublicHashedId);
             var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
             var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
