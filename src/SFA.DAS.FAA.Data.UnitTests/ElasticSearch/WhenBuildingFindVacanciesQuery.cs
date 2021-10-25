@@ -91,14 +91,12 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }}}} ]");
         }
         
-        
-        
         [Test, MoqAutoData]
-        public void And_Ukprn_And_AccountId_HasValue_Then_Adds_Must_Condition(
+        public void And_AccountLegalEntityId_HasValue_Then_Adds_Must_Condition(
             int pageNumber, 
             int pageSize, 
             int ukprn,
-            string accountPublicHashedId,
+            string accountLegalEntityPublicHashedId,
             [Frozen] Mock<IElasticSearchQueries> mockQueries,
             ElasticSearchQueryBuilder queryBuilder)
         {
@@ -108,10 +106,34 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
                 .Returns(@"{""must"": [ {mustConditions} ] }");
             
             //act
-            var query = queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId);
+            var query = queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, null, null, accountLegalEntityPublicHashedId);
 
             //ass
-            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}}}, {{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }}}} ]");
+            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(accountLegalEntityPublicHashedId)}"": ""{accountLegalEntityPublicHashedId}"" }}}} ]");
+        }
+        
+        
+        
+        [Test, MoqAutoData]
+        public void And_Ukprn_And_AccountId_And_AccountLegalEntity_HasValue_Then_Adds_Must_Condition(
+            int pageNumber, 
+            int pageSize, 
+            int ukprn,
+            string accountPublicHashedId,
+            string accountLegalEntityPublicHashedId,
+            [Frozen] Mock<IElasticSearchQueries> mockQueries,
+            ElasticSearchQueryBuilder queryBuilder)
+        {
+            //arr
+            mockQueries
+                .Setup(queries => queries.FindVacanciesQuery)
+                .Returns(@"{""must"": [ {mustConditions} ] }");
+            
+            //act
+            var query = queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId, accountLegalEntityPublicHashedId);
+
+            //ass
+            query.Should().Contain(@$"""must"": [ {{ ""term"": {{ ""{nameof(ukprn)}"": ""{ukprn}"" }}}}, {{ ""term"": {{ ""{nameof(accountPublicHashedId)}"": ""{accountPublicHashedId}"" }}}}, {{ ""term"": {{ ""{nameof(accountLegalEntityPublicHashedId)}"": ""{accountLegalEntityPublicHashedId}"" }}}} ]");
         }
     }
 }

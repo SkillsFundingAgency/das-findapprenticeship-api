@@ -11,6 +11,7 @@ namespace SFA.DAS.FAA.Domain.Interfaces
             int pageNumber, 
             int pageSize, 
             int? ukprn = null,
-            string accountPublicHashedId = null);
+            string accountPublicHashedId = null,
+            string accountLegalEntityPublicHashedId = null);
     }
 }

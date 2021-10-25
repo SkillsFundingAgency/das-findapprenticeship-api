@@ -50,10 +50,11 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
 
             _mockQueryBuilder
-                .Setup(x => x.BuildFindVacanciesQuery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int?>(),It.IsAny<string>()))
+                .Setup(x => x.BuildFindVacanciesQuery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int?>(),It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(string.Empty);
             _mockQueryBuilder.Setup(x => x.BuildGetVacanciesCountQuery()).Returns(string.Empty);
         }
+
 
         [Test]
         public async Task Then_Will_Return_ApprenticeshipVacancies_Found()

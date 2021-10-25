@@ -25,7 +25,8 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                     query.PageNumber, 
                     query.PageSize,
                     query.Ukprn, 
-                    query.AccountPublicHashedId))
+                    query.AccountPublicHashedId,
+                    query.AccountLegalEntityPublicHashedId))
                 .ReturnsAsync(responseFromRepository);
             
             var result = await handler.Handle(query, CancellationToken.None);

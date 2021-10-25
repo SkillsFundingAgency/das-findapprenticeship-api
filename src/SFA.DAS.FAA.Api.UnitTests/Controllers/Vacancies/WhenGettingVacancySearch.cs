@@ -22,6 +22,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             int pageSize,
             int ukprn,
             string accountPublicHashedId,
+            string accountLegalEntityPublicHashedId,
             SearchApprenticeshipVacanciesResult mediatorResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] VacanciesController controller)
@@ -32,11 +33,12 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
                         query.PageNumber == pageNumber &&
                         query.PageSize == pageSize && 
                         query.Ukprn == ukprn && 
-                        query.AccountPublicHashedId == accountPublicHashedId), 
+                        query.AccountPublicHashedId == accountPublicHashedId && 
+                        query.AccountLegalEntityPublicHashedId == accountLegalEntityPublicHashedId), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mediatorResult);
 
-            var result = await controller.Search(pageNumber, pageSize, ukprn, accountPublicHashedId) as OkObjectResult;
+            var result = await controller.Search(pageNumber, pageSize, ukprn, accountPublicHashedId, accountLegalEntityPublicHashedId) as OkObjectResult;
 
             result.Should().NotBeNull();
             result.StatusCode.Should().Be((int) HttpStatusCode.OK);
