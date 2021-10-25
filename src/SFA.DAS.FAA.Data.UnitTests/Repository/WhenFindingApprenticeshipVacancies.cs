@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using Elasticsearch.Net;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -12,60 +13,46 @@ using SFA.DAS.FAA.Data.Repository;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.FAA.Data.UnitTests.Repository
 {
     public class WhenFindingApprenticeshipVacancies
     {
-        private const string ExpectedEnvironmentName = "test";
         private const string IndexName = "-faa-apprenticeships";
 
-        private Mock<IElasticLowLevelClient> _mockClient;
-        private ElasticEnvironment _apiEnvironment;
-        private ApprenticeshipVacancySearchRepository _repository;
-        private Mock<IElasticSearchQueryBuilder> _mockQueryBuilder;
-
-        [SetUp]
-        public void Init()
-        {
-            _mockClient = new Mock<IElasticLowLevelClient>();
-            _mockQueryBuilder = new Mock<IElasticSearchQueryBuilder>();
-            _apiEnvironment = new ElasticEnvironment(ExpectedEnvironmentName);
-            _repository = new ApprenticeshipVacancySearchRepository(_mockClient.Object, _apiEnvironment, _mockQueryBuilder.Object, Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
-
-            _mockClient.Setup(c =>
-                    c.SearchAsync<StringResponse>(
-                        $"{_apiEnvironment.Prefix}{IndexName}",
-                        It.IsAny<PostData>(),
-                        It.IsAny<SearchRequestParameters>(),
-                        It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse(FakeElasticResponses.MoreThanOneHitResponse));
-
-            _mockClient.Setup(c =>
-                    c.CountAsync<StringResponse>(
-                        $"{_apiEnvironment.Prefix}{IndexName}",
-                        It.IsAny<PostData>(),
-                        It.IsAny<CountRequestParameters>(),
-                        It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse(@"{""count"":10}"));
-
-            _mockQueryBuilder
-                .Setup(x => x.BuildFindVacanciesQuery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int?>(),It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(string.Empty);
-            _mockQueryBuilder.Setup(x => x.BuildGetVacanciesCountQuery()).Returns(string.Empty);
-        }
-
-
-        [Test]
-        public async Task Then_Will_Return_ApprenticeshipVacancies_Found()
+        [Test, MoqAutoData]
+        public async Task Then_Will_Return_ApprenticeshipVacancies_Found(
+            int pageNumber,
+            int pageSize,
+            [Frozen] ElasticEnvironment environment,
+            [Frozen] Mock<IElasticSearchQueryBuilder> mockQueryBuilder,
+            [Frozen] Mock<IElasticLowLevelClient> mockElasticClient,
+            ApprenticeshipVacancySearchRepository repository)
         {
             //arrange
             var expectedVacancy = JsonConvert
                 .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(FakeElasticResponses.MoreThanOneHitResponse)
                 .Items.First();
             
+            mockElasticClient.Setup(c =>
+                    c.SearchAsync<StringResponse>(
+                        $"{environment.Prefix}{IndexName}",
+                        It.IsAny<PostData>(),
+                        It.IsAny<SearchRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(FakeElasticResponses.MoreThanOneHitResponse));
+
+            mockElasticClient.Setup(c =>
+                    c.CountAsync<StringResponse>(
+                        $"{environment.Prefix}{IndexName}",
+                        It.IsAny<PostData>(),
+                        It.IsAny<CountRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(@"{""count"":10}"));
+            
             //Act
-            var results = await _repository.Find(1, 1);
+            var results = await repository.Find(pageNumber, pageSize);
 
             //Assert
             results.Total.Should().Be(10);
@@ -75,20 +62,26 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             vacancy.Should().BeEquivalentTo(expectedVacancy);
         }
 
-        [Test]
-        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Invalid_Response()
+        [Test, MoqAutoData]
+        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Invalid_Response(
+            int pageNumber,
+            int pageSize,
+            [Frozen] ElasticEnvironment environment,
+            [Frozen] Mock<IElasticSearchQueryBuilder> mockQueryBuilder,
+            [Frozen] Mock<IElasticLowLevelClient> mockElasticClient,
+            ApprenticeshipVacancySearchRepository repository)
         {
             //Arrange
-            _mockClient.Setup(c =>
+            mockElasticClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
-                        $"{_apiEnvironment.Prefix}{IndexName}",
+                        $"{environment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(""));
 
             //Act
-            var result = await _repository.Find(1, 10);
+            var result = await repository.Find(pageNumber, pageSize);
 
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
@@ -96,22 +89,36 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             Assert.AreEqual(0, result.TotalFound);
         }
         
-        [Test]
-        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_No_results()
+        [Test, MoqAutoData]
+        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_No_results(
+            int pageNumber,
+            int pageSize,
+            [Frozen] ElasticEnvironment environment,
+            [Frozen] Mock<IElasticSearchQueryBuilder> mockQueryBuilder,
+            [Frozen] Mock<IElasticLowLevelClient> mockElasticClient,
+            ApprenticeshipVacancySearchRepository repository)
         {
             //Arrange
             var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1}}";
 
-            _mockClient.Setup(c =>
+            mockElasticClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
-                        $"{_apiEnvironment.Prefix}{IndexName}",
+                        $"{environment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(response));
+            
+            mockElasticClient.Setup(c =>
+                    c.CountAsync<StringResponse>(
+                        $"{environment.Prefix}{IndexName}",
+                        It.IsAny<PostData>(),
+                        It.IsAny<CountRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(@"{""count"":10}"));
 
             //Act
-            var result = await _repository.Find(1, 10);
+            var result = await repository.Find(pageNumber, pageSize);
 
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
@@ -119,23 +126,37 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             Assert.AreEqual(0, result.TotalFound);
         }
         
-        [Test]
-        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Failed_Response()
+        [Test, MoqAutoData]
+        public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Failed_Response(
+            int pageNumber,
+            int pageSize,
+            [Frozen] ElasticEnvironment environment,
+            [Frozen] Mock<IElasticSearchQueryBuilder> mockQueryBuilder,
+            [Frozen] Mock<IElasticLowLevelClient> mockElasticClient,
+            ApprenticeshipVacancySearchRepository repository)
         {
             //Arrange
             var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1},""hits"":{""total"":
             {""value"":0,""relation"":""eq""},""max_score"":null,""hits"":[]}}";
 
-            _mockClient.Setup(c =>
+            mockElasticClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
-                        $"{_apiEnvironment.Prefix}{IndexName}",
+                        $"{environment.Prefix}{IndexName}",
                         It.IsAny<PostData>(),
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(response));
+            
+            mockElasticClient.Setup(c =>
+                    c.CountAsync<StringResponse>(
+                        $"{environment.Prefix}{IndexName}",
+                        It.IsAny<PostData>(),
+                        It.IsAny<CountRequestParameters>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new StringResponse(@"{""count"":10}"));
 
             //Act
-            var result = await _repository.Find(1, 10);
+            var result = await repository.Find(pageNumber, pageSize);
 
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
