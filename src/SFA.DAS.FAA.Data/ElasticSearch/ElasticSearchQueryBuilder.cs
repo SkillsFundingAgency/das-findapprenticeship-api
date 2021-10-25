@@ -36,7 +36,11 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
 
         public string BuildGetVacancyQuery(string vacancyReference)
         {
-            return _elasticSearchQueries.GetVacancyQuery;
+            var parameters = new Dictionary<string, object>
+            {
+                {nameof(vacancyReference), vacancyReference}
+            };
+            return _elasticSearchQueries.GetVacancyQuery.ReplaceParameters(parameters);
         }
         
         private string BuildMustConditions(int? ukprn, string accountPublicHashedId)

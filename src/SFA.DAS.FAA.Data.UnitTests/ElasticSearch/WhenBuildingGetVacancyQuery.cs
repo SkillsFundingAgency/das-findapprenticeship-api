@@ -16,11 +16,16 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             [Frozen] Mock<IElasticSearchQueries> mockQueries,
             ElasticSearchQueryBuilder queryBuilder)
         {
+            //arr
+            mockQueries
+                .Setup(queries => queries.GetVacancyQuery)
+                .Returns(@"{""query"": { ""term"": { ""vacancyReference"": ""{vacancyReference}""}}}");
+            
             //act
             var query = queryBuilder.BuildGetVacancyQuery(vacancyReference);
 
             //ass
-            query.Should().Be(mockQueries.Object.GetVacancyQuery);
+            query.Should().Contain(@$"""vacancyReference"": ""{vacancyReference}""");
         }
     }
 }
