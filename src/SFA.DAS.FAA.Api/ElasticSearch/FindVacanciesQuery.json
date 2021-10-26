@@ -2,21 +2,8 @@
   "from": "{startingDocumentIndex}",
   "query": {
     "bool": {
-      "should": [],
-      "must_not": [],
       "must": [
-        {
-          "multi_match": {
-            "query": "{searchTerm}",
-            "type": "phrase_prefix",
-            "fields": [
-              "title",
-              "employerName",
-              "providerName",
-              "description"
-            ]
-          }
-        }
+        {mustConditions}
       ]
     }
   },

@@ -17,14 +17,16 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
         public async Task Then_Gets_Vacancies_From_Repository(
             SearchApprenticeshipVacanciesQuery query,
             ApprenticeshipSearchResponse responseFromRepository,
-            [Frozen] Mock<IVacancyIndexRepository> mockVacancyIndexRepository,
+            [Frozen] Mock<IVacancySearchRepository> mockVacancyIndexRepository,
             SearchApprenticeshipVacanciesQueryHandler handler)
         {
             mockVacancyIndexRepository
                 .Setup(repository => repository.Find(
-                    null,
                     query.PageNumber, 
-                    query.PageSize))
+                    query.PageSize,
+                    query.Ukprn, 
+                    query.AccountPublicHashedId,
+                    query.AccountLegalEntityPublicHashedId))
                 .ReturnsAsync(responseFromRepository);
             
             var result = await handler.Handle(query, CancellationToken.None);

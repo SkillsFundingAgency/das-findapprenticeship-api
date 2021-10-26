@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
+using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 
 namespace SFA.DAS.FAA.Api.Controllers
@@ -20,23 +21,40 @@ namespace SFA.DAS.FAA.Api.Controllers
         }
         
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> Get(string id)
+        [Route("{vacancyReference}")]
+        public async Task<IActionResult> Get(string vacancyReference)
         {
-            await Task.CompletedTask;
-            return Ok(new {ok = "get ok"});
+            var result = await _mediator.Send(new GetApprenticeshipVacancyQuery
+            {
+                VacancyReference = vacancyReference
+            });
+
+            if (result.ApprenticeshipVacancy == null)
+            {
+                return NotFound();
+            }
+
+            var apiResponse = (GetApprenticeshipVacancyResponse) result.ApprenticeshipVacancy;
+            
+            return Ok(apiResponse);
         }
 
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> Search(
             int pageNumber = 1,
-            int pageSize = 10)
+            int pageSize = 10,
+            int? ukprn = null,
+            string accountPublicHashedId = null,
+            string accountLegalEntityPublicHashedId = null)
         {
             var result = await _mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
                 PageNumber = pageNumber, 
-                PageSize = pageSize
+                PageSize = pageSize,
+                Ukprn = ukprn,
+                AccountPublicHashedId = accountPublicHashedId,
+                AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse) result;

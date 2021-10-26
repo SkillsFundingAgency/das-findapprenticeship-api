@@ -1,0 +1,9 @@
+﻿{
+  "from": "0",
+  "query": {
+    "term": {
+      "vacancyReference": "{vacancyReference}"
+    }
+  },
+  "size": "1"
+}

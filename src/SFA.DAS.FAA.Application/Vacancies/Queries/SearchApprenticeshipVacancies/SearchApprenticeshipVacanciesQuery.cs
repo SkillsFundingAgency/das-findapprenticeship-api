@@ -6,5 +6,8 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
+        public int? Ukprn { get; set; }
+        public string AccountPublicHashedId { get; set; }
+        public string AccountLegalEntityPublicHashedId { get ; set ; }
     }
 }

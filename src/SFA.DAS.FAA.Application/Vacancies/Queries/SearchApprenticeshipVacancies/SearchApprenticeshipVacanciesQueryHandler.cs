@@ -7,16 +7,16 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
 {
     public class SearchApprenticeshipVacanciesQueryHandler : IRequestHandler<SearchApprenticeshipVacanciesQuery, SearchApprenticeshipVacanciesResult>
     {
-        private readonly IVacancyIndexRepository _vacancyIndexRepository;
+        private readonly IVacancySearchRepository _vacancySearchRepository;
 
-        public SearchApprenticeshipVacanciesQueryHandler(IVacancyIndexRepository vacancyIndexRepository)
+        public SearchApprenticeshipVacanciesQueryHandler(IVacancySearchRepository vacancySearchRepository)
         {
-            _vacancyIndexRepository = vacancyIndexRepository;
+            _vacancySearchRepository = vacancySearchRepository;
         }
         
         public async Task<SearchApprenticeshipVacanciesResult> Handle(SearchApprenticeshipVacanciesQuery request, CancellationToken cancellationToken)
         {
-            var searchResult = await _vacancyIndexRepository.Find(null, request.PageNumber, request.PageSize);
+            var searchResult = await _vacancySearchRepository.Find(request.PageNumber, request.PageSize, request.Ukprn, request.AccountPublicHashedId, request.AccountLegalEntityPublicHashedId);
 
             return new SearchApprenticeshipVacanciesResult
             {

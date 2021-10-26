@@ -3,7 +3,7 @@
     public interface IElasticSearchQueries
     {
         string FindVacanciesQuery { get; }
-        string GetAllVacanciesQuery { get; }
         string GetVacanciesCountQuery { get; }
+        string GetVacancyQuery { get; }
     }
 }

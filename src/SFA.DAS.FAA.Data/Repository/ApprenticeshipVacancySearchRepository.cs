@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
@@ -13,34 +11,32 @@ using SFA.DAS.FAA.Domain.Interfaces;
 
 namespace SFA.DAS.FAA.Data.Repository
 {
-    public class ApprenticeshipVacancySearchRepository : IVacancyIndexRepository
+    public class ApprenticeshipVacancySearchRepository : IVacancySearchRepository
     {
         private readonly IElasticLowLevelClient _client;
         private readonly ElasticEnvironment _environment;
-        private readonly IElasticSearchQueries _elasticQueries;
+        private readonly IElasticSearchQueryBuilder _queryBuilder;
         private readonly ILogger<ApprenticeshipVacancySearchRepository> _logger;
         private const string IndexName = "-faa-apprenticeships";
 
         public ApprenticeshipVacancySearchRepository(
             IElasticLowLevelClient client, 
             ElasticEnvironment environment, 
-            IElasticSearchQueries elasticQueries, 
+            IElasticSearchQueryBuilder queryBuilder, 
             ILogger<ApprenticeshipVacancySearchRepository> logger)
         {
             _client = client;
             _environment = environment;
-            _elasticQueries = elasticQueries;
+            _queryBuilder = queryBuilder;
             _logger = logger;
         }
 
-        public string GetCurrentApprenticeshipVacanciesIndex() => _environment.Prefix + IndexName;
-        
+        private string ApprenticeshipVacanciesIndex => _environment.Prefix + IndexName;
+
         public async Task<bool> PingAsync()
         {
-            var index = GetCurrentApprenticeshipVacanciesIndex();
-
             var pingResponse = await _client.CountAsync<StringResponse>(
-                index, 
+                ApprenticeshipVacanciesIndex, 
                 PostData.String(""), 
                 new CountRequestParameters(), 
                 CancellationToken.None);
@@ -53,25 +49,28 @@ namespace SFA.DAS.FAA.Data.Repository
             return pingResponse.Success;
         }
 
-        public async Task<ApprenticeshipSearchResponse> Find( string searchTerm, int pageNumber, int pageSize)
+        public async Task<ApprenticeshipSearchItem> Get(string vacancyReference)
+        {
+            _logger.LogInformation($"Starting get vacancy [{vacancyReference}]");
+            
+            var query = _queryBuilder.BuildGetVacancyQuery(vacancyReference);
+            var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
+            var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
+            
+            _logger.LogInformation($"Found [{responseBody.hits.total.value}] hits for vacancy [{vacancyReference}]");
+            
+            return responseBody.Items.SingleOrDefault();
+        }
+
+        public async Task<ApprenticeshipSearchResponse> Find(int pageNumber, int pageSize, int? ukprn = null, string accountPublicHashedId = null, string accountLegalEntityPublicHashedId = null)
         {
             _logger.LogInformation("Starting vacancy search");
+            
+            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId, accountLegalEntityPublicHashedId);
+            var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
+            var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 
-            var vacanciesIndex = GetCurrentApprenticeshipVacanciesIndex();
-
-            if (string.IsNullOrWhiteSpace(vacanciesIndex))
-            {
-                _logger.LogWarning("Searching failed. Latest Apprenticeship Vacancy index does not have a name value");
-
-                return new ApprenticeshipSearchResponse();
-            }
-
-            var startingDocumentIndex = StartingDocumentIndex(pageNumber, pageSize);
-
-            var elasticSearchResult = await GetSearchResult(
-                searchTerm, pageSize, startingDocumentIndex, vacanciesIndex);
-
-            if (elasticSearchResult == null)
+            if (responseBody == null)
             {
                 _logger.LogWarning("Searching failed. Elastic search response could not be de-serialised");
                 return new ApprenticeshipSearchResponse();
@@ -79,65 +78,22 @@ namespace SFA.DAS.FAA.Data.Repository
 
             _logger.LogDebug("Searching complete, returning search results");
 
-            var totalRecordCount = await GetTotal(vacanciesIndex);
+            var totalRecordCount = await GetTotal();
             
             var searchResult =  new ApprenticeshipSearchResponse
             {
-               ApprenticeshipVacancies = elasticSearchResult.Items,
-               TotalFound = elasticSearchResult.hits.total.value,
+               ApprenticeshipVacancies = responseBody.Items,
+               TotalFound = responseBody.hits?.total?.value ?? 0,
                Total = totalRecordCount
             };
 
             return searchResult;
         }
 
-        private static int StartingDocumentIndex(int pageNumber, int pageSize)
+        private async Task<int> GetTotal()
         {
-            return pageNumber < 2 ? 0 : (pageNumber - 1) * pageSize;
-        }
-
-        private async Task<ElasticResponse<ApprenticeshipSearchItem>> GetSearchResult(
-            string searchTerm, int pageSize,
-            int startingDocumentIndex, string vacancyIndexName)
-        {
-            var request = string.IsNullOrEmpty(searchTerm) ?
-                GetSearchString(startingDocumentIndex, pageSize) :
-                GetSearchString(startingDocumentIndex, pageSize, searchTerm);
-
-            _logger.LogDebug($"Searching with search term: {searchTerm}");
-
-            var jsonResponse =
-                await _client.SearchAsync<StringResponse>(vacancyIndexName, PostData.String(request));
-
-            var searchResult = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
-
-            return searchResult;
-        }
-
-        private string GetSearchString(
-            int startingDocumentIndex, int pageSize)
-        {
-            var query = _elasticQueries.GetAllVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
-            query = query.Replace("{pageSize}", pageSize.ToString());
-
-            return query;
-        }
-
-        private string GetSearchString(
-            int startingDocumentIndex, int pageSize, string searchTerm)
-        {
-            var query = _elasticQueries.FindVacanciesQuery.Replace("{startingDocumentIndex}", startingDocumentIndex.ToString());
-            query = query.Replace("{pageSize}", pageSize.ToString());
-            query = query.Replace("{searchTerm}", searchTerm);
-
-            return query;
-        }
-
-        private async Task<int> GetTotal(string indexName)
-        {
-            var jsonResponse = await _client.CountAsync<StringResponse>(indexName,
-                PostData.String(_elasticQueries.GetVacanciesCountQuery));
-
+            var query = _queryBuilder.BuildGetVacanciesCountQuery();
+            var jsonResponse = await _client.CountAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
             var result = JsonConvert.DeserializeObject<ElasticCountResponse>(jsonResponse.Body);
 
             return result.count;

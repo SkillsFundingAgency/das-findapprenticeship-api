@@ -355,3 +355,4 @@ MigrationBackup/
 
 # Others
 *.orig
+src/SFA.DAS.FAA.Api/appsettings.Development.json
