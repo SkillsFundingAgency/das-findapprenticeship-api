@@ -70,7 +70,7 @@ namespace SFA.DAS.FAA.Api
 #if DEBUG
             services.AddSingleton(new ElasticEnvironment("TEST"));
 #else
-            services.AddSingleton(new ElasticEnvironment(_configuration["Environment"]));
+            services.AddSingleton(new ElasticEnvironment(_configuration["ResourceEnvironmentName"]));
 #endif
 
             var apiConfig = _configuration
