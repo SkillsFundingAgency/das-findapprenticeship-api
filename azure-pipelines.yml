@@ -5,28 +5,29 @@ trigger:
       - "*"
 
 variables:
+  - group: RELEASE Management Resources
+  - group: RELEASE das-findapprenticeship-api
   - name: SolutionBaseName
     value: SFA.DAS.FAA.Api
   - name: BuildConfiguration
     value: release
   - name: BuildPlatform
     value: any cpu
-  - group: RELEASE Management Resources
-  - group: RELEASE das-findapprenticeship-api
+  - name: Deploy
+    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'PullRequest'))
 
 resources:
   repositories:
   - repository: self
   - repository: das-platform-building-blocks
     type: github
-
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.4.26
+    ref: refs/tags/0.4.29
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
     name: SkillsFundingAgency/das-platform-automation
-    ref: refs/tags/4.5.9
+    ref: refs/tags/4.5.11
     endpoint: SkillsFundingAgency
   pipelines:
   - pipeline: das-employer-config
@@ -44,6 +45,7 @@ stages:
 - stage: Deploy_AT
   dependsOn: Build
   displayName: Deploy to AT
+  condition: and(succeeded(), eq(variables.Deploy, 'true'))
   variables:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
