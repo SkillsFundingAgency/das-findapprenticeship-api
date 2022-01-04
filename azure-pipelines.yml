@@ -14,7 +14,7 @@ variables:
   - name: BuildPlatform
     value: any cpu
   - name: Deploy
-    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'PullRequest'))
+    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'PullRequest'))]
 
 resources:
   repositories:
