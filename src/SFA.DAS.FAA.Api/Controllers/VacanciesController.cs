@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
@@ -46,7 +46,15 @@ namespace SFA.DAS.FAA.Api.Controllers
             int pageSize = 10,
             int? ukprn = null,
             string accountPublicHashedId = null,
-            string accountLegalEntityPublicHashedId = null)
+            string accountLegalEntityPublicHashedId = null,
+            int? standardLarsCode = null,
+            bool nationWideOnly = false,
+            double? lat = null,
+            double? lon = null,
+            uint? distanceInMiles = null,
+            string route = null,
+            uint? postedInLastNumberOfDays = null,
+            VacancySort sort = VacancySort.AgeDesc)
         {
             var result = await _mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
@@ -54,7 +62,15 @@ namespace SFA.DAS.FAA.Api.Controllers
                 PageSize = pageSize,
                 Ukprn = ukprn,
                 AccountPublicHashedId = accountPublicHashedId,
-                AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId
+                AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId,
+                Route = route,
+                Lat = lat,
+                Lon = lon,
+                DistanceInMiles = distanceInMiles,
+                NationWideOnly = nationWideOnly,
+                StandardLarsCode = standardLarsCode,
+                PostedInLastNumberOfDays = postedInLastNumberOfDays,
+                VacancySort = sort
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse) result;
