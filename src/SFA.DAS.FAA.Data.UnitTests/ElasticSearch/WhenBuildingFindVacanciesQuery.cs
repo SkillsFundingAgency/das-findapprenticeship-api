@@ -208,5 +208,43 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             //Assert
             query.Should().Be(@"{""sort"": [  ] } ");
         }
+
+        [Test, MoqAutoData]
+        public void Then_If_There_Is_A_PostedInLastNumberOfDays_Value_Then_Added_To_Query(
+            FindVacanciesModel model,
+            [Frozen] Mock<IElasticSearchQueries> mockQueries,
+            ElasticSearchQueryBuilder queryBuilder)
+        {
+            //Arrange
+            mockQueries
+                .Setup(queries => queries.FindVacanciesQuery)
+                .Returns(@"{rangeFilter}");
+            
+            //Act
+            var query = queryBuilder.BuildFindVacanciesQuery(model);
+            
+            //Assert
+            query.Should().Be(@$", ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }}");
+        }
+        
+        
+        [Test, MoqAutoData]
+        public void Then_If_There_Is_No_Value_For_PostedInLastNumberOfDays_Value_Then_Added_To_Query(
+            FindVacanciesModel model,
+            [Frozen] Mock<IElasticSearchQueries> mockQueries,
+            ElasticSearchQueryBuilder queryBuilder)
+        {
+            //Arrange
+            model.PostedInLastNumberOfDays = null;
+            mockQueries
+                .Setup(queries => queries.FindVacanciesQuery)
+                .Returns(@"{rangeFilter}");
+            
+            //Act
+            var query = queryBuilder.BuildFindVacanciesQuery(model);
+            
+            //Assert
+            query.Should().Be("");
+        }
     }
 }

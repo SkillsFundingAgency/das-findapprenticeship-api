@@ -20,13 +20,15 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             var mustConditions = BuildMustConditions(findVacanciesModel);
             var sort = BuildSort(findVacanciesModel);
             var distanceFilter = BuildDistanceFilter(findVacanciesModel);
+            var rangeFilter = BuildDateRangeFilter(findVacanciesModel.PostedInLastNumberOfDays);
             var parameters = new Dictionary<string, object>
             {
                 {"pageSize", findVacanciesModel.PageSize},
                 {nameof(startingDocumentIndex), startingDocumentIndex},
                 {nameof(mustConditions), mustConditions},
                 {nameof(sort), sort},
-                {nameof(distanceFilter), distanceFilter}
+                {nameof(distanceFilter), distanceFilter},
+                {nameof(rangeFilter), rangeFilter}
             };
             
             var query = _elasticSearchQueries.FindVacanciesQuery.ReplaceParameters(parameters);
@@ -118,6 +120,11 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             }
             
             return $@",""filter"": {{ ""geo_distance"": {{ ""distance"": ""{findVacanciesModel.DistanceInMiles}miles"", ""location"": {{ ""lat"": {findVacanciesModel.Lat}, ""lon"": {findVacanciesModel.Lon} }} }} }}";
+        }
+
+        private string BuildDateRangeFilter(uint? numberOfDays)
+        {
+            return !numberOfDays.HasValue ? "" : @$", ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{numberOfDays}d/d"", ""lt"": ""now/d"" }} }}";
         }
     }
 }
