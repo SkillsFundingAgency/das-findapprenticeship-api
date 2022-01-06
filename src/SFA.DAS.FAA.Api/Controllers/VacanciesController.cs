@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
+using SFA.DAS.FAA.Api.ApRequests;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Models;
@@ -41,36 +42,23 @@ namespace SFA.DAS.FAA.Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> Search(
-            int pageNumber = 1,
-            int pageSize = 10,
-            int? ukprn = null,
-            string accountPublicHashedId = null,
-            string accountLegalEntityPublicHashedId = null,
-            int? standardLarsCode = null,
-            bool? nationWideOnly = null,
-            double? lat = null,
-            double? lon = null,
-            uint? distanceInMiles = null,
-            string route = null,
-            uint? postedInLastNumberOfDays = null,
-            VacancySort sort = VacancySort.AgeDesc)
+        public async Task<IActionResult> Search([FromQuery]SearchVacancyRequest request)
         {
             var result = await _mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
-                PageNumber = pageNumber, 
-                PageSize = pageSize,
-                Ukprn = ukprn,
-                AccountPublicHashedId = accountPublicHashedId,
-                AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId,
-                Route = route,
-                Lat = lat,
-                Lon = lon,
-                DistanceInMiles = distanceInMiles,
-                NationWideOnly = nationWideOnly,
-                StandardLarsCode = standardLarsCode,
-                PostedInLastNumberOfDays = postedInLastNumberOfDays,
-                VacancySort = sort
+                PageNumber = request.PageNumber, 
+                PageSize = request.PageSize,
+                Ukprn = request.Ukprn,
+                AccountPublicHashedId = request.AccountPublicHashedId,
+                AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
+                Route = request.Route,
+                Lat = request.Lat,
+                Lon = request.Lon,
+                DistanceInMiles = request.DistanceInMiles,
+                NationWideOnly = request.NationWideOnly,
+                StandardLarsCode = request.StandardLarsCode,
+                PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
+                VacancySort = request.Sort
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse) result;
