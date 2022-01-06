@@ -12,7 +12,7 @@ namespace SFA.DAS.FAA.Domain.Models
         public double? Lat { get; set; }
         public double? Lon { get; set; }
         public uint? DistanceInMiles { get; set; }
-        public bool NationWideOnly { get; set; }
+        public bool? NationWideOnly { get; set; }
         public uint? PostedInLastNumberOfDays { get; set; }
         public VacancySort VacancySort { get; set; }
     }

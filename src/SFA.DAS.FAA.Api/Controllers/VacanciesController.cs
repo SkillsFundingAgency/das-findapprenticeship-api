@@ -48,7 +48,7 @@ namespace SFA.DAS.FAA.Api.Controllers
             string accountPublicHashedId = null,
             string accountLegalEntityPublicHashedId = null,
             int? standardLarsCode = null,
-            bool nationWideOnly = false,
+            bool? nationWideOnly = null,
             double? lat = null,
             double? lon = null,
             uint? distanceInMiles = null,

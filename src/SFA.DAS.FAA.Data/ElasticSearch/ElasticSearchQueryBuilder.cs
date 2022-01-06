@@ -71,6 +71,10 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""{nameof(findVacanciesModel.Route)}"": ""{findVacanciesModel.Route}"" }}}}";
             }
+            if (findVacanciesModel.NationWideOnly.HasValue)
+            {
+                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""vacancyLocationType"": ""{(findVacanciesModel.NationWideOnly.Value ? "National":"NonNational")}"" }}}}";
+            }
             return filters;
         }
 

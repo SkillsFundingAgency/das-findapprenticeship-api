@@ -61,17 +61,20 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
         }
         
         [Test]
-        [MoqInlineAutoData(50000112, null, null, null, null, @"{""must"": [ { ""term"": { ""Ukprn"": ""50000112"" }} ]")]
-        [MoqInlineAutoData(null, "ACB123", null, null, null, @"{""must"": [ { ""term"": { ""AccountPublicHashedId"": ""ACB123"" }} ]")]
-        [MoqInlineAutoData(null, null, "XYZ456",null, null,  @"{""must"": [ { ""term"": { ""AccountLegalEntityPublicHashedId"": ""XYZ456"" }} ]")]
-        [MoqInlineAutoData(null, null, null, 123, null, @"{""must"": [ { ""term"": { ""StandardLarsCode"": ""123"" }} ]")]
-        [MoqInlineAutoData(null, null, null, null, "route-name", @"{""must"": [ { ""term"": { ""Route"": ""route-name"" }} ]")]
+        [MoqInlineAutoData(50000112, null, null, null, null,null, @"{""must"": [ { ""term"": { ""Ukprn"": ""50000112"" }} ]")]
+        [MoqInlineAutoData(null, "ACB123", null, null, null, null,@"{""must"": [ { ""term"": { ""AccountPublicHashedId"": ""ACB123"" }} ]")]
+        [MoqInlineAutoData(null, null, "XYZ456",null, null,  null,@"{""must"": [ { ""term"": { ""AccountLegalEntityPublicHashedId"": ""XYZ456"" }} ]")]
+        [MoqInlineAutoData(null, null, null, 123, null, null,@"{""must"": [ { ""term"": { ""StandardLarsCode"": ""123"" }} ]")]
+        [MoqInlineAutoData(null, null, null, null, "route-name", null,@"{""must"": [ { ""term"": { ""Route"": ""route-name"" }} ]")]
+        [MoqInlineAutoData(null, null, null, null, null, true, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""National"" }} ]")]
+        [MoqInlineAutoData(null, null, null, null, null, false, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""NonNational"" }} ]")]
         public void And_Single_Field_HasValue_Then_Adds_Must_Condition(
             int? ukprn,
             string accountPublicHashedId,
             string accountLegalEntityPublicHashedId,
             int? standardLarsCode,
             string route,
+            bool? national,
             string fieldAssertion,
             int pageNumber, 
             int pageSize,
@@ -87,7 +90,8 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
                 AccountPublicHashedId = accountPublicHashedId,
                 AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId,
                 StandardLarsCode = standardLarsCode,
-                Route = route
+                Route = route,
+                NationWideOnly = national
             };
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
