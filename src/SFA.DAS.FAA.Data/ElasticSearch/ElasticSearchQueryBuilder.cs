@@ -55,23 +55,23 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             var filters = string.Empty;
             if (findVacanciesModel.Ukprn.HasValue)
             {
-                filters += @$"{{ ""term"": {{ ""{nameof(findVacanciesModel.Ukprn)}"": ""{findVacanciesModel.Ukprn}"" }}}}";
+                filters += @$"{{ ""term"": {{ ""ukprn"": ""{findVacanciesModel.Ukprn}"" }}}}";
             }
             if (!string.IsNullOrEmpty(findVacanciesModel.AccountPublicHashedId))
             {
-                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""{nameof(findVacanciesModel.AccountPublicHashedId)}"": ""{findVacanciesModel.AccountPublicHashedId}"" }}}}";
+                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""accountPublicHashedId"": ""{findVacanciesModel.AccountPublicHashedId}"" }}}}";
             }
             if (!string.IsNullOrEmpty(findVacanciesModel.AccountLegalEntityPublicHashedId))
             {
-                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""{nameof(findVacanciesModel.AccountLegalEntityPublicHashedId)}"": ""{findVacanciesModel.AccountLegalEntityPublicHashedId}"" }}}}";
+                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""accountLegalEntityPublicHashedId"": ""{findVacanciesModel.AccountLegalEntityPublicHashedId}"" }}}}";
             }
             if (findVacanciesModel.StandardLarsCode.HasValue)
             {
-                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""{nameof(findVacanciesModel.StandardLarsCode)}"": ""{findVacanciesModel.StandardLarsCode}"" }}}}";
+                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""standardLarsCode"": ""{findVacanciesModel.StandardLarsCode}"" }}}}";
             }
             if (!string.IsNullOrEmpty(findVacanciesModel.Route))
             {
-                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""{nameof(findVacanciesModel.Route)}"": ""{findVacanciesModel.Route}"" }}}}";
+                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""category"": ""{findVacanciesModel.Route}"" }}}}";
             }
             if (findVacanciesModel.NationWideOnly.HasValue)
             {
@@ -124,7 +124,7 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
 
         private string BuildDateRangeFilter(uint? numberOfDays)
         {
-            return !numberOfDays.HasValue ? "" : @$", ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{numberOfDays}d/d"", ""lt"": ""now/d"" }} }}";
+            return !numberOfDays.HasValue ? "" : @$",""filter"" : {{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{numberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}";
         }
     }
 }

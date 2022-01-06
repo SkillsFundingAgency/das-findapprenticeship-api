@@ -61,11 +61,11 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
         }
         
         [Test]
-        [MoqInlineAutoData(50000112, null, null, null, null,null, @"{""must"": [ { ""term"": { ""Ukprn"": ""50000112"" }} ]")]
-        [MoqInlineAutoData(null, "ACB123", null, null, null, null,@"{""must"": [ { ""term"": { ""AccountPublicHashedId"": ""ACB123"" }} ]")]
-        [MoqInlineAutoData(null, null, "XYZ456",null, null,  null,@"{""must"": [ { ""term"": { ""AccountLegalEntityPublicHashedId"": ""XYZ456"" }} ]")]
-        [MoqInlineAutoData(null, null, null, 123, null, null,@"{""must"": [ { ""term"": { ""StandardLarsCode"": ""123"" }} ]")]
-        [MoqInlineAutoData(null, null, null, null, "route-name", null,@"{""must"": [ { ""term"": { ""Route"": ""route-name"" }} ]")]
+        [MoqInlineAutoData(50000112, null, null, null, null,null, @"{""must"": [ { ""term"": { ""ukprn"": ""50000112"" }} ]")]
+        [MoqInlineAutoData(null, "ACB123", null, null, null, null,@"{""must"": [ { ""term"": { ""accountPublicHashedId"": ""ACB123"" }} ]")]
+        [MoqInlineAutoData(null, null, "XYZ456",null, null,  null,@"{""must"": [ { ""term"": { ""accountLegalEntityPublicHashedId"": ""XYZ456"" }} ]")]
+        [MoqInlineAutoData(null, null, null, 123, null, null,@"{""must"": [ { ""term"": { ""standardLarsCode"": ""123"" }} ]")]
+        [MoqInlineAutoData(null, null, null, null, "route-name", null,@"{""must"": [ { ""term"": { ""categoryCode"": ""route-name"" }} ]")]
         [MoqInlineAutoData(null, null, null, null, null, true, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""National"" }} ]")]
         [MoqInlineAutoData(null, null, null, null, null, false, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""NonNational"" }} ]")]
         public void And_Single_Field_HasValue_Then_Adds_Must_Condition(
@@ -221,10 +221,11 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
                 .Returns(@"{rangeFilter}");
             
             //Act
+            
             var query = queryBuilder.BuildFindVacanciesQuery(model);
             
             //Assert
-            query.Should().Be(@$", ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }}");
+            query.Should().Be(@$",""filter"" : {{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}");
         }
         
         
