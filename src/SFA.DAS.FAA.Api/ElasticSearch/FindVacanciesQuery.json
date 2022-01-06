@@ -5,14 +5,9 @@
       "must": [
         {mustConditions}
       ]
+        {distanceFilter}
     }
   },
   "size": "{pageSize}",
-  "sort": [
-    {
-      "closingDate": {
-        "order": "asc"
-      }
-    }
-  ]
+  "sort": [ {sort} ]
 }

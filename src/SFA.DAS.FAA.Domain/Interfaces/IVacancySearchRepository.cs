@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Domain.Interfaces
 {
@@ -7,11 +8,6 @@ namespace SFA.DAS.FAA.Domain.Interfaces
     {
         Task<bool> PingAsync();
         Task<ApprenticeshipSearchItem> Get(string vacancyReference);
-        Task<ApprenticeshipSearchResponse> Find(
-            int pageNumber, 
-            int pageSize, 
-            int? ukprn = null,
-            string accountPublicHashedId = null,
-            string accountLegalEntityPublicHashedId = null);
+        Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
     }
 }
