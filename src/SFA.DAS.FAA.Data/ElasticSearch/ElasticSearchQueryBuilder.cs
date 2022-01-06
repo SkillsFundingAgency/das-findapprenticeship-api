@@ -19,16 +19,14 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             var startingDocumentIndex = findVacanciesModel.PageNumber < 2 ? 0 : (findVacanciesModel.PageNumber - 1) * findVacanciesModel.PageSize;
             var mustConditions = BuildMustConditions(findVacanciesModel);
             var sort = BuildSort(findVacanciesModel);
-            var distanceFilter = BuildDistanceFilter(findVacanciesModel);
-            var rangeFilter = BuildDateRangeFilter(findVacanciesModel.PostedInLastNumberOfDays);
+            var filters = BuildFilters(findVacanciesModel);
             var parameters = new Dictionary<string, object>
             {
                 {"pageSize", findVacanciesModel.PageSize},
                 {nameof(startingDocumentIndex), startingDocumentIndex},
                 {nameof(mustConditions), mustConditions},
                 {nameof(sort), sort},
-                {nameof(distanceFilter), distanceFilter},
-                {nameof(rangeFilter), rangeFilter}
+                {nameof(filters), filters}
             };
             
             var query = _elasticSearchQueries.FindVacanciesQuery.ReplaceParameters(parameters);
@@ -80,15 +78,7 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             return filters;
         }
 
-        private static string AddFilterSeparator(string filters)
-        {
-            if (!string.IsNullOrEmpty(filters))
-            {
-                return ", ";
-            }
-
-            return "";
-        }
+        
 
         private string BuildSort(FindVacanciesModel model)
         {
@@ -111,20 +101,29 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             return "";
         }
 
-        private string BuildDistanceFilter(FindVacanciesModel findVacanciesModel)
+        private string BuildFilters(FindVacanciesModel findVacanciesModel)
         {
-            if (!findVacanciesModel.Lat.HasValue || !findVacanciesModel.Lon.HasValue ||
-                !findVacanciesModel.DistanceInMiles.HasValue)
+            var filters = "";
+            if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue && findVacanciesModel.DistanceInMiles.HasValue)
             {
-                return "";
+                filters = $@"{{ ""geo_distance"": {{ ""distance"": ""{findVacanciesModel.DistanceInMiles}miles"", ""location"": {{ ""lat"": {findVacanciesModel.Lat}, ""lon"": {findVacanciesModel.Lon} }} }} }}";
+            }
+
+            if (findVacanciesModel.PostedInLastNumberOfDays.HasValue)
+            {
+                filters += @$"{AddFilterSeparator(filters)}{{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{findVacanciesModel.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}";
             }
             
-            return $@",""filter"": {{ ""geo_distance"": {{ ""distance"": ""{findVacanciesModel.DistanceInMiles}miles"", ""location"": {{ ""lat"": {findVacanciesModel.Lat}, ""lon"": {findVacanciesModel.Lon} }} }} }}";
+            return filters;
         }
-
-        private string BuildDateRangeFilter(uint? numberOfDays)
+        private static string AddFilterSeparator(string filters)
         {
-            return !numberOfDays.HasValue ? "" : @$",""filter"" : {{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{numberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}";
+            if (!string.IsNullOrEmpty(filters))
+            {
+                return ", ";
+            }
+
+            return "";
         }
     }
 }

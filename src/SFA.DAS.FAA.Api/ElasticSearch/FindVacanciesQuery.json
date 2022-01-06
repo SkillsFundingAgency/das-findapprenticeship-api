@@ -4,9 +4,10 @@
     "bool": {
       "must": [
         {mustConditions}
+      ], 
+      "filter": [
+        {filters}
       ]
-        {distanceFilter}
-        {rangeFilter}
     } 
   },
   "size": "{pageSize}",

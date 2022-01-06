@@ -172,13 +172,13 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
         {
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
-                .Returns(@"{distanceFilter}");
+                .Returns(@"{filters}");
             
             //Act
             var query = queryBuilder.BuildFindVacanciesQuery(model);
 
             //Assert
-            query.Should().Contain($@",""filter"": {{ ""geo_distance"": {{ ""distance"": ""{model.DistanceInMiles}miles"", ""location"": {{ ""lat"": {model.Lat}, ""lon"": {model.Lon} }} }} }}");
+            query.Should().Contain($@"{{ ""geo_distance"": {{ ""distance"": ""{model.DistanceInMiles}miles"", ""location"": {{ ""lat"": {model.Lat}, ""lon"": {model.Lon} }} }} }}");
         }
 
         [Test]
@@ -197,10 +197,11 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             model.Lat = lat;
             model.Lon = lon;
             model.DistanceInMiles = distanceInMiles;
+            model.PostedInLastNumberOfDays = null;
             model.VacancySort = VacancySort.DistanceAsc;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
-                .Returns(@"{""sort"": [ {sort} ] } {distanceFilter}");
+                .Returns(@"{""sort"": [ {sort} ] } {filters}");
             
             //Act
             var query = queryBuilder.BuildFindVacanciesQuery(model);
@@ -216,30 +217,53 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             ElasticSearchQueryBuilder queryBuilder)
         {
             //Arrange
+            model.Lat = null;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
-                .Returns(@"{rangeFilter}");
+                .Returns(@"{filters}");
             
             //Act
             
             var query = queryBuilder.BuildFindVacanciesQuery(model);
             
             //Assert
-            query.Should().Be(@$",""filter"" : {{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}");
+            query.Should().Be(@$"{{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}");
         }
         
         
         [Test, MoqAutoData]
-        public void Then_If_There_Is_No_Value_For_PostedInLastNumberOfDays_Value_Then_Added_To_Query(
+        public void Then_If_There_Is_A_PostedInLastNumberOfDays_And_Location_Value_Then_Added_To_Query(
+            FindVacanciesModel model,
+            [Frozen] Mock<IElasticSearchQueries> mockQueries,
+            ElasticSearchQueryBuilder queryBuilder)
+        {
+            //Arrange
+            mockQueries
+                .Setup(queries => queries.FindVacanciesQuery)
+                .Returns(@"{filters}");
+            
+            //Act
+            
+            var query = queryBuilder.BuildFindVacanciesQuery(model);
+            
+            //Assert
+            query.Should().Be(@$"{{ ""geo_distance"": {{ ""distance"": ""{model.DistanceInMiles}miles"", ""location"": {{ ""lat"": {model.Lat}, ""lon"": {model.Lon} }} }} }}, {{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}");
+        }
+
+        [Test, MoqAutoData]
+        public void Then_If_There_Is_No_Value_For_PostedInLastNumberOfDays_And_Location_Value_Then_Not_Added_To_Filter_Query(
             FindVacanciesModel model,
             [Frozen] Mock<IElasticSearchQueries> mockQueries,
             ElasticSearchQueryBuilder queryBuilder)
         {
             //Arrange
             model.PostedInLastNumberOfDays = null;
+            model.Lat = null;
+            model.Lon = null;
+            model.DistanceInMiles = null;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
-                .Returns(@"{rangeFilter}");
+                .Returns(@"{filters}");
             
             //Act
             var query = queryBuilder.BuildFindVacanciesQuery(model);
