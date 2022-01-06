@@ -6,7 +6,8 @@
         {mustConditions}
       ]
         {distanceFilter}
-    } {rangeFilter}
+        {rangeFilter}
+    } 
   },
   "size": "{pageSize}",
   "sort": [ {sort} ]
