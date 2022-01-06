@@ -13,6 +13,7 @@ using SFA.DAS.FAA.Data.Repository;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
+using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.FAA.Data.UnitTests.Repository
@@ -23,8 +24,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
         [Test, MoqAutoData]
         public async Task Then_Will_Return_ApprenticeshipVacancies_Found(
-            int pageNumber,
-            int pageSize,
+            FindVacanciesModel model,
             [Frozen] ElasticEnvironment environment,
             [Frozen] Mock<IElasticSearchQueryBuilder> mockQueryBuilder,
             [Frozen] Mock<IElasticLowLevelClient> mockElasticClient,
@@ -52,7 +52,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
             
             //Act
-            var results = await repository.Find(pageNumber, pageSize);
+            var results = await repository.Find(model);
 
             //Assert
             results.Total.Should().Be(10);
@@ -64,8 +64,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
         [Test, MoqAutoData]
         public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Invalid_Response(
-            int pageNumber,
-            int pageSize,
+            FindVacanciesModel model,
             [Frozen] ElasticEnvironment environment,
             [Frozen] Mock<IElasticSearchQueryBuilder> mockQueryBuilder,
             [Frozen] Mock<IElasticLowLevelClient> mockElasticClient,
@@ -81,7 +80,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(""));
 
             //Act
-            var result = await repository.Find(pageNumber, pageSize);
+            var result = await repository.Find(model);
 
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
@@ -91,8 +90,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         
         [Test, MoqAutoData]
         public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_No_results(
-            int pageNumber,
-            int pageSize,
+            FindVacanciesModel model,
             [Frozen] ElasticEnvironment environment,
             [Frozen] Mock<IElasticSearchQueryBuilder> mockQueryBuilder,
             [Frozen] Mock<IElasticLowLevelClient> mockElasticClient,
@@ -118,7 +116,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
 
             //Act
-            var result = await repository.Find(pageNumber, pageSize);
+            var result = await repository.Find(model);
 
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
@@ -128,8 +126,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         
         [Test, MoqAutoData]
         public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Failed_Response(
-            int pageNumber,
-            int pageSize,
+            FindVacanciesModel model,
             [Frozen] ElasticEnvironment environment,
             [Frozen] Mock<IElasticSearchQueryBuilder> mockQueryBuilder,
             [Frozen] Mock<IElasticLowLevelClient> mockElasticClient,
@@ -156,7 +153,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
 
             //Act
-            var result = await repository.Find(pageNumber, pageSize);
+            var result = await repository.Find(model);
 
             //Assert
             Assert.IsNotNull(result?.ApprenticeshipVacancies);
