@@ -39,7 +39,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
                         query.Lat.Equals(request.Lat) &&
                         query.Lon.Equals(request.Lon) &&
                         query.DistanceInMiles == request.DistanceInMiles &&
-                        query.Route == request.Route &&
+                        query.Categories == request.Categories &&
                         query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                         query.VacancySort.Equals(request.Sort)
                     ), 

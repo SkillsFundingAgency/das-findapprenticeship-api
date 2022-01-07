@@ -51,14 +51,14 @@ namespace SFA.DAS.FAA.Api.Controllers
                 Ukprn = request.Ukprn,
                 AccountPublicHashedId = request.AccountPublicHashedId,
                 AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
-                Route = request.Route,
+                Categories = request.Categories,
                 Lat = request.Lat,
                 Lon = request.Lon,
                 DistanceInMiles = request.DistanceInMiles,
                 NationWideOnly = request.NationWideOnly,
                 StandardLarsCode = request.StandardLarsCode,
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
-                VacancySort = request.Sort
+                VacancySort = request.Sort ?? VacancySort.AgeDesc
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse) result;

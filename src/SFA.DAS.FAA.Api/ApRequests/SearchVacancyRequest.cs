@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Domain.Models;
 
@@ -26,10 +27,10 @@ namespace SFA.DAS.FAA.Api.ApRequests
         [FromQuery]
         public uint? DistanceInMiles  { get; set; } = null;
         [FromQuery]
-        public string Route  { get; set; } = null;
+        public List<string> Categories  { get; set; } = null;
         [FromQuery]
         public uint? PostedInLastNumberOfDays  { get; set; } = null;
         [FromQuery]
-        public VacancySort Sort  { get; set; } = VacancySort.AgeDesc;
+        public VacancySort? Sort  { get; set; } = VacancySort.AgeDesc;
     }
 }

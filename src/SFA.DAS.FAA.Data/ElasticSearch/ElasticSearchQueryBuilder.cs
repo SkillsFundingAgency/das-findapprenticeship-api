@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SFA.DAS.FAA.Data.Extensions;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
@@ -67,10 +68,6 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""standardLarsCode"": ""{findVacanciesModel.StandardLarsCode}"" }}}}";
             }
-            if (!string.IsNullOrEmpty(findVacanciesModel.Route))
-            {
-                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""category"": ""{findVacanciesModel.Route}"" }}}}";
-            }
             if (findVacanciesModel.NationWideOnly.HasValue)
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""vacancyLocationType"": ""{(findVacanciesModel.NationWideOnly.Value ? "National":"NonNational")}"" }}}}";
@@ -113,7 +110,10 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{findVacanciesModel.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}";
             }
-            
+            if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Any())
+            {
+                filters += @$"{AddFilterSeparator(filters)}{{ ""terms"": {{ ""category"": [""{string.Join(@""",""",findVacanciesModel.Categories)}""] }} }}";
+            }
             return filters;
         }
         private static string AddFilterSeparator(string filters)

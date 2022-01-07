@@ -25,7 +25,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
                 AccountPublicHashedId = request.AccountPublicHashedId, 
                 AccountLegalEntityPublicHashedId =request.AccountLegalEntityPublicHashedId,
                 StandardLarsCode = request.StandardLarsCode,
-                Route = request.Route,
+                Categories = request.Categories,
                 Lat = request.Lat,
                 Lon =request.Lon,
                 DistanceInMiles = request.DistanceInMiles,

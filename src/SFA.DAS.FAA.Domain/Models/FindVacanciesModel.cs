@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SFA.DAS.FAA.Domain.Models
 {
     public class FindVacanciesModel
@@ -8,7 +10,7 @@ namespace SFA.DAS.FAA.Domain.Models
         public string AccountPublicHashedId { get; set; }
         public string AccountLegalEntityPublicHashedId { get; set; }
         public int? StandardLarsCode { get; set; }
-        public string Route { get; set; }
+        public List<string> Categories { get; set; }
         public double? Lat { get; set; }
         public double? Lon { get; set; }
         public uint? DistanceInMiles { get; set; }

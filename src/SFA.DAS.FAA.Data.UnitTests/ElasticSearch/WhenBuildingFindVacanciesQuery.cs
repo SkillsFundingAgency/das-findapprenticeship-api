@@ -61,19 +61,17 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
         }
         
         [Test]
-        [MoqInlineAutoData(50000112, null, null, null, null,null, @"{""must"": [ { ""term"": { ""ukprn"": ""50000112"" }} ]")]
-        [MoqInlineAutoData(null, "ACB123", null, null, null, null,@"{""must"": [ { ""term"": { ""accountPublicHashedId"": ""ACB123"" }} ]")]
-        [MoqInlineAutoData(null, null, "XYZ456",null, null,  null,@"{""must"": [ { ""term"": { ""accountLegalEntityPublicHashedId"": ""XYZ456"" }} ]")]
-        [MoqInlineAutoData(null, null, null, 123, null, null,@"{""must"": [ { ""term"": { ""standardLarsCode"": ""123"" }} ]")]
-        [MoqInlineAutoData(null, null, null, null, "route-name", null,@"{""must"": [ { ""term"": { ""category"": ""route-name"" }} ]")]
-        [MoqInlineAutoData(null, null, null, null, null, true, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""National"" }} ]")]
-        [MoqInlineAutoData(null, null, null, null, null, false, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""NonNational"" }} ]")]
+        [MoqInlineAutoData(50000112, null, null, null,null, @"{""must"": [ { ""term"": { ""ukprn"": ""50000112"" }} ]")]
+        [MoqInlineAutoData(null, "ACB123", null, null, null,@"{""must"": [ { ""term"": { ""accountPublicHashedId"": ""ACB123"" }} ]")]
+        [MoqInlineAutoData(null, null, "XYZ456", null,  null,@"{""must"": [ { ""term"": { ""accountLegalEntityPublicHashedId"": ""XYZ456"" }} ]")]
+        [MoqInlineAutoData(null, null, null, 123,null,@"{""must"": [ { ""term"": { ""standardLarsCode"": ""123"" }} ]")]
+        [MoqInlineAutoData(null, null, null,null, true, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""National"" }} ]")]
+        [MoqInlineAutoData(null, null, null,null, false, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""NonNational"" }} ]")]
         public void And_Single_Field_HasValue_Then_Adds_Must_Condition(
             int? ukprn,
             string accountPublicHashedId,
             string accountLegalEntityPublicHashedId,
             int? standardLarsCode,
-            string route,
             bool? national,
             string fieldAssertion,
             int pageNumber, 
@@ -90,7 +88,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
                 AccountPublicHashedId = accountPublicHashedId,
                 AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId,
                 StandardLarsCode = standardLarsCode,
-                Route = route,
+                Categories = null,
                 NationWideOnly = national
             };
             mockQueries
@@ -198,6 +196,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             model.Lon = lon;
             model.DistanceInMiles = distanceInMiles;
             model.PostedInLastNumberOfDays = null;
+            model.Categories = null;
             model.VacancySort = VacancySort.DistanceAsc;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
@@ -218,6 +217,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
         {
             //Arrange
             model.Lat = null;
+            model.Categories = null;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
                 .Returns(@"{filters}");
@@ -229,10 +229,30 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             //Assert
             query.Should().Be(@$"{{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}");
         }
-        
+
+        [Test, MoqAutoData]
+        public void Then_If_There_Are_Categories_They_Are_Added_To_The_Filter(
+            FindVacanciesModel model,
+            [Frozen] Mock<IElasticSearchQueries> mockQueries,
+            ElasticSearchQueryBuilder queryBuilder)
+        {
+            //Arrange
+            model.Lat = null;
+            model.PostedInLastNumberOfDays = null;
+            mockQueries
+                .Setup(queries => queries.FindVacanciesQuery)
+                .Returns(@"{filters}");
+            
+            //Act
+            
+            var query = queryBuilder.BuildFindVacanciesQuery(model);
+            
+            //Assert
+            query.Should().Be(@$"{{ ""terms"": {{ ""category"": [""{string.Join(@""",""",model.Categories)}""] }} }}");
+        }
         
         [Test, MoqAutoData]
-        public void Then_If_There_Is_A_PostedInLastNumberOfDays_And_Location_Value_Then_Added_To_Query(
+        public void Then_If_There_Is_A_PostedInLastNumberOfDays_And_Location_And_Categories_Value_Then_Added_To_Query(
             FindVacanciesModel model,
             [Frozen] Mock<IElasticSearchQueries> mockQueries,
             ElasticSearchQueryBuilder queryBuilder)
@@ -247,7 +267,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             var query = queryBuilder.BuildFindVacanciesQuery(model);
             
             //Assert
-            query.Should().Be(@$"{{ ""geo_distance"": {{ ""distance"": ""{model.DistanceInMiles}miles"", ""location"": {{ ""lat"": {model.Lat}, ""lon"": {model.Lon} }} }} }}, {{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}");
+            query.Should().Be(@$"{{ ""geo_distance"": {{ ""distance"": ""{model.DistanceInMiles}miles"", ""location"": {{ ""lat"": {model.Lat}, ""lon"": {model.Lon} }} }} }}, {{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}, {{ ""terms"": {{ ""category"": [""{string.Join(@""",""",model.Categories)}""] }} }}");
         }
 
         [Test, MoqAutoData]
@@ -261,6 +281,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             model.Lat = null;
             model.Lon = null;
             model.DistanceInMiles = null;
+            model.Categories = null;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
                 .Returns(@"{filters}");

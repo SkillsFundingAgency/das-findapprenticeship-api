@@ -29,7 +29,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                         c.AccountPublicHashedId.Equals(query.AccountPublicHashedId) &&
                         c.AccountLegalEntityPublicHashedId.Equals(query.AccountLegalEntityPublicHashedId) &&
                         c.StandardLarsCode.Equals(query.StandardLarsCode) &&
-                        c.Route.Equals(query.Route) &&
+                        c.Categories.Equals(query.Categories) &&
                         c.Lat.Equals(query.Lat) &&
                         c.Lon.Equals(query.Lon) &&
                         c.DistanceInMiles.Equals(query.DistanceInMiles) &&
