@@ -1,10 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
+using SFA.DAS.FAA.Api.ApRequests;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
@@ -41,20 +42,23 @@ namespace SFA.DAS.FAA.Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> Search(
-            int pageNumber = 1,
-            int pageSize = 10,
-            int? ukprn = null,
-            string accountPublicHashedId = null,
-            string accountLegalEntityPublicHashedId = null)
+        public async Task<IActionResult> Search([FromQuery]SearchVacancyRequest request)
         {
             var result = await _mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
-                PageNumber = pageNumber, 
-                PageSize = pageSize,
-                Ukprn = ukprn,
-                AccountPublicHashedId = accountPublicHashedId,
-                AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId
+                PageNumber = request.PageNumber, 
+                PageSize = request.PageSize,
+                Ukprn = request.Ukprn,
+                AccountPublicHashedId = request.AccountPublicHashedId,
+                AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
+                Categories = request.Categories,
+                Lat = request.Lat,
+                Lon = request.Lon,
+                DistanceInMiles = request.DistanceInMiles,
+                NationWideOnly = request.NationWideOnly,
+                StandardLarsCode = request.StandardLarsCode,
+                PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
+                VacancySort = request.Sort ?? VacancySort.AgeDesc
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse) result;

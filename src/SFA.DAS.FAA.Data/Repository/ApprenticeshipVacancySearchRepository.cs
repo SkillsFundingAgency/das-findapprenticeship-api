@@ -8,6 +8,7 @@ using SFA.DAS.FAA.Data.ElasticSearch;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Data.Repository
 {
@@ -62,11 +63,11 @@ namespace SFA.DAS.FAA.Data.Repository
             return responseBody.Items.SingleOrDefault();
         }
 
-        public async Task<ApprenticeshipSearchResponse> Find(int pageNumber, int pageSize, int? ukprn = null, string accountPublicHashedId = null, string accountLegalEntityPublicHashedId = null)
+        public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)
         {
             _logger.LogInformation("Starting vacancy search");
             
-            var query = _queryBuilder.BuildFindVacanciesQuery(pageNumber, pageSize, ukprn, accountPublicHashedId, accountLegalEntityPublicHashedId);
+            var query = _queryBuilder.BuildFindVacanciesQuery(findVacanciesModel);
             var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
             var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
 

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.FAA.Domain.Interfaces;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies
 {
@@ -16,7 +17,22 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
         
         public async Task<SearchApprenticeshipVacanciesResult> Handle(SearchApprenticeshipVacanciesQuery request, CancellationToken cancellationToken)
         {
-            var searchResult = await _vacancySearchRepository.Find(request.PageNumber, request.PageSize, request.Ukprn, request.AccountPublicHashedId, request.AccountLegalEntityPublicHashedId);
+            var searchResult = await _vacancySearchRepository.Find(new FindVacanciesModel
+            {
+                PageNumber = request.PageNumber, 
+                PageSize = request.PageSize, 
+                Ukprn = request.Ukprn, 
+                AccountPublicHashedId = request.AccountPublicHashedId, 
+                AccountLegalEntityPublicHashedId =request.AccountLegalEntityPublicHashedId,
+                StandardLarsCode = request.StandardLarsCode,
+                Categories = request.Categories,
+                Lat = request.Lat,
+                Lon =request.Lon,
+                DistanceInMiles = request.DistanceInMiles,
+                NationWideOnly = request.NationWideOnly,
+                PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
+                VacancySort = request.VacancySort
+            });
 
             return new SearchApprenticeshipVacanciesResult
             {

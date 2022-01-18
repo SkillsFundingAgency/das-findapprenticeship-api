@@ -4,15 +4,12 @@
     "bool": {
       "must": [
         {mustConditions}
+      ], 
+      "filter": [
+        {filters}
       ]
-    }
+    } 
   },
   "size": "{pageSize}",
-  "sort": [
-    {
-      "closingDate": {
-        "order": "asc"
-      }
-    }
-  ]
+  "sort": [ {sort} ]
 }
