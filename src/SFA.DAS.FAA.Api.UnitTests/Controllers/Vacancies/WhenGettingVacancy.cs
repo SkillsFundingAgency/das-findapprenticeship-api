@@ -34,9 +34,9 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
 
             result.Should().NotBeNull();
             result.StatusCode.Should().Be((int) HttpStatusCode.OK);
-            var apiModel = result.Value as GetApprenticeshipVacancyResponse;
+            var apiModel = result.Value as GetApprenticeshipVacancyDetailResponse;
             apiModel.Should().NotBeNull();
-            apiModel.Should().BeEquivalentTo((GetApprenticeshipVacancyResponse)mediatorResult.ApprenticeshipVacancy);
+            apiModel.Should().BeEquivalentTo((GetApprenticeshipVacancyDetailResponse)mediatorResult.ApprenticeshipVacancy);
         }
         
         [Test, MoqAutoData]

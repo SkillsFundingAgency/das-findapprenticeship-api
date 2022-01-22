@@ -35,7 +35,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                 return NotFound();
             }
 
-            var apiResponse = (GetApprenticeshipVacancyResponse) result.ApprenticeshipVacancy;
+            var apiResponse = (GetApprenticeshipVacancyDetailResponse) result.ApprenticeshipVacancy;
             
             return Ok(apiResponse);
         }
