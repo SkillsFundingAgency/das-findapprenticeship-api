@@ -4,6 +4,6 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy
 {
     public class GetApprenticeshipVacancyResult
     {
-        public ApprenticeshipSearchItem ApprenticeshipVacancy { get; set; }
+        public ApprenticeshipVacancyItem ApprenticeshipVacancy { get; set; }
     }
 }

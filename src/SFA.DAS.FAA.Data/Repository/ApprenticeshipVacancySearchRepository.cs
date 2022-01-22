@@ -50,13 +50,13 @@ namespace SFA.DAS.FAA.Data.Repository
             return pingResponse.Success;
         }
 
-        public async Task<ApprenticeshipSearchItem> Get(string vacancyReference)
+        public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
         {
             _logger.LogInformation($"Starting get vacancy [{vacancyReference}]");
             
             var query = _queryBuilder.BuildGetVacancyQuery(vacancyReference);
             var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
-            var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(jsonResponse.Body);
+            var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipVacancyItem>>(jsonResponse.Body);
             
             _logger.LogInformation($"Found [{responseBody.hits.total.value}] hits for vacancy [{vacancyReference}]");
             
