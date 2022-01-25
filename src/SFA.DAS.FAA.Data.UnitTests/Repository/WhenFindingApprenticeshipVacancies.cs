@@ -110,10 +110,15 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         [MoqInlineAutoData(1.0, null, null)]
         [MoqInlineAutoData(null, 1.0, null)]
         [MoqInlineAutoData(null, null, 1u)]
+        [MoqInlineAutoData(1.0, 1.0, 1u, VacancySort.AgeAsc)]
+        [MoqInlineAutoData(1.0, 1.0, 1u, VacancySort.AgeDesc)]
+        [MoqInlineAutoData(1.0, 1.0, 1u, VacancySort.ExpectedStartDateAsc)]
+        [MoqInlineAutoData(1.0, 1.0, 1u, VacancySort.ExpectedStartDateDesc)]
         public async Task Then_Will_Return_ApprenticeshipVacancies_Found_And_Distance_Null_If_Not_GeoDistance(
             double? lat,
             double? lon,
             uint? distanceInMiles,
+            VacancySort vacancySort,
             FindVacanciesModel model,
             [Frozen] ElasticEnvironment environment,
             [Frozen] Mock<IElasticSearchQueryBuilder> mockQueryBuilder,
@@ -124,6 +129,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             model.Lat = lat;
             model.Lat = lon;
             model.DistanceInMiles = distanceInMiles;
+            model.VacancySort = vacancySort;
             var expectedVacancy = JsonConvert
                 .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(FakeElasticResponses.MoreThanOneHitResponseWithSort)
                 .Items.First();
