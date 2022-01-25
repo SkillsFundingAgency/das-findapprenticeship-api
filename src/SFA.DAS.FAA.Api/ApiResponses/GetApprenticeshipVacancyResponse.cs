@@ -40,7 +40,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string WorkingWeek { get; set; }
         
         //Calculated after search
-        public double Distance { get; set; }
+        public decimal? Distance { get; set; }
         public double Score { get; set; }
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoFixture;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.FAA.Data.ElasticSearch;
@@ -12,13 +14,16 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
         public void ThenWillShowSearchHitsAsItems()
         {
             //Arrange
-            var expectedResponseHits = new List<string> {"1", "2", "3"};
+            var expectedResponseHits = new List<Hit<string>> {
+                new Hit<string>{_source = "1"},
+                new Hit<string>{_source = "2"},
+                new Hit<string>{_source = "3"}};
             var response = new ElasticResponse<string>
             {
                 hits = new Hits<string>()
                 {
                     hits = expectedResponseHits
-                        .Select(h => new Hit<string> {_source = h})
+                        .Select(h => h)
                         .ToList()
                 }
             };

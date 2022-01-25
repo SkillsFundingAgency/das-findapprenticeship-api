@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
@@ -59,8 +60,9 @@ namespace SFA.DAS.FAA.Data.Repository
             var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipVacancyItem>>(jsonResponse.Body);
             
             _logger.LogInformation($"Found [{responseBody.hits.total.value}] hits for vacancy [{vacancyReference}]");
-            
-            return responseBody.Items.SingleOrDefault();
+
+            var apprenticeshipVacancyItem = responseBody.Items.SingleOrDefault()?._source;
+            return apprenticeshipVacancyItem;
         }
 
         public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)
@@ -80,10 +82,29 @@ namespace SFA.DAS.FAA.Data.Repository
             _logger.LogDebug("Searching complete, returning search results");
 
             var totalRecordCount = await GetTotal();
+
+            var apprenticeshipSearchItems = responseBody.Items;
+
+            var searchItems = new List<ApprenticeshipSearchItem>();
+            if (findVacanciesModel.Lat == null || findVacanciesModel.Lon == null ||
+                findVacanciesModel.DistanceInMiles == null)
+            {
+                searchItems = apprenticeshipSearchItems.Select(c=>c._source).ToList();
+            }
+            else
+            {
+                foreach (var apprenticeshipSearchItem in apprenticeshipSearchItems)
+                {
+                    var searchItem = apprenticeshipSearchItem._source;
+                    searchItem.Distance = apprenticeshipSearchItem.sort?.FirstOrDefault();  
+                    searchItems.Add(searchItem);
+                }    
+            }
+            
             
             var searchResult =  new ApprenticeshipSearchResponse
             {
-               ApprenticeshipVacancies = responseBody.Items,
+               ApprenticeshipVacancies = searchItems,
                TotalFound = responseBody.hits?.total?.value ?? 0,
                Total = totalRecordCount
             };

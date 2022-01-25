@@ -41,7 +41,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             
             var vacancy = await repository.Get(vacancyReference);
 
-            vacancy.Should().BeEquivalentTo(expectedVacancy);
+            vacancy.Should().BeEquivalentTo(expectedVacancy._source);
         }
         
         [Test, MoqAutoData]
