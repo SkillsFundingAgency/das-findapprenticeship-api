@@ -86,10 +86,12 @@ namespace SFA.DAS.FAA.Data.Repository
             var apprenticeshipSearchItems = responseBody.Items;
 
             var searchItems = new List<ApprenticeshipSearchItem>();
+
+            var isDistanceSort = findVacanciesModel.VacancySort == VacancySort.DistanceAsc ||
+                                 findVacanciesModel.VacancySort == VacancySort.DistanceDesc;
+            
             if (findVacanciesModel.Lat == null || findVacanciesModel.Lon == null 
-                                               || findVacanciesModel.DistanceInMiles == null 
-                                               || findVacanciesModel.VacancySort != VacancySort.DistanceAsc 
-                                               || findVacanciesModel.VacancySort != VacancySort.DistanceDesc)
+                                               || findVacanciesModel.DistanceInMiles == null || !isDistanceSort)
             {
                 searchItems = apprenticeshipSearchItems.Select(c=>c._source).ToList();
             }
