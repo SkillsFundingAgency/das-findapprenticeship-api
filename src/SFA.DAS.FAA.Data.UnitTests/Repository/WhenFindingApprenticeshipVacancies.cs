@@ -72,6 +72,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             ApprenticeshipVacancySearchRepository repository)
         {
             //arrange
+            model.VacancySort = VacancySort.DistanceAsc;
             var expectedVacancy = JsonConvert
                 .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(FakeElasticResponses.MoreThanOneHitResponseWithSort)
                 .Items.First();
@@ -127,7 +128,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         {
             //arrange
             model.Lat = lat;
-            model.Lat = lon;
+            model.Lon = lon;
             model.DistanceInMiles = distanceInMiles;
             model.VacancySort = vacancySort;
             var expectedVacancy = JsonConvert
