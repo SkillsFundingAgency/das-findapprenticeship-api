@@ -39,7 +39,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string WorkingWeek { get; set; }
         
         //Calculated after search
-        public double Distance { get; set; }
+        public decimal? Distance { get; set; }
         public double Score { get; set; }
     }
     

@@ -16,7 +16,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
         [Test, MoqAutoData]
         public async Task Then_Gets_Vacancies_From_Repository(
             GetApprenticeshipVacancyQuery query,
-            ApprenticeshipSearchItem responseFromRepository,
+            ApprenticeshipVacancyItem responseFromRepository,
             [Frozen] Mock<IVacancySearchRepository> mockVacancyIndexRepository,
             GetApprenticeshipVacancyQueryHandler handler)
         {

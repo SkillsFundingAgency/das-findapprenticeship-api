@@ -10,7 +10,7 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
         public Shards _shards { get; set; }
         public Hits<T> hits { get; set; }
         
-        public ICollection<T> Items => hits?.hits?.Select(h => h._source).ToList() ?? new List<T>();
+        public ICollection<Hit<T>> Items => hits?.hits?.Select(h => h).ToList() ?? new List<Hit<T>>();
     }
 
     public class ElasticCountResponse
@@ -47,6 +47,6 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
         public string _id { get; set; }
         public object _score { get; set; }
         public T _source { get; set; }
-        public List<string> sort { get; set; }
+        public List<decimal> sort { get; set; }
     }
 }
