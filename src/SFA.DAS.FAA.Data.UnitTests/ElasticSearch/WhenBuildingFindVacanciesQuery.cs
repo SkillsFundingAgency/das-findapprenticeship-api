@@ -65,7 +65,6 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
         [MoqInlineAutoData(50000112, null, null, null,null, @"{""must"": [ { ""term"": { ""ukprn"": ""50000112"" }} ]")]
         [MoqInlineAutoData(null, "ACB123", null, null, null,@"{""must"": [ { ""term"": { ""accountPublicHashedId"": ""ACB123"" }} ]")]
         [MoqInlineAutoData(null, null, "XYZ456", null,  null,@"{""must"": [ { ""term"": { ""accountLegalEntityPublicHashedId"": ""XYZ456"" }} ]")]
-        [MoqInlineAutoData(null, null, null, 123,null,@"{""must"": [ { ""term"": { ""standardLarsCode"": ""123"" }} ]")]
         [MoqInlineAutoData(null, null, null,null, true, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""National"" }} ]")]
         [MoqInlineAutoData(null, null, null,null, false, @"{""must"": [ { ""term"": { ""vacancyLocationType"": ""NonNational"" }} ]")]
         public void And_Single_Field_HasValue_Then_Adds_Must_Condition(
