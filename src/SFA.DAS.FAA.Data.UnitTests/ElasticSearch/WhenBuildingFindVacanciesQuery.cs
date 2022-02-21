@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -71,7 +72,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             int? ukprn,
             string accountPublicHashedId,
             string accountLegalEntityPublicHashedId,
-            int? standardLarsCode,
+            List<int?> standardLarsCode,
             bool? national,
             string fieldAssertion,
             int pageNumber, 
@@ -197,6 +198,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             model.DistanceInMiles = distanceInMiles;
             model.PostedInLastNumberOfDays = null;
             model.Categories = null;
+            model.StandardLarsCode = null;
             model.VacancySort = VacancySort.DistanceAsc;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
@@ -218,6 +220,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             //Arrange
             model.Lat = null;
             model.Categories = null;
+            model.StandardLarsCode = null;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
                 .Returns(@"{filters}");
@@ -239,6 +242,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             //Arrange
             model.Lat = null;
             model.PostedInLastNumberOfDays = null;
+            model.StandardLarsCode = null;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
                 .Returns(@"{filters}");
@@ -258,6 +262,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             ElasticSearchQueryBuilder queryBuilder)
         {
             //Arrange
+            model.StandardLarsCode = null;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
                 .Returns(@"{filters}");
@@ -268,6 +273,47 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             
             //Assert
             query.Should().Be(@$"{{ ""geo_distance"": {{ ""distance"": ""{model.DistanceInMiles}miles"", ""location"": {{ ""lat"": {model.Lat}, ""lon"": {model.Lon} }} }} }}, {{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}, {{ ""terms"": {{ ""category"": [""{string.Join(@""",""",model.Categories)}""] }} }}");
+        }
+
+        [Test, MoqAutoData]
+        public void Then_If_There_Are_Standard_Lars_Codes_They_Are_Added_To_The_Filter(
+            FindVacanciesModel model,
+            [Frozen] Mock<IElasticSearchQueries> mockQueries,
+            ElasticSearchQueryBuilder queryBuilder)
+        {
+            //Arrange
+            model.Lat = null;
+            model.PostedInLastNumberOfDays = null;
+            model.Categories = null;
+            mockQueries
+                .Setup(queries => queries.FindVacanciesQuery)
+                .Returns(@"{filters}");
+
+            //Act
+
+            var query = queryBuilder.BuildFindVacanciesQuery(model);
+
+            //Assert
+            query.Should().Be(@$"{{ ""terms"": {{ ""standardLarsCode"": [""{string.Join(@""",""", model.StandardLarsCode)}""] }} }}");
+        }
+
+        [Test, MoqAutoData]
+        public void Then_If_There_Is_A_PostedInLastNumberOfDays_And_Location_And_Catagories_And_Standard_Lars_Codes_Value_Then_Added_To_Query(
+            FindVacanciesModel model,
+            [Frozen] Mock<IElasticSearchQueries> mockQueries,
+            ElasticSearchQueryBuilder queryBuilder)
+        {
+            //Arrange
+            mockQueries
+                .Setup(queries => queries.FindVacanciesQuery)
+                .Returns(@"{filters}");
+
+            //Act
+
+            var query = queryBuilder.BuildFindVacanciesQuery(model);
+
+            //Assert
+            query.Should().Be(@$"{{ ""geo_distance"": {{ ""distance"": ""{model.DistanceInMiles}miles"", ""location"": {{ ""lat"": {model.Lat}, ""lon"": {model.Lon} }} }} }}, {{ ""range"": {{ ""postedDate"": {{ ""gte"": ""now-{model.PostedInLastNumberOfDays}d/d"", ""lt"": ""now/d"" }} }} }}, {{ ""terms"": {{ ""category"": [""{string.Join(@""",""", model.Categories)}""] }} }}, {{ ""terms"": {{ ""standardLarsCode"": [""{string.Join(@""",""", model.StandardLarsCode)}""] }} }}");
         }
 
         [Test, MoqAutoData]
@@ -282,6 +328,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             model.Lon = null;
             model.DistanceInMiles = null;
             model.Categories = null;
+            model.StandardLarsCode = null;
             mockQueries
                 .Setup(queries => queries.FindVacanciesQuery)
                 .Returns(@"{filters}");

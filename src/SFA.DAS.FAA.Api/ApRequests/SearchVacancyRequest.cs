@@ -17,7 +17,7 @@ namespace SFA.DAS.FAA.Api.ApRequests
         [FromQuery]
         public string AccountLegalEntityPublicHashedId  { get; set; } = null;
         [FromQuery]
-        public int? StandardLarsCode  { get; set; } = null;
+        public List<int?> StandardLarsCode  { get; set; } = null;
         [FromQuery]
         public bool? NationWideOnly  { get; set; } = null;
         [FromQuery]
