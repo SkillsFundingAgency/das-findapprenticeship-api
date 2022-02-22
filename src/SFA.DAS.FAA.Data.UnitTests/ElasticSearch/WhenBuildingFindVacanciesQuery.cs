@@ -71,7 +71,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearch
             int? ukprn,
             string accountPublicHashedId,
             string accountLegalEntityPublicHashedId,
-            List<int?> standardLarsCode,
+            List<int> standardLarsCode,
             bool? national,
             string fieldAssertion,
             int pageNumber, 

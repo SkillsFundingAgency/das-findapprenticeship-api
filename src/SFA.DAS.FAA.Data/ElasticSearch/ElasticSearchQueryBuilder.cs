@@ -64,10 +64,6 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""accountLegalEntityPublicHashedId"": ""{findVacanciesModel.AccountLegalEntityPublicHashedId}"" }}}}";
             }
-            if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Any())
-            {
-                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""standardLarsCode"": [""{string.Join(@""",""", findVacanciesModel.StandardLarsCode)}""] }}}}";
-            }
             if (findVacanciesModel.NationWideOnly.HasValue)
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""vacancyLocationType"": ""{(findVacanciesModel.NationWideOnly.Value ? "National":"NonNational")}"" }}}}";
