@@ -38,10 +38,17 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public int WageUnit { get; set; }
         public int WageType { get; set; }
         public string WorkingWeek { get; set; }
+        public string ExpectedDuration { get ; set ; }
         
         //Calculated after search
         public decimal? Distance { get; set; }
         public double Score { get; set; }
+        public Address Address { get ; set ; }
+        public string EmployerDescription { get ; set ; }
+        public string EmployerWebsiteUrl { get ; set ; }
+        public string EmployerContactPhone { get ; set ; }
+        public string EmployerContactEmail { get ; set ; }
+        public string EmployerContactName { get ; set ; }
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
@@ -81,7 +88,13 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageType = source.WageType,
                 WorkingWeek = source.WorkingWeek,
                 Distance = source.Distance,
-                Score = source.Score
+                Score = source.Score,
+                ExpectedDuration =  $"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}",
+                EmployerContactName = source.EmployerContactName,
+                EmployerContactEmail = source.EmployerContactEmail,
+                EmployerContactPhone = source.EmployerContactPhone,
+                EmployerWebsiteUrl = source.EmployerWebsiteUrl,
+                Address = source.Address
             };
         }
     }
@@ -97,6 +110,27 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             {
                 lon = source.lon,
                 lat = source.lat
+            };
+        }
+    }
+
+    public class Address
+    {
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string AddressLine3 { get; set; }
+        public string AddressLine4 { get; set; }
+        public string Postcode { get; set; }
+        
+        public static implicit operator Address(SFA.DAS.FAA.Domain.Entities.Address source)
+        {
+            return new Address
+            {
+                AddressLine1 = source.AddressLine1,
+                AddressLine2 = source.AddressLine2,
+                AddressLine3 = source.AddressLine3,
+                AddressLine4 = source.AddressLine4,
+                Postcode = source.Postcode
             };
         }
     }

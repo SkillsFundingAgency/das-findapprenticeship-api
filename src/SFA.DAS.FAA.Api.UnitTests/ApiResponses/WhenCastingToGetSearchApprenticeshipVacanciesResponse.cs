@@ -9,12 +9,16 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
     public class WhenCastingToGetSearchApprenticeshipVacanciesResponse
     {
         [Test, AutoData]
-        public void Then_Maps_Fields(
-            SearchApprenticeshipVacanciesResult source)
+        public void Then_Maps_Fields(SearchApprenticeshipVacanciesResult source)
         {
             var response = (GetSearchApprenticeshipVacanciesResponse)source;
 
-            response.Should().BeEquivalentTo(source);
+            response.Should().BeEquivalentTo(source, options=>options.Excluding(c=>c.ApprenticeshipVacancies));
+            response.ApprenticeshipVacancies.Should().BeEquivalentTo(source.ApprenticeshipVacancies, options => options
+                .Excluding(c => c.EmployerDescription)
+                .Excluding(c => c.Duration)
+                .Excluding(c => c.DurationUnit)
+            );
         }
     }
 }

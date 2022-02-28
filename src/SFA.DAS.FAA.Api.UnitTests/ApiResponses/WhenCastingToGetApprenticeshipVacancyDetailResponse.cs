@@ -13,7 +13,10 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         {
             var actual = (GetApprenticeshipVacancyDetailResponse)source;
 
-            actual.Should().BeEquivalentTo(source);
+            actual.Should().BeEquivalentTo(source, options=> options
+                .Excluding(c=>c.Duration)
+                .Excluding(c=>c.DurationUnit)
+            );
         }
     }
 }
