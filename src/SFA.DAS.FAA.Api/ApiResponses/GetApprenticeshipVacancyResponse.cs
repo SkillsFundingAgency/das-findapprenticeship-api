@@ -124,6 +124,10 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         
         public static implicit operator Address(SFA.DAS.FAA.Domain.Entities.Address source)
         {
+            if (source == null)
+            {
+                return null;
+            }
             return new Address
             {
                 AddressLine1 = source.AddressLine1,

@@ -32,5 +32,16 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
 
             response.ExpectedDuration.Should().Be(expectedText);
         }
+        
+        
+        [Test, AutoData]
+        public void Then_If_No_Address_Then_Null_Returned(ApprenticeshipVacancyItem source)
+        {
+            source.Address = null;
+            
+            var actual = (GetApprenticeshipVacancyResponse)source;
+
+            actual.Address.Should().BeNull();
+        }
     }
 }
