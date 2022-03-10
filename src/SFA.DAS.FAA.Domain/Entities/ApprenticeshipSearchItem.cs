@@ -37,7 +37,14 @@ namespace SFA.DAS.FAA.Domain.Entities
         public int WageUnit { get; set; }
         public int WageType { get; set; }
         public string WorkingWeek { get; set; }
-        
+        public Address Address { get; set; }
+        public string EmployerWebsiteUrl { get; set; }
+        public string EmployerDescription { get; set; }
+        public string EmployerContactName { get; set; }
+        public string EmployerContactPhone { get; set; }
+        public string EmployerContactEmail { get; set; }
+        public int Duration { get; set; }
+        public string DurationUnit { get; set; }
         //Calculated after search
         public decimal? Distance { get; set; }
         public double Score { get; set; }
@@ -65,5 +72,14 @@ namespace SFA.DAS.FAA.Domain.Entities
         Unknown = 0,
         NonNational,
         National
+    }
+
+    public class Address
+    {
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string AddressLine3 { get; set; }
+        public string AddressLine4 { get; set; }
+        public string Postcode { get; set; }
     }
 }

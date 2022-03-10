@@ -12,6 +12,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string TrainingDescription { get; set; }
         public List<string> Skills { get; set; }
         public List<Qualification> Qualifications { get; set; }
+        
+
         public static implicit operator GetApprenticeshipVacancyDetailResponse(ApprenticeshipVacancyItem source)
         {
             return new GetApprenticeshipVacancyDetailResponse
@@ -56,11 +58,18 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 OutcomeDescription = source.OutcomeDescription,
                 TrainingDescription = source.TrainingDescription,
                 Skills = source.Skills,
-                Qualifications = source.Qualifications.Select(c=> (Qualification)c).ToList()
+                Qualifications = source.Qualifications.Select(c=> (Qualification)c).ToList(),
+                ExpectedDuration =  $"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}",
+                EmployerContactName = source.EmployerContactName,
+                EmployerContactEmail = source.EmployerContactEmail,
+                EmployerContactPhone = source.EmployerContactPhone,
+                EmployerWebsiteUrl = source.EmployerWebsiteUrl,
+                EmployerDescription = source.EmployerDescription,
+                Address = source.Address
             };
         }
     }
-
+    
     public class Qualification
     {
         public QualificationWeighting Weighting { get ; set ; }
@@ -80,7 +89,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             };
         }
     }
-    
+
     public enum QualificationWeighting
     {
         Essential,
