@@ -9,7 +9,7 @@ namespace SFA.DAS.FAA.Domain.Models
         public int? Ukprn { get; set; }
         public string AccountPublicHashedId { get; set; }
         public string AccountLegalEntityPublicHashedId { get; set; }
-        public int? StandardLarsCode { get; set; }
+        public List<int> StandardLarsCode { get; set; }
         public List<string> Categories { get; set; }
         public double? Lat { get; set; }
         public double? Lon { get; set; }

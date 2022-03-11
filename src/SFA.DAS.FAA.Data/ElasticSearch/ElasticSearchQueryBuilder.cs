@@ -64,10 +64,6 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""accountLegalEntityPublicHashedId"": ""{findVacanciesModel.AccountLegalEntityPublicHashedId}"" }}}}";
             }
-            if (findVacanciesModel.StandardLarsCode.HasValue)
-            {
-                filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""standardLarsCode"": ""{findVacanciesModel.StandardLarsCode}"" }}}}";
-            }
             if (findVacanciesModel.NationWideOnly.HasValue)
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""term"": {{ ""vacancyLocationType"": ""{(findVacanciesModel.NationWideOnly.Value ? "National":"NonNational")}"" }}}}";
@@ -113,6 +109,10 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Any())
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""terms"": {{ ""category"": [""{string.Join(@""",""",findVacanciesModel.Categories)}""] }} }}";
+            }
+            if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Any())
+            {
+                filters += @$"{AddFilterSeparator(filters)}{{ ""terms"": {{ ""standardLarsCode"": [""{string.Join(@""",""", findVacanciesModel.StandardLarsCode)}""] }} }}";
             }
             return filters;
         }
