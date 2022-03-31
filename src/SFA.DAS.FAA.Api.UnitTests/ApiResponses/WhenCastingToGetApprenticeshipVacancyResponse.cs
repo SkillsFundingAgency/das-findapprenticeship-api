@@ -24,6 +24,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         [Test]
         [InlineAutoData(1, "year", "1 year")]
         [InlineAutoData(3, "month", "3 months")]
+        [InlineAutoData(3, "weeks", "3 weeks")]
         public void Then_The_Expected_Duration_Is_Set(int duration, string unit, string expectedText, ApprenticeshipSearchItem source)
         {
             source.Duration = duration;
