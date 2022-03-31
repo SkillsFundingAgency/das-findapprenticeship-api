@@ -59,7 +59,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 TrainingDescription = source.TrainingDescription,
                 Skills = source.Skills,
                 Qualifications = source.Qualifications.Select(c=> (Qualification)c).ToList(),
-                ExpectedDuration =  $"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}",
+                ExpectedDuration =  $"{source.Duration} {(source.Duration == 1 || source.DurationUnit.EndsWith("s") ? source.DurationUnit : $"{source.DurationUnit}s")}",
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,

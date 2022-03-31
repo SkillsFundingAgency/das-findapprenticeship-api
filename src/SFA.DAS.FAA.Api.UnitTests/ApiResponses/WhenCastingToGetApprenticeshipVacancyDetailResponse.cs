@@ -18,5 +18,19 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.DurationUnit)
             );
         }
+        
+        
+        [Test]
+        [InlineAutoData(1, "year", "1 year")]
+        [InlineAutoData(3, "month", "3 months")]
+        [InlineAutoData(3, "weeks", "3 weeks")]
+        public void Then_The_Expected_Duration_Is_Set(int duration, string unit, string expectedText, ApprenticeshipVacancyItem source)
+        {
+            source.Duration = duration;
+            source.DurationUnit = unit;
+            var response = (GetApprenticeshipVacancyDetailResponse)source;
+
+            response.ExpectedDuration.Should().Be(expectedText);
+        }
     }
 }
