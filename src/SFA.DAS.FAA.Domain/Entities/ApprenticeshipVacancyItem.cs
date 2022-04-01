@@ -7,6 +7,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string LongDescription { get; set; }
         public string OutcomeDescription { get; set; }
         public string TrainingDescription { get; set; }
+        public string ThingsToConsider { get; set; }
         public List<string> Skills { get; set; }
         public List<VacancyQualification> Qualifications { get; set; }
     }

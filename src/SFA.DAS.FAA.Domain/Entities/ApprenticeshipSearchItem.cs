@@ -45,6 +45,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string EmployerContactEmail { get; set; }
         public int Duration { get; set; }
         public string DurationUnit { get; set; }
+        public string ExpectedDuration { get; set; }
         //Calculated after search
         public decimal? Distance { get; set; }
         public double Score { get; set; }
