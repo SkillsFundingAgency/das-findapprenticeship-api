@@ -18,6 +18,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.EmployerDescription)
                 .Excluding(c => c.Duration)
                 .Excluding(c => c.DurationUnit)
+                .Excluding(c=>c.ExpectedDuration)
             );
         }
     }
