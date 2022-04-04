@@ -90,7 +90,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WorkingWeek = source.WorkingWeek,
                 Distance = source.Distance,
                 Score = source.Score,
-                ExpectedDuration =  $"{source.Duration} {(source.Duration == 1 || source.DurationUnit.EndsWith("s") ? source.DurationUnit : $"{source.DurationUnit}s")}",
+                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) 
+                    ? source.ExpectedDuration 
+                    : $"{source.Duration} {(source.Duration == 1 || string.IsNullOrEmpty(source.DurationUnit) || source.DurationUnit.EndsWith("s") ? source.DurationUnit : $"{source.DurationUnit}s")}",
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,

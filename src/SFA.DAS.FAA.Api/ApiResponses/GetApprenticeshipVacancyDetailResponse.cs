@@ -12,7 +12,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string TrainingDescription { get; set; }
         public List<string> Skills { get; set; }
         public List<Qualification> Qualifications { get; set; }
-        
+        public string ThingsToConsider { get; set; }
+
 
         public static implicit operator GetApprenticeshipVacancyDetailResponse(ApprenticeshipVacancyItem source)
         {
@@ -57,9 +58,12 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 LongDescription = source.LongDescription,
                 OutcomeDescription = source.OutcomeDescription,
                 TrainingDescription = source.TrainingDescription,
+                ThingsToConsider = source.ThingsToConsider,
                 Skills = source.Skills,
                 Qualifications = source.Qualifications.Select(c=> (Qualification)c).ToList(),
-                ExpectedDuration =  $"{source.Duration} {(source.Duration == 1 || source.DurationUnit.EndsWith("s") ? source.DurationUnit : $"{source.DurationUnit}s")}",
+                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) 
+                    ? source.ExpectedDuration 
+                    : $"{source.Duration} {(source.Duration == 1 || string.IsNullOrEmpty(source.DurationUnit) || source.DurationUnit.EndsWith("s") ? source.DurationUnit : $"{source.DurationUnit}s")}",
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,

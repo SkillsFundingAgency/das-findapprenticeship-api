@@ -11,12 +11,15 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         [Test, AutoData]
         public void Then_Maps_Fields(ApprenticeshipSearchItem source)
         {
+            source.ExpectedDuration = null;
+            
             var response = (GetApprenticeshipVacancyResponse)source;
 
             response.Should().BeEquivalentTo(source, options=>options
                 .Excluding(c=>c.Duration)
                 .Excluding(c=>c.DurationUnit)
                 .Excluding(c=>c.EmployerDescription)
+                .Excluding(c=>c.ExpectedDuration)
             );
             response.ExpectedDuration.Should().Be($"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}");
         }
@@ -25,13 +28,28 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         [InlineAutoData(1, "year", "1 year")]
         [InlineAutoData(3, "month", "3 months")]
         [InlineAutoData(3, "weeks", "3 weeks")]
+        [InlineAutoData(3, null, "3 ")]
         public void Then_The_Expected_Duration_Is_Set(int duration, string unit, string expectedText, ApprenticeshipSearchItem source)
         {
+            source.ExpectedDuration = null;
             source.Duration = duration;
             source.DurationUnit = unit;
+            
             var response = (GetApprenticeshipVacancyResponse)source;
 
             response.ExpectedDuration.Should().Be(expectedText);
+        }
+
+        [Test, AutoData]
+        public void Then_If_ExpectedDuration_Then_Used(ApprenticeshipSearchItem source)
+        {
+            var response = (GetApprenticeshipVacancyResponse)source;
+
+            response.Should().BeEquivalentTo(source, options=>options
+                .Excluding(c=>c.Duration)
+                .Excluding(c=>c.DurationUnit)
+                .Excluding(c=>c.EmployerDescription)
+            );
         }
         
         
