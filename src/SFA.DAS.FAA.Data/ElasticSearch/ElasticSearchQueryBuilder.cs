@@ -110,9 +110,9 @@ namespace SFA.DAS.FAA.Data.ElasticSearch
             {
                 filters += @$"{AddFilterSeparator(filters)}{{ ""terms"": {{ ""category"": [""{string.Join(@""",""",findVacanciesModel.Categories)}""] }} }}";
             }
-            if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Any())
+            if (findVacanciesModel.LarsCode != null && findVacanciesModel.LarsCode.Any())
             {
-                filters += @$"{AddFilterSeparator(filters)}{{ ""terms"": {{ ""standardLarsCode"": [""{string.Join(@""",""", findVacanciesModel.StandardLarsCode)}""] }} }}";
+                filters += @$"{AddFilterSeparator(filters)}{{ ""terms"": {{ ""standardLarsCode"": [""{string.Join(@""",""", findVacanciesModel.LarsCode)}""] }} }}";
             }
             return filters;
         }

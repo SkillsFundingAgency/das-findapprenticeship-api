@@ -34,7 +34,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
                         query.Ukprn == request.Ukprn && 
                         query.AccountPublicHashedId == request.AccountPublicHashedId && 
                         query.AccountLegalEntityPublicHashedId == request.AccountLegalEntityPublicHashedId &&
-                        query.StandardLarsCode == request.StandardLarsCode &&
+                        query.LarsCode == request.LarsCode &&
                         query.NationWideOnly == request.NationWideOnly &&
                         query.Lat.Equals(request.Lat) &&
                         query.Lon.Equals(request.Lon) &&

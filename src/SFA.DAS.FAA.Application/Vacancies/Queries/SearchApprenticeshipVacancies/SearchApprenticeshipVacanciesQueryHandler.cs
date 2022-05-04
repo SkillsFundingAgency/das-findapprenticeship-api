@@ -24,7 +24,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
                 Ukprn = request.Ukprn, 
                 AccountPublicHashedId = request.AccountPublicHashedId, 
                 AccountLegalEntityPublicHashedId =request.AccountLegalEntityPublicHashedId,
-                StandardLarsCode = request.StandardLarsCode,
+                LarsCode = request.LarsCode,
                 Categories = request.Categories,
                 Lat = request.Lat,
                 Lon =request.Lon,

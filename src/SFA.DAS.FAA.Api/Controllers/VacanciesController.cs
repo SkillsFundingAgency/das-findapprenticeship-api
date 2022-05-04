@@ -56,7 +56,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                 Lon = request.Lon,
                 DistanceInMiles = request.DistanceInMiles,
                 NationWideOnly = request.NationWideOnly,
-                StandardLarsCode = request.StandardLarsCode,
+                LarsCode = request.LarsCode,
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                 VacancySort = request.Sort ?? VacancySort.AgeDesc
             });
