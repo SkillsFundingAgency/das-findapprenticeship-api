@@ -115,7 +115,7 @@ namespace SFA.DAS.FAA.Api
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+            services.AddApplicationInsightsTelemetry();
 
             services.AddSwaggerGen(c =>
             {
