@@ -9,5 +9,6 @@ namespace SFA.DAS.FAA.Domain.Interfaces
         Task<bool> PingAsync();
         Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
         Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
+        Task<int> Count();
     }
 }
