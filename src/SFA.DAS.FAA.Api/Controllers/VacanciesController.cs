@@ -78,7 +78,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                 var result = await _mediator.Send(new GetApprenticeshipVacancyCountQuery());
                 return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new StatusCodeResult((int) HttpStatusCode.InternalServerError);
             }
