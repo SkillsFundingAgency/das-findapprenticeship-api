@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.ApRequests;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
+using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Models;
 
@@ -64,6 +67,21 @@ namespace SFA.DAS.FAA.Api.Controllers
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse) result;
             
             return Ok(apiResponse);
+        }
+
+        [HttpGet]
+        [Route("count")]
+        public async Task<IActionResult> GetVacancyCount()
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetApprenticeshipVacancyCountQuery());
+                return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult((int) HttpStatusCode.InternalServerError);
+            }
         }
     }
 }

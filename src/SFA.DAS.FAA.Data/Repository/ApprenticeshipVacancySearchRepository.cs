@@ -116,6 +116,11 @@ namespace SFA.DAS.FAA.Data.Repository
             return searchResult;
         }
 
+        public Task<int> Count()
+        {
+            return GetTotal();
+        }
+
         private async Task<int> GetTotal()
         {
             var query = _queryBuilder.BuildGetVacanciesCountQuery();

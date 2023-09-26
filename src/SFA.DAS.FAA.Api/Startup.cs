@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
@@ -98,7 +94,7 @@ namespace SFA.DAS.FAA.Api
                 services.AddHealthChecks();
             }
             
-            services.AddMediatR(typeof(SearchApprenticeshipVacanciesQuery).Assembly);
+            services.AddMediatR(_=> _.RegisterServicesFromAssembly(typeof(SearchApprenticeshipVacanciesQuery).Assembly));
             services.AddServiceRegistration();
             
             services
@@ -109,7 +105,7 @@ namespace SFA.DAS.FAA.Api
                         o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
                     }
                     o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
-                }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                })
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
