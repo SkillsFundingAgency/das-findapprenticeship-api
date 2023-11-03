@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
@@ -71,11 +72,16 @@ namespace SFA.DAS.FAA.Api.Controllers
 
         [HttpGet]
         [Route("count")]
-        public async Task<IActionResult> GetVacancyCount()
+        public async Task<IActionResult> GetVacancyCount([FromQuery] List<string>? routeIds, [FromQuery] string? location)
         {
             try
             {
-                var result = await _mediator.Send(new GetApprenticeshipVacancyCountQuery());
+                var result = await _mediator.Send(new GetApprenticeshipVacancyCountQuery
+                {
+                    location = location,
+                    SelectedRouteIds = routeIds,
+                    NationalSearch = (location == null)
+                });
                 return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
             }
             catch (Exception)
