@@ -6,10 +6,16 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
 {
     public class GetApprenticeshipVacancyCountQuery : IRequest<int>
     {
-        public bool NationalSearch { get; set; }
-        public string? location { get; set; }
-        public List<string>? SelectedRouteIds { get; set; }
-        public int? Distance { get; set; }
+        public int? Ukprn { get; set; }
+        public string AccountPublicHashedId { get; set; }
+        public string AccountLegalEntityPublicHashedId { get; set; }
+        public List<int> StandardLarsCode { get; set; }
+        public bool? NationWideOnly { get; set; }
+        public uint? DistanceInMiles { get; set; }
+        public uint? PostedInLastNumberOfDays { get; set; }
+        public List<string> Categories { get; set; }
+        public double? Lat { get; set; }
+        public double? Lon { get; set; }
     }
 
 }

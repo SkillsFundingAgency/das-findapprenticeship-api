@@ -4,6 +4,5 @@ namespace SFA.DAS.FAA.Api.ApiResponses
     {
         public int TotalVacancies { get; set; }
 
-        public int FilteredTotalVacancies { get; set; }
     }
 }

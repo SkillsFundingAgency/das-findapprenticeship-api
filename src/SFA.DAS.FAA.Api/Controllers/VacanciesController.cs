@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
@@ -72,16 +73,22 @@ namespace SFA.DAS.FAA.Api.Controllers
 
         [HttpGet]
         [Route("count")]
-        public async Task<IActionResult> GetVacancyCount([FromQuery] List<string>? routeIds, string? location, int? distance)
+        public async Task<IActionResult> GetVacancyCount([FromQuery] SearchVacancyTotalRequest request)
         {
             try
             {
                 var result = await _mediator.Send(new GetApprenticeshipVacancyCountQuery
                 {
-                    location = location,
-                    SelectedRouteIds = routeIds,
-                    NationalSearch = (location == null),
-                    Distance = distance,
+                    Ukprn = request.Ukprn,
+                    AccountPublicHashedId = request.AccountPublicHashedId,
+                    AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
+                    Categories = request.Categories,
+                    Lat = request.Lat,
+                    Lon = request.Lon,
+                    DistanceInMiles = request.DistanceInMiles,
+                    NationWideOnly = request.NationWideOnly,
+                    StandardLarsCode = request.StandardLarsCode,
+                    PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
 
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
