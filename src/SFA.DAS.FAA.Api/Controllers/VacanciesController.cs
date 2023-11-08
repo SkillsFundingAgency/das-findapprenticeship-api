@@ -72,7 +72,7 @@ namespace SFA.DAS.FAA.Api.Controllers
 
         [HttpGet]
         [Route("count")]
-        public async Task<IActionResult> GetVacancyCount([FromQuery] List<string>? routeIds, [FromQuery] string? location)
+        public async Task<IActionResult> GetVacancyCount([FromQuery] List<string>? routeIds, string? location, int? distance)
         {
             try
             {
@@ -80,7 +80,9 @@ namespace SFA.DAS.FAA.Api.Controllers
                 {
                     location = location,
                     SelectedRouteIds = routeIds,
-                    NationalSearch = (location == null)
+                    NationalSearch = (location == null),
+                    Distance = distance,
+
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
             }

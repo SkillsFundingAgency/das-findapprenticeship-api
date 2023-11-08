@@ -9,6 +9,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
         public bool NationalSearch { get; set; }
         public string? location { get; set; }
         public List<string>? SelectedRouteIds { get; set; }
+        public int? Distance { get; set; }
     }
 
 }
