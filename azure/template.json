@@ -67,14 +67,14 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "apiAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
-        "configNames": "SFA.DAS.FindApprenticeships.Api"
+        "configNames": "SFA.DAS.FindApprenticeships.Api",
+        "azureSearchName": "[concat(variables('resourceNamePrefix'), '-azs')]"
     },
     "resources": [
         {
             "apiVersion": "2021-04-01",
             "name": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/resourceGroups",
-            "location": "[parameters('resourceGroupLocation')]",
             "tags": "[parameters('tags')]",
             "properties": {}
         },
@@ -208,6 +208,29 @@
                         "value": "[parameters('backEndAccessRestrictions')]"
                     }
                 }
+            }
+        },
+        {
+            "apiVersion": "2021-04-01",
+            "name": "[concat(variables('apiAppServiceName'), '-azure-search-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[concat(variables('deploymentUrlBase'),'azure-search.json')]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "azureSearchName": {
+                  "value": "[variables('azureSearchName')]"
+                },
+                "azureSearchSku": {
+                  "value": "standard"
+                },
+                "location": {
+                  "value": "[parameters('resourceGroupLocation')]"
+                }
+              }
             }
         }
     ],
