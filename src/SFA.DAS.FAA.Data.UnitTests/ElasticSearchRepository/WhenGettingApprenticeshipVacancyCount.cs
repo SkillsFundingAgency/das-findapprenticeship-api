@@ -15,7 +15,7 @@ using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.FAA.Data.UnitTests.Repository
+namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearchRepository
 {
     public class WhenGettingApprenticeshipVacancyCount
     {
@@ -36,7 +36,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<CountRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
-            
+
             //Act
             var results = await repository.Count();
 
