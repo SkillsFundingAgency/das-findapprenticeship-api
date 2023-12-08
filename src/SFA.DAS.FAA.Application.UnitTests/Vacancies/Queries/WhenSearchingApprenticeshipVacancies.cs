@@ -21,6 +21,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IVacancySearchRepository> mockVacancyIndexRepository,
             SearchApprenticeshipVacanciesQueryHandler handler)
         {
+            query.Source = "Elastic";
             mockVacancyIndexRepository
                 .Setup(repository => repository.Find(It.Is<FindVacanciesModel>(c=> 
                         c.PageNumber.Equals(query.PageNumber) &&
