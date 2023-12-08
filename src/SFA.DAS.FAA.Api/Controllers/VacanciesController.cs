@@ -23,7 +23,7 @@ namespace SFA.DAS.FAA.Api.Controllers
         {
             _mediator = mediator;
         }
-        
+
         [HttpGet]
         [Route("{vacancyReference}")]
         public async Task<IActionResult> Get(string vacancyReference)
@@ -38,18 +38,18 @@ namespace SFA.DAS.FAA.Api.Controllers
                 return NotFound();
             }
 
-            var apiResponse = (GetApprenticeshipVacancyDetailResponse) result.ApprenticeshipVacancy;
-            
+            var apiResponse = (GetApprenticeshipVacancyDetailResponse)result.ApprenticeshipVacancy;
+
             return Ok(apiResponse);
         }
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> Search([FromQuery]SearchVacancyRequest request)
+        public async Task<IActionResult> Search([FromQuery] SearchVacancyRequest request)
         {
             var result = await _mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
-                PageNumber = request.PageNumber, 
+                PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
                 Ukprn = request.Ukprn,
                 AccountPublicHashedId = request.AccountPublicHashedId,
@@ -61,11 +61,12 @@ namespace SFA.DAS.FAA.Api.Controllers
                 NationWideOnly = request.NationWideOnly,
                 StandardLarsCode = request.StandardLarsCode,
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
-                VacancySort = request.Sort ?? VacancySort.AgeDesc
+                VacancySort = request.Sort ?? VacancySort.AgeDesc,
+                Source = "Elastic"
             });
 
-            var apiResponse = (GetSearchApprenticeshipVacanciesResponse) result;
-            
+            var apiResponse = (GetSearchApprenticeshipVacanciesResponse)result;
+
             return Ok(apiResponse);
         }
 
@@ -76,11 +77,11 @@ namespace SFA.DAS.FAA.Api.Controllers
             try
             {
                 var result = await _mediator.Send(new GetApprenticeshipVacancyCountQuery());
-                return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
+                return Ok(new GetCountApprenticeshipVacanciesResponse { TotalVacancies = result });
             }
             catch (Exception)
             {
-                return new StatusCodeResult((int) HttpStatusCode.InternalServerError);
+                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
             }
         }
     }

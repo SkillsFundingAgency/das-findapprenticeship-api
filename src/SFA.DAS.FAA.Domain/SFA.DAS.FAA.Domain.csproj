@@ -4,4 +4,10 @@
         <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Azure.Core" Version="1.36.0" />
+      <PackageReference Include="Azure.Search.Documents" Version="11.5.1" />
+      <PackageReference Include="Microsoft.Azure.Search.Data" Version="10.1.0" />
+    </ItemGroup>
+
 </Project>

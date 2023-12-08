@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
@@ -104,15 +103,15 @@ namespace SFA.DAS.FAA.Api.ApiResponses
     
     public class GeoPoint
     {
-        public double lon { get; set; }
-        public double lat { get; set; }
+        public double Lon { get; set; }
+        public double Lat { get; set; }
 
-        public static implicit operator GeoPoint(SFA.DAS.FAA.Domain.Entities.GeoPoint source)
+        public static implicit operator GeoPoint(Domain.Entities.GeoPoint source)
         {
             return new GeoPoint
             {
-                lon = source.lon,
-                lat = source.lat
+                Lon = source.Lon,
+                Lat = source.Lat
             };
         }
     }
@@ -125,7 +124,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string AddressLine4 { get; set; }
         public string Postcode { get; set; }
         
-        public static implicit operator Address(SFA.DAS.FAA.Domain.Entities.Address source)
+        public static implicit operator Address(Domain.Entities.Address source)
         {
             if (source == null)
             {
