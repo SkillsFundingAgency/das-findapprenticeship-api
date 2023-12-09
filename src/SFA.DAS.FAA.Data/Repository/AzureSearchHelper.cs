@@ -9,19 +9,33 @@ using SFA.DAS.FAA.Domain.Entities;
 using System.Collections.Generic;
 using Azure.Search.Documents.Models;
 using System.Threading.Tasks;
+using Azure.Core.Serialization;
+using System.Text.Json;
 
 namespace SFA.DAS.FAA.Data.Repository;
 public class AzureSearchHelper : IAzureSearchHelper
 {
     private readonly AzureKeyCredential _azureKeyCredential;
+    private readonly SearchClientOptions _clientOptions;
     private readonly Uri _endpoint;
     private readonly SearchClient _searchClient;
 
     public AzureSearchHelper(FindApprenticeshipsApiConfiguration configuration)
     {
+        _clientOptions = new SearchClientOptions
+        {
+            Serializer = new JsonObjectSerializer(new JsonSerializerOptions
+            {
+                Converters =
+                {
+                    new MicrosoftSpatialGeoJsonConverter()
+                }
+            })
+        };
+
         _azureKeyCredential = new AzureKeyCredential(configuration.AzureSearchKey);
         _endpoint = new Uri(configuration.AzureSearchBaseUrl);
-        _searchClient = new SearchClient(_endpoint, "apprenticeships", _azureKeyCredential);
+        _searchClient = new SearchClient(_endpoint, "vacancies", _azureKeyCredential, _clientOptions);
     }
     public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)
     {
@@ -71,7 +85,7 @@ public class AzureSearchHelper : IAzureSearchHelper
 
     private static SearchOptions BuildPaging(FindVacanciesModel findVacanciesModel, SearchOptions searchOptions)
     {
-        findVacanciesModel.PageNumber = findVacanciesModel.PageNumber < 2 ? 0 : findVacanciesModel.PageNumber;
+        findVacanciesModel.PageNumber = findVacanciesModel.PageNumber < 2 ? 1 : findVacanciesModel.PageNumber;
         searchOptions.Skip = (findVacanciesModel.PageNumber - 1) * findVacanciesModel.PageSize;
         searchOptions.Size = findVacanciesModel.PageSize;
         return searchOptions;
@@ -148,43 +162,49 @@ public class AzureSearchHelper : IAzureSearchHelper
     private static IEnumerable<ApprenticeshipSearchItem> MapVacancies(Pageable<SearchResult<ApprenticeshipAzureSearchDocument>> searchResults)
     {
         var searchItems = new List<ApprenticeshipSearchItem>();
+        var docSearchScore = 1;
         foreach (var result in searchResults)
         {
             var document = result.Document;
             searchItems.Add(new ApprenticeshipSearchItem()
             {
+                //TODO: as part of ticket 1027 the following commented out fields need to be added to the ApprenticeAzureSearchDocument.cs file in FAA Jobs as they are currently missing.
+
+
                 //Id = document.Id,
-                //AnonymousEmployerName = document
+                //AnonymousEmployerName = document.AnonymousEmployerName,
                 ApprenticeshipLevel = (ApprenticeshipLevel)document.Course.Level,
-                //Category
-                //CategoryCode
+                //Category = document.Category,
+                //CategoryCode = document.CategoryCode,
                 ClosingDate = document.ClosingDate.DateTime,
                 Description = document.Description,
                 EmployerName = document.EmployerName,
-                FrameworkLarsCode = string.Empty, // - this shouldn't be needed at all
+                FrameworkLarsCode = string.Empty,
                 HoursPerWeek = document.HoursPerWeek,
-                //IsDisabilityConfident = 
-                //IsEmployerAnonymous = document.
-                //IsPositiveAboutDisability = document
-                //IsRecruitVacancy =
+                //IsDisabilityConfident = document.IsDisabilityConfident,
+                //IsEmployerAnonymous = document.IsEmployerAnonymous,
+                //IsPositiveAboutDisability = document.IsPositiveAboutDisability,
+                //IsRecruitVacancy = document.IsRecruitVacancy,
                 Location = new GeoPoint() { Lat = document.Location.Latitude, Lon = document.Location.Longitude },
                 NumberOfPositions = Convert.ToInt32(document.NumberOfPositions),
                 PostedDate = document.PostedDate.DateTime,
                 ProviderName = document.ProviderName,
                 StandardLarsCode = Convert.ToInt32(document.Course.LarsCode),
                 StartDate = document.StartDate.DateTime,
-                //SubCategory = 
-                //SubCategoryCode = 
+                //SubCategory = document.SubCategory,
+                //SubCategoryCode = document.SubCategoryCode,
                 Title = document.Title,
                 Ukprn = (long)document.Ukprn,
-                //VacancyLocationType = document
+                //VacancyLocationType = document.VacancyLocationType,
                 VacancyReference = document.VacancyReference,
                 WageAmount = document.Wage.WageAmount,
-                //WageAmountLowerBound = document.Wage.
-                //WageAmountUpperBound = document.Wage
+                //WageAmountLowerBound = document.Wage.WageAmountLowerBound,
+                //WageAmountUpperBound = document.Wage.WageAmountUpperBound,
                 WageText = document.Wage.WageAdditionalInformation,
-                WageUnit = Convert.ToInt32(document.Wage.WageUnit),
-                WageType = Convert.ToInt32(document.Wage.WageType),
+                //WageUnit = Convert.ToInt32(document.Wage.WageUnit),
+                // ^^^ - ERROR this comes through as 'month'. This needs to be stored as an INT in the indexes and passed through APIs as such. 
+                //WageType = Convert.ToInt32(document.Wage.WageType),
+                // ^^^^ - ERROR this comes through as 'CompetitiveSalary'. This needs to be stored as an INT in the indexes and passed through APIs as such.
                 WorkingWeek = document.Wage.WorkingWeekDescription,
                 Address = new Address()
                 {
@@ -194,17 +214,19 @@ public class AzureSearchHelper : IAzureSearchHelper
                     AddressLine4 = document.Address.AddressLine4,
                     Postcode = document.Address.Postcode
                 },
-                //EmployerWebsiteUrl = document.
-                //EmployerDescription = document.
-                //EmployerContactName = 
-                //EmployerContactPhone = 
-                //EmployerContactEmail = 
-                //Duration = document
-                //DurationUnit = document.
-                //ExpectedDuration = document
-                //Distance = document.di
-                //Score = document
+                //EmployerWebsiteUrl = document.EmployerWebsiteUrl,
+                //EmployerDescription = document.EmployerDescription,
+                //EmployerContactName = document.EmployerContactName,
+                //EmployerContactPhone = document.EmployerContactPhone,
+                //EmployerContactEmail = document.EmployerContactEmail,
+                //Duration = document.Duration,
+                //DurationUnit = document.DurationUnit,
+                //ExpectedDuration = document.ExpectedDuration,
+                //Distance = document.Distance,
+                // ^^^ - NOT NEEDED? I think this might've been used for sorting by distance when we used Elastic. May no longer be needed. 
+                Score = docSearchScore
             });
+            docSearchScore++;
         }
         return searchItems.AsEnumerable();
     }

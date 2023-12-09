@@ -12,7 +12,9 @@
       <PackageReference Include="Azure.Identity" Version="1.10.4" />
       <PackageReference Include="Azure.Search.Documents" Version="11.5.1" />
       <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
+      <PackageReference Include="Microsoft.Azure.Core.Spatial" Version="1.1.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Spatial" Version="7.20.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="SFA.DAS.Api.Common" Version="1.0.28" />
     </ItemGroup>
