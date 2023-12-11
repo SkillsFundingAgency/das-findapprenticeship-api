@@ -16,7 +16,7 @@ public class WhenFindingApprenticeshipVacancies
     //TODO: mock responses to be filled in once we can call the search without a distance sort (after 1027 is done).
 
     //[Test, MoqAutoData]
-    //public async Task Then_Will_Return_ApprenticeshipVacancies_Found_And_Distance_Is_Null_If_No_Sort(
+    //public async Task Then_Will_Return_ApprenticeshipVacancies_Found_And_Distance_Is_Null(
     //    FindVacanciesModel model,
     //    [Frozen] Mock<ILogger<AcsVacancySearchRepository>> logger,
     //    [Frozen] Mock<IAzureSearchHelper> azureSearchHelper,
@@ -35,30 +35,6 @@ public class WhenFindingApprenticeshipVacancies
     //        var vacancy = actual.ApprenticeshipVacancies.First();
     //        vacancy.Should().BeEquivalentTo(expectedVacancy);
     //        vacancy.Distance.Should().BeNull();
-    //    }
-    //}
-
-    //[Test, MoqAutoData]
-    //public async Task Then_Will_Return_ApprenticeshipVacancues_Found_And_Distance_If_Sort_And_GeoDistance(
-    //    FindVacanciesModel model,
-    //    [Frozen] Mock<ILogger<AcsVacancySearchRepository>> logger,
-    //    [Frozen] Mock<IAzureSearchHelper> azureSearchHelper,
-    //    AcsVacancySearchRepository sut)
-    //{
-    //    model.VacancySort = VacancySort.DistanceAsc;
-    //    azureSearchHelper.Setup(x => x.Find(model)).ReturnsAsync(mockResponse);
-    //    // var expectedVacancy = mockResponse first vacancy
-
-    //    var actual = await sut.Find(model);
-
-    //    using (new AssertionScope())
-    //    {
-    //        actual.Total.Should().Be(10);
-    //        actual.TotalFound.Should().Be(2);
-    //        actual.ApprenticeshipVacancies.Count().Should().Be(2);
-    //        var vacancy = actual.ApprenticeshipVacancies.First();
-    //        vacancy.Should().BeEquivalentTo(expectedVacancy, options => options.Excluding(c => c.Distance));
-    //        vacancy.Distance.Should().NotBeNull();
     //    }
     //}
 

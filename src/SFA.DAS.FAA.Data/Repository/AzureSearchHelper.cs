@@ -222,8 +222,7 @@ public class AzureSearchHelper : IAzureSearchHelper
                 //Duration = document.Duration,
                 //DurationUnit = document.DurationUnit,
                 //ExpectedDuration = document.ExpectedDuration,
-                //Distance = document.Distance,
-                // ^^^ - NOT NEEDED? I think this might've been used for sorting by distance when we used Elastic. May no longer be needed. 
+                Distance = null,
                 Score = docSearchScore
             });
             docSearchScore++;
