@@ -12,23 +12,14 @@ using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
-    [ApiVersion("1.0")]
-    [ApiController]
-    [Route("/api/[controller]/")]
-    public class VacanciesController : ControllerBase
+
+    public abstract class VacanciesControllerBase(IMediator mediator, string searchSource) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public VacanciesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpGet]
         [Route("{vacancyReference}")]
         public async Task<IActionResult> Get(string vacancyReference)
         {
-            var result = await _mediator.Send(new GetApprenticeshipVacancyQuery
+            var result = await mediator.Send(new GetApprenticeshipVacancyQuery
             {
                 VacancyReference = vacancyReference
             });
@@ -42,12 +33,12 @@ namespace SFA.DAS.FAA.Api.Controllers
 
             return Ok(apiResponse);
         }
-
+        
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> Search([FromQuery] SearchVacancyRequest request)
         {
-            var result = await _mediator.Send(new SearchApprenticeshipVacanciesQuery
+            var result = await mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
@@ -62,7 +53,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                 StandardLarsCode = request.StandardLarsCode,
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                 VacancySort = request.Sort ?? VacancySort.AgeDesc,
-                Source = "Elastic"
+                Source = searchSource
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse)result;
@@ -76,7 +67,7 @@ namespace SFA.DAS.FAA.Api.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetApprenticeshipVacancyCountQuery());
+                var result = await mediator.Send(new GetApprenticeshipVacancyCountQuery());
                 return Ok(new GetCountApprenticeshipVacanciesResponse { TotalVacancies = result });
             }
             catch (Exception)
@@ -85,4 +76,17 @@ namespace SFA.DAS.FAA.Api.Controllers
             }
         }
     }
+    
+    
+    
+    
+    [ApiVersion("1.0")]
+    [ApiController]
+    [Route("/api/Vacancies/")]
+    public class VacanciesController(IMediator mediator) : VacanciesControllerBase(mediator, "Elastic");
+    
+    [ApiVersion("2.0")]
+    [ApiController]
+    [Route("/api/Vacancies/")]
+    public class VacanciesV2Controller(IMediator mediator) : VacanciesControllerBase(mediator, "ACS");
 }
