@@ -39,7 +39,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 NumberOfPositions = source.NumberOfPositions,
                 PostedDate = source.PostedDate,
                 ProviderName = source.ProviderName,
-                StandardLarsCode = source.StandardLarsCode,
+                StandardTitle = source.Course.Title,
+                StandardLarsCode = source.StandardLarsCode ?? source.Course.LarsCode,
+                RouteCode = source.Course.RouteCode,
                 StartDate = source.StartDate,
                 SubCategory = source.SubCategory,
                 SubCategoryCode = source.SubCategoryCode,
@@ -73,6 +75,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 Address = source.Address
             };
         }
+
+        
     }
     
     public class Qualification

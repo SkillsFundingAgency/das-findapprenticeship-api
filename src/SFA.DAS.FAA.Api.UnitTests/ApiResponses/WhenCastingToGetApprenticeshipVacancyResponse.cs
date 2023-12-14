@@ -20,6 +20,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.DurationUnit)
                 .Excluding(c=>c.EmployerDescription)
                 .Excluding(c=>c.ExpectedDuration)
+                .Excluding(c=>c.Wage)
+                .Excluding(c=>c.Course)
             );
             response.ExpectedDuration.Should().Be($"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}");
         }
@@ -49,6 +51,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.Duration)
                 .Excluding(c=>c.DurationUnit)
                 .Excluding(c=>c.EmployerDescription)
+                .Excluding(c=>c.Wage)
+                .Excluding(c=>c.Course)
             );
         }
         

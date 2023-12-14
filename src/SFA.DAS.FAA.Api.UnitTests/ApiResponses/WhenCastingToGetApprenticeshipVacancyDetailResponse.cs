@@ -16,6 +16,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             actual.Should().BeEquivalentTo(source, options=> options
                 .Excluding(c=>c.Duration)
                 .Excluding(c=>c.DurationUnit)
+                .Excluding(c=>c.Wage)
+                .Excluding(c=>c.Course)
             );
         }
         

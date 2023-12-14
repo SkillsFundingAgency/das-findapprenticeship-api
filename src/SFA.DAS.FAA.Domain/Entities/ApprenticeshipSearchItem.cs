@@ -1,4 +1,5 @@
 ﻿using System;
+using Azure.Search.Documents.Models;
 
 namespace SFA.DAS.FAA.Domain.Entities
 {
@@ -51,8 +52,9 @@ namespace SFA.DAS.FAA.Domain.Entities
         public double Score { get; set; }
         public WageSearchDocument Wage { get; set; }
         public CourseSearchDocument Course { get; set; }
-        public int RouteCode { get; set; }
     }
+    
+    
     
     public class GeoPoint
     {
@@ -60,24 +62,6 @@ namespace SFA.DAS.FAA.Domain.Entities
         public double Lat { get; set; }
     }
     
-    public enum ApprenticeshipLevel
-    {
-        Unknown = 0,
-        Intermediate,
-        Advanced,
-        Higher,
-        Degree,
-        Foundation,
-        Masters
-    }
-    
-    public enum VacancyLocationType
-    {
-        Unknown = 0,
-        NonNational,
-        National
-    }
-
     public class Address
     {
         public string AddressLine1 { get; set; }
@@ -90,10 +74,10 @@ namespace SFA.DAS.FAA.Domain.Entities
     }
     public class CourseSearchDocument
     {
-        public long LarsCode { get; set; }
+        public int? LarsCode { get; set; }
         public string Title { get; set; }
-        public long Level { get; set; }
-        public int RouteCode { get; set; }
+        public int? Level { get; set; }
+        public int? RouteCode { get; set; }
         public string Route { get; set; }
     }
 

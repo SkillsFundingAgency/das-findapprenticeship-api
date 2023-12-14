@@ -46,7 +46,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         searchOptions = BuildFilters(findVacanciesModel, searchOptions);
         searchOptions.IncludeTotalCount = true;
 
-        var searchResultsTask = _searchClient.SearchAsync<ApprenticeshipSearchItem>(searchOptions.Filter);
+        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>(searchOptions.Filter);
         var totalVacanciesCountTask = _searchClient.GetDocumentCountAsync();
 
         await Task.WhenAll(searchResultsTask, totalVacanciesCountTask);
@@ -54,7 +54,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         var searchResults = searchResultsTask.Result;
         var totalVacanciesCount = totalVacanciesCountTask.Result;
         
-        return await MapResponse(searchResults.Value, totalVacanciesCount.Value);
+        return MapResponse(searchResults.Value, totalVacanciesCount.Value);
     }
 
     private static SearchOptions BuildSort(FindVacanciesModel searchVacanciesModel, SearchOptions searchOptions)
@@ -155,11 +155,13 @@ public class AzureSearchHelper : IAzureSearchHelper
         return searchOptions;
     }
 
-    private async Task<ApprenticeshipSearchResponse> MapResponse(SearchResults<ApprenticeshipSearchItem> searchResponse, long totalVacanciesCount)
+    private ApprenticeshipSearchResponse MapResponse(SearchResults<SearchDocument> searchResponse, long totalVacanciesCount)
     {
+        var result = searchResponse.GetResults().ToList().Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString())).ToList();
         return new ApprenticeshipSearchResponse
         {
-            ApprenticeshipVacancies = searchResponse.GetResults().Select(c=>c.Document).ToList(),
+            ApprenticeshipVacancies = result.Select(c=>c)
+                .ToList(),
             TotalFound = Convert.ToInt32(searchResponse.TotalCount),
             Total = Convert.ToInt32(totalVacanciesCount)
         };

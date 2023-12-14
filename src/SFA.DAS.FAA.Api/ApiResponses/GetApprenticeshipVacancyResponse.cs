@@ -49,7 +49,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string EmployerContactPhone { get ; set ; }
         public string EmployerContactEmail { get ; set ; }
         public string EmployerContactName { get ; set ; }
-        public int RouteCode { get ; set ; }
+        public int? RouteCode { get ; set ; }
+        public string StandardTitle { get; set; }
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
@@ -73,8 +74,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 NumberOfPositions = source.NumberOfPositions,
                 PostedDate = source.PostedDate,
                 ProviderName = source.ProviderName,
-                StandardLarsCode = source.StandardLarsCode,
-                RouteCode = source.RouteCode,
+                StandardLarsCode = source.StandardLarsCode ?? source.Course.LarsCode,
+                RouteCode = source.Course.RouteCode,
                 StartDate = source.StartDate,
                 SubCategory = source.SubCategory,
                 SubCategoryCode = source.SubCategoryCode,
