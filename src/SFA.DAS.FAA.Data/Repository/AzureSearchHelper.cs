@@ -35,7 +35,8 @@ public class AzureSearchHelper : IAzureSearchHelper
 
         _azureKeyCredential = new AzureKeyCredential(configuration.AzureSearchKey);
         _endpoint = new Uri(configuration.AzureSearchBaseUrl);
-        _searchClient = new SearchClient(_endpoint, "vacancies", _azureKeyCredential, _clientOptions);
+        
+        _searchClient = new SearchClient(_endpoint, "apprenticeships", _azureKeyCredential, _clientOptions);
     }
     public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)
     {
@@ -45,7 +46,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         searchOptions = BuildFilters(findVacanciesModel, searchOptions);
         searchOptions.IncludeTotalCount = true;
 
-        var searchResults = await _searchClient.SearchAsync<ApprenticeshipAzureSearchDocument>(searchOptions);
+        var searchResults = await _searchClient.SearchAsync<ApprenticeshipSearchItem>(searchOptions.Filter);
         var totalVacanciesCount = await _searchClient.GetDocumentCountAsync();
 
         return MapResponse(searchResults.Value, totalVacanciesCount.Value);
@@ -149,7 +150,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         return searchOptions;
     }
 
-    private static ApprenticeshipSearchResponse MapResponse(SearchResults<ApprenticeshipAzureSearchDocument> searchResponse, long totalVacanciesCount)
+    private static ApprenticeshipSearchResponse MapResponse(SearchResults<ApprenticeshipSearchItem> searchResponse, long totalVacanciesCount)
     {
         return new ApprenticeshipSearchResponse()
         {
@@ -159,7 +160,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         };
     }
 
-    private static IEnumerable<ApprenticeshipSearchItem> MapVacancies(Pageable<SearchResult<ApprenticeshipAzureSearchDocument>> searchResults)
+    private static IEnumerable<ApprenticeshipSearchItem> MapVacancies(Pageable<SearchResult<ApprenticeshipSearchItem>> searchResults)
     {
         var searchItems = new List<ApprenticeshipSearchItem>();
         var docSearchScore = 1;
@@ -171,35 +172,31 @@ public class AzureSearchHelper : IAzureSearchHelper
                 //TODO: as part of ticket 1027 the following commented out fields need to be added to the ApprenticeAzureSearchDocument.cs file in FAA Jobs as they are currently missing.
 
 
-                //Id = document.Id,
-                //AnonymousEmployerName = document.AnonymousEmployerName,
+                Id = document.Id,
+                AnonymousEmployerName = document.AnonymousEmployerName,
                 ApprenticeshipLevel = (ApprenticeshipLevel)document.Course.Level,
-                //Category = document.Category,
-                //CategoryCode = document.CategoryCode,
-                ClosingDate = document.ClosingDate.DateTime,
+                Category = document.Category,
+                CategoryCode = document.CategoryCode,
+                ClosingDate = document.ClosingDate,
                 Description = document.Description,
                 EmployerName = document.EmployerName,
                 FrameworkLarsCode = string.Empty,
                 HoursPerWeek = document.HoursPerWeek,
-                //IsDisabilityConfident = document.IsDisabilityConfident,
-                //IsEmployerAnonymous = document.IsEmployerAnonymous,
-                //IsPositiveAboutDisability = document.IsPositiveAboutDisability,
-                //IsRecruitVacancy = document.IsRecruitVacancy,
-                Location = new GeoPoint() { Lat = document.Location.Latitude, Lon = document.Location.Longitude },
+                IsDisabilityConfident = document.IsDisabilityConfident,
+                IsEmployerAnonymous = document.IsEmployerAnonymous,
+                IsPositiveAboutDisability = document.IsPositiveAboutDisability,
+                IsRecruitVacancy = document.IsRecruitVacancy,
+                Location = new GeoPoint() { Lat = document.Address.Latitude, Lon = document.Address.Longitude },
                 NumberOfPositions = Convert.ToInt32(document.NumberOfPositions),
-                PostedDate = document.PostedDate.DateTime,
+                PostedDate = document.PostedDate,
                 ProviderName = document.ProviderName,
                 StandardLarsCode = Convert.ToInt32(document.Course.LarsCode),
-                StartDate = document.StartDate.DateTime,
-                //SubCategory = document.SubCategory,
-                //SubCategoryCode = document.SubCategoryCode,
+                StartDate = document.StartDate,
                 Title = document.Title,
-                Ukprn = (long)document.Ukprn,
+                Ukprn = document.Ukprn,
                 //VacancyLocationType = document.VacancyLocationType,
                 VacancyReference = document.VacancyReference,
                 WageAmount = document.Wage.WageAmount,
-                //WageAmountLowerBound = document.Wage.WageAmountLowerBound,
-                //WageAmountUpperBound = document.Wage.WageAmountUpperBound,
                 WageText = document.Wage.WageAdditionalInformation,
                 //WageUnit = Convert.ToInt32(document.Wage.WageUnit),
                 // ^^^ - ERROR this comes through as 'month'. This needs to be stored as an INT in the indexes and passed through APIs as such. 
@@ -214,14 +211,14 @@ public class AzureSearchHelper : IAzureSearchHelper
                     AddressLine4 = document.Address.AddressLine4,
                     Postcode = document.Address.Postcode
                 },
-                //EmployerWebsiteUrl = document.EmployerWebsiteUrl,
-                //EmployerDescription = document.EmployerDescription,
-                //EmployerContactName = document.EmployerContactName,
-                //EmployerContactPhone = document.EmployerContactPhone,
-                //EmployerContactEmail = document.EmployerContactEmail,
-                //Duration = document.Duration,
-                //DurationUnit = document.DurationUnit,
-                //ExpectedDuration = document.ExpectedDuration,
+                EmployerWebsiteUrl = document.EmployerWebsiteUrl,
+                EmployerDescription = document.EmployerDescription,
+                EmployerContactName = document.EmployerContactName,
+                EmployerContactPhone = document.EmployerContactPhone,
+                EmployerContactEmail = document.EmployerContactEmail,
+                Duration = document.Duration,
+                DurationUnit = document.DurationUnit,
+                ExpectedDuration = document.ExpectedDuration,
                 Distance = null,
                 Score = docSearchScore
             });

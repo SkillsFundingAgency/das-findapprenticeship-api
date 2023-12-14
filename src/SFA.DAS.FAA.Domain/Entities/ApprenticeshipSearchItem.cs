@@ -4,9 +4,9 @@ namespace SFA.DAS.FAA.Domain.Entities
 {
     public class ApprenticeshipSearchItem
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string AnonymousEmployerName { get; set; }
-        public ApprenticeshipLevel ApprenticeshipLevel { get; set; }
+        public ApprenticeshipLevel? ApprenticeshipLevel { get; set; } //TODO
         public string Category { get; set; }
         public string CategoryCode { get; set; }
         public DateTime ClosingDate { get; set; }
@@ -28,7 +28,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string SubCategoryCode { get; set; }
         public string Title { get; set; }
         public long Ukprn { get; set; }
-        public VacancyLocationType VacancyLocationType { get; set; }
+        public string? VacancyLocationType { get; set; }
         public string VacancyReference { get; set; }
         public decimal? WageAmount { get; set; }
         public decimal? WageAmountLowerBound { get; set; }
@@ -49,6 +49,8 @@ namespace SFA.DAS.FAA.Domain.Entities
         //Calculated after search
         public decimal? Distance { get; set; }
         public double Score { get; set; }
+        public WageSearchDocument Wage { get; set; }
+        public CourseSearchDocument Course { get; set; }
     }
     
     public class GeoPoint
@@ -82,5 +84,23 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string AddressLine3 { get; set; }
         public string AddressLine4 { get; set; }
         public string Postcode { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
+    }
+    public class CourseSearchDocument
+    {
+        public long LarsCode { get; set; }
+        public string Title { get; set; }
+        public long Level { get; set; }
+    }
+
+
+    public class WageSearchDocument
+    {
+        public string WageAdditionalInformation { get; set; }
+        public string WageType { get; set; }
+        public string WorkingWeekDescription { get; set; }
+        public string WageUnit { get; set; }
+        public long? WageAmount { get; set; }
     }
 }

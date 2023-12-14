@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 SubCategoryCode = source.SubCategoryCode,
                 Title = source.Title,
                 Ukprn = source.Ukprn,
-                VacancyLocationType = (VacancyLocationType) source.VacancyLocationType,
+                VacancyLocationType = (VacancyLocationType)Enum.Parse<SFA.DAS.FAA.Domain.Entities.VacancyLocationType>(source.VacancyLocationType, true),
                 VacancyReference = source.VacancyReference,
                 WageAmount = source.WageAmount,
                 WageAmountLowerBound = source.WageAmountLowerBound,

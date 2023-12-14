@@ -5,7 +5,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 {
     public class GetApprenticeshipVacancyResponse
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string AnonymousEmployerName { get; set; }
         public ApprenticeshipLevel ApprenticeshipLevel { get; set; }
         public string Category { get; set; }
@@ -56,7 +56,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             {
                 Id = source.Id,
                 AnonymousEmployerName = source.AnonymousEmployerName,
-                ApprenticeshipLevel = (ApprenticeshipLevel) source.ApprenticeshipLevel,
+                ApprenticeshipLevel = source.ApprenticeshipLevel ==null? ApprenticeshipLevel.Unknown : (ApprenticeshipLevel) source.ApprenticeshipLevel,
                 Category = source.Category,
                 CategoryCode = source.CategoryCode,
                 ClosingDate = source.ClosingDate,
@@ -78,7 +78,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 SubCategoryCode = source.SubCategoryCode,
                 Title = source.Title,
                 Ukprn = source.Ukprn,
-                VacancyLocationType = (VacancyLocationType) source.VacancyLocationType,
+                VacancyLocationType = source.VacancyLocationType !=null ? (VacancyLocationType)Enum.Parse<SFA.DAS.FAA.Domain.Entities.VacancyLocationType>(source.VacancyLocationType, true) : VacancyLocationType.Unknown,
                 VacancyReference = source.VacancyReference,
                 WageAmount = source.WageAmount,
                 WageAmountLowerBound = source.WageAmountLowerBound,
