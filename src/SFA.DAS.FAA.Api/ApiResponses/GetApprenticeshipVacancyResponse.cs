@@ -7,7 +7,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
     {
         public string Id { get; set; }
         public string AnonymousEmployerName { get; set; }
-        public ApprenticeshipLevel ApprenticeshipLevel { get; set; }
+        public string ApprenticeshipLevel { get; set; }
         public string Category { get; set; }
         public string CategoryCode { get; set; }
         public DateTime ClosingDate { get; set; }
@@ -29,7 +29,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string SubCategoryCode { get; set; }
         public string Title { get; set; }
         public long Ukprn { get; set; }
-        public VacancyLocationType VacancyLocationType { get; set; }
+        public string VacancyLocationType { get; set; }
         public string VacancyReference { get; set; }
         public decimal? WageAmount { get; set; }
         public decimal? WageAmountLowerBound { get; set; }
@@ -49,6 +49,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string EmployerContactPhone { get ; set ; }
         public string EmployerContactEmail { get ; set ; }
         public string EmployerContactName { get ; set ; }
+        public int RouteCode { get ; set ; }
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
@@ -56,7 +57,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             {
                 Id = source.Id,
                 AnonymousEmployerName = source.AnonymousEmployerName,
-                ApprenticeshipLevel = source.ApprenticeshipLevel ==null? ApprenticeshipLevel.Unknown : (ApprenticeshipLevel) source.ApprenticeshipLevel,
+                ApprenticeshipLevel = source.ApprenticeshipLevel,
                 Category = source.Category,
                 CategoryCode = source.CategoryCode,
                 ClosingDate = source.ClosingDate,
@@ -73,12 +74,13 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 PostedDate = source.PostedDate,
                 ProviderName = source.ProviderName,
                 StandardLarsCode = source.StandardLarsCode,
+                RouteCode = source.RouteCode,
                 StartDate = source.StartDate,
                 SubCategory = source.SubCategory,
                 SubCategoryCode = source.SubCategoryCode,
                 Title = source.Title,
                 Ukprn = source.Ukprn,
-                VacancyLocationType = source.VacancyLocationType !=null ? (VacancyLocationType)Enum.Parse<SFA.DAS.FAA.Domain.Entities.VacancyLocationType>(source.VacancyLocationType, true) : VacancyLocationType.Unknown,
+                VacancyLocationType = source.VacancyLocationType,
                 VacancyReference = source.VacancyReference,
                 WageAmount = source.WageAmount,
                 WageAmountLowerBound = source.WageAmountLowerBound,
@@ -123,7 +125,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string AddressLine3 { get; set; }
         public string AddressLine4 { get; set; }
         public string Postcode { get; set; }
-        
+        public double Longitude { get; set; }
+
+        public double Latitude { get; set; }
         public static implicit operator Address(Domain.Entities.Address source)
         {
             if (source == null)
@@ -136,26 +140,10 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 AddressLine2 = source.AddressLine2,
                 AddressLine3 = source.AddressLine3,
                 AddressLine4 = source.AddressLine4,
-                Postcode = source.Postcode
+                Postcode = source.Postcode,
+                Latitude = source.Latitude,
+                Longitude = source.Longitude,
             };
         }
-    }
-    
-    public enum ApprenticeshipLevel
-    {
-        Unknown = 0,
-        Intermediate,
-        Advanced,
-        Higher,
-        Degree,
-        Foundation,
-        Masters
-    }
-    
-    public enum VacancyLocationType
-    {
-        Unknown = 0,
-        NonNational,
-        National
     }
 }

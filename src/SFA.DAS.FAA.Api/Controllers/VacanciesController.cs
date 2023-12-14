@@ -1,6 +1,8 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
@@ -60,15 +62,28 @@ namespace SFA.DAS.FAA.Api.Controllers
 
             return Ok(apiResponse);
         }
-
+        
         [HttpGet]
         [Route("count")]
-        public async Task<IActionResult> GetVacancyCount()
+        public async Task<IActionResult> GetVacancyCount([FromQuery] SearchVacancyTotalRequest request)
         {
             try
             {
-                var result = await mediator.Send(new GetApprenticeshipVacancyCountQuery());
-                return Ok(new GetCountApprenticeshipVacanciesResponse { TotalVacancies = result });
+                var result = await mediator.Send(new GetApprenticeshipVacancyCountQuery
+                {
+                    Ukprn = request.Ukprn,
+                    AccountPublicHashedId = request.AccountPublicHashedId,
+                    AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
+                    Categories = request.Categories,
+                    Lat = request.Lat,
+                    Lon = request.Lon,
+                    DistanceInMiles = request.DistanceInMiles,
+                    NationWideOnly = request.NationWideOnly,
+                    StandardLarsCode = request.StandardLarsCode,
+                    PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
+
+                });
+                return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
             }
             catch (Exception)
             {

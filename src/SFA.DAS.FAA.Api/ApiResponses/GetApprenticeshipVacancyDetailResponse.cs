@@ -23,7 +23,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 
                 Id = source.Id,
                 AnonymousEmployerName = source.AnonymousEmployerName,
-                ApprenticeshipLevel = (ApprenticeshipLevel) source.ApprenticeshipLevel,
+                ApprenticeshipLevel = source.ApprenticeshipLevel,
                 Category = source.Category,
                 CategoryCode = source.CategoryCode,
                 ClosingDate = source.ClosingDate,
@@ -45,7 +45,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 SubCategoryCode = source.SubCategoryCode,
                 Title = source.Title,
                 Ukprn = source.Ukprn,
-                VacancyLocationType = (VacancyLocationType)Enum.Parse<SFA.DAS.FAA.Domain.Entities.VacancyLocationType>(source.VacancyLocationType, true),
+                VacancyLocationType = source.VacancyLocationType,
                 VacancyReference = source.VacancyReference,
                 WageAmount = source.WageAmount,
                 WageAmountLowerBound = source.WageAmountLowerBound,

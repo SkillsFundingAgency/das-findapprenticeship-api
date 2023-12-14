@@ -6,7 +6,7 @@ namespace SFA.DAS.FAA.Domain.Entities
     {
         public string Id { get; set; }
         public string AnonymousEmployerName { get; set; }
-        public ApprenticeshipLevel? ApprenticeshipLevel { get; set; } //TODO
+        public string ApprenticeshipLevel { get; set; } 
         public string Category { get; set; }
         public string CategoryCode { get; set; }
         public DateTime ClosingDate { get; set; }
@@ -28,7 +28,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string SubCategoryCode { get; set; }
         public string Title { get; set; }
         public long Ukprn { get; set; }
-        public string? VacancyLocationType { get; set; }
+        public string VacancyLocationType { get; set; }
         public string VacancyReference { get; set; }
         public decimal? WageAmount { get; set; }
         public decimal? WageAmountLowerBound { get; set; }
@@ -51,6 +51,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public double Score { get; set; }
         public WageSearchDocument Wage { get; set; }
         public CourseSearchDocument Course { get; set; }
+        public int RouteCode { get; set; }
     }
     
     public class GeoPoint
@@ -92,6 +93,8 @@ namespace SFA.DAS.FAA.Domain.Entities
         public long LarsCode { get; set; }
         public string Title { get; set; }
         public long Level { get; set; }
+        public int RouteCode { get; set; }
+        public string Route { get; set; }
     }
 
 
