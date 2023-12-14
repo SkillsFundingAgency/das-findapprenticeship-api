@@ -40,7 +40,8 @@ public class WhenGettingVacancySearch
                     query.DistanceInMiles == request.DistanceInMiles &&
                     query.Categories == request.Categories &&
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
-                    query.VacancySort.Equals(request.Sort)
+                    query.VacancySort.Equals(request.Sort) &&
+                    query.Source.Equals("ACS")
                 ),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(mediatorResult);

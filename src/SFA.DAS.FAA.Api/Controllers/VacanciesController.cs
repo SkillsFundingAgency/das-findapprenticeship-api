@@ -23,7 +23,8 @@ namespace SFA.DAS.FAA.Api.Controllers
         {
             var result = await mediator.Send(new GetApprenticeshipVacancyQuery
             {
-                VacancyReference = vacancyReference
+                VacancyReference = vacancyReference,
+                Source = searchSource
             });
 
             if (result.ApprenticeshipVacancy == null)
