@@ -21,4 +21,9 @@ public class AcsVacancySearchRepository : IAcsVacancySearchRespository
         _logger.LogInformation("Starting vacancy search");
         return await _searchHelper.Find(findVacanciesModel);
     }
+
+    public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
+    {
+        return await _searchHelper.Get(vacancyReference);
+    }
 }

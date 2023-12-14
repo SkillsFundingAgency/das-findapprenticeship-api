@@ -60,4 +60,10 @@ public class AzureSearchHelper : IAzureSearchHelper
             Total = Convert.ToInt32(totalVacanciesCount)
         };
     }
+
+    public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
+    {
+        var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
+        return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
+    }
 }
