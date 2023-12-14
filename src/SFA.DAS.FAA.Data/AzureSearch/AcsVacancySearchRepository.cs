@@ -4,7 +4,7 @@ using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
 
-namespace SFA.DAS.FAA.Data.Repository;
+namespace SFA.DAS.FAA.Data.AzureSearch;
 public class AcsVacancySearchRepository : IAcsVacancySearchRespository
 {
     private readonly ILogger<AcsVacancySearchRepository> _logger;

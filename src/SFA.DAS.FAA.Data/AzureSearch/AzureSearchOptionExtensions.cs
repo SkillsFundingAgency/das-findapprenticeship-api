@@ -1,63 +1,14 @@
-﻿using System;
-using Azure.Search.Documents;
-using Azure;
-using SFA.DAS.FAA.Domain.Interfaces;
-using SFA.DAS.FAA.Domain.Configuration;
-using SFA.DAS.FAA.Domain.Models;
-using System.Linq;
-using SFA.DAS.FAA.Domain.Entities;
+using System;
 using System.Collections.Generic;
-using Azure.Search.Documents.Models;
-using System.Threading.Tasks;
-using Azure.Core.Serialization;
-using System.Text.Json;
+using System.Linq;
+using Azure.Search.Documents;
+using SFA.DAS.FAA.Domain.Models;
 
-namespace SFA.DAS.FAA.Data.Repository;
-public class AzureSearchHelper : IAzureSearchHelper
+namespace SFA.DAS.FAA.Data.AzureSearch;
+
+public static class AzureSearchOptionExtensions
 {
-    private readonly AzureKeyCredential _azureKeyCredential;
-    private readonly SearchClientOptions _clientOptions;
-    private readonly Uri _endpoint;
-    private readonly SearchClient _searchClient;
-
-    public AzureSearchHelper(FindApprenticeshipsApiConfiguration configuration)
-    {
-        _clientOptions = new SearchClientOptions
-        {
-            Serializer = new JsonObjectSerializer(new JsonSerializerOptions
-            {
-                Converters =
-                {
-                    new MicrosoftSpatialGeoJsonConverter()
-                }
-            })
-        };
-
-        _azureKeyCredential = new AzureKeyCredential(configuration.AzureSearchKey);
-        _endpoint = new Uri(configuration.AzureSearchBaseUrl);
-        
-        _searchClient = new SearchClient(_endpoint, "apprenticeships", _azureKeyCredential, _clientOptions);
-    }
-    public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)
-    {
-        var searchOptions = new SearchOptions();
-        searchOptions = BuildSort(findVacanciesModel, searchOptions);
-        searchOptions = BuildPaging(findVacanciesModel, searchOptions);
-        searchOptions = BuildFilters(findVacanciesModel, searchOptions);
-        searchOptions.IncludeTotalCount = true;
-
-        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>(searchOptions.Filter);
-        var totalVacanciesCountTask = _searchClient.GetDocumentCountAsync();
-
-        await Task.WhenAll(searchResultsTask, totalVacanciesCountTask);
-
-        var searchResults = searchResultsTask.Result;
-        var totalVacanciesCount = totalVacanciesCountTask.Result;
-        
-        return MapResponse(searchResults.Value, totalVacanciesCount.Value);
-    }
-
-    private static SearchOptions BuildSort(FindVacanciesModel searchVacanciesModel, SearchOptions searchOptions)
+    public static SearchOptions BuildSort(this SearchOptions searchOptions, FindVacanciesModel searchVacanciesModel)
     {
         switch (searchVacanciesModel.VacancySort)
         {
@@ -89,7 +40,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         return searchOptions;
     }
 
-    private static SearchOptions BuildPaging(FindVacanciesModel findVacanciesModel, SearchOptions searchOptions)
+    public static SearchOptions BuildPaging(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
         findVacanciesModel.PageNumber = findVacanciesModel.PageNumber < 2 ? 1 : findVacanciesModel.PageNumber;
         searchOptions.Skip = (findVacanciesModel.PageNumber - 1) * findVacanciesModel.PageSize;
@@ -97,7 +48,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         return searchOptions;
     }
 
-    private static SearchOptions BuildFilters(FindVacanciesModel findVacanciesModel, SearchOptions searchOptions)
+    public static SearchOptions BuildFilters(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
         List<string> searchFilters = new();
 
@@ -153,17 +104,5 @@ public class AzureSearchHelper : IAzureSearchHelper
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
         return searchOptions;
-    }
-
-    private ApprenticeshipSearchResponse MapResponse(SearchResults<SearchDocument> searchResponse, long totalVacanciesCount)
-    {
-        var result = searchResponse.GetResults().ToList().Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString())).ToList();
-        return new ApprenticeshipSearchResponse
-        {
-            ApprenticeshipVacancies = result.Select(c=>c)
-                .ToList(),
-            TotalFound = Convert.ToInt32(searchResponse.TotalCount),
-            Total = Convert.ToInt32(totalVacanciesCount)
-        };
     }
 }

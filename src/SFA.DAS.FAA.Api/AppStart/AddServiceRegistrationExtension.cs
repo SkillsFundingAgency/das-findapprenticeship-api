@@ -1,8 +1,8 @@
 ﻿using System;
 using Elasticsearch.Net;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.FAA.Data.AzureSearch;
 using SFA.DAS.FAA.Data.ElasticSearch;
-using SFA.DAS.FAA.Data.Repository;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Interfaces;
 

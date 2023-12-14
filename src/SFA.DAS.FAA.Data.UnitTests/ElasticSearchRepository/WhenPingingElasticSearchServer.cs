@@ -4,7 +4,7 @@ using Elasticsearch.Net;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.FAA.Data.Repository;
+using SFA.DAS.FAA.Data.AzureSearch;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Interfaces;
 
