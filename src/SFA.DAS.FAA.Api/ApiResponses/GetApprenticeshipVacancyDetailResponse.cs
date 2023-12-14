@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Linq;
 using SFA.DAS.FAA.Domain.Entities;
 
@@ -81,7 +79,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
     
     public class Qualification
     {
-        public QualificationWeighting Weighting { get ; set ; }
+        public string Weighting { get ; set ; }
         public string QualificationType { get ; set ; }
         public string Subject { get ; set ; }
         public string Grade { get ; set ; }
@@ -92,16 +90,10 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             {
                 Grade = source.Grade,
                 Subject = source.Subject,
-                Weighting = (QualificationWeighting)source.Weighting,
+                Weighting = source.Weighting,
                 QualificationType = source.QualificationType
 
             };
         }
-    }
-
-    public enum QualificationWeighting
-    {
-        Essential,
-        Desired
     }
 }
