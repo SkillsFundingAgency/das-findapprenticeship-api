@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Azure.Search.Documents.Models;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Domain.Entities
 {
@@ -85,9 +87,11 @@ namespace SFA.DAS.FAA.Domain.Entities
     public class WageSearchDocument
     {
         public string WageAdditionalInformation { get; set; }
-        public string WageType { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public WageType WageType { get; set; }
         public string WorkingWeekDescription { get; set; }
-        public string WageUnit { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public WageUnit WageUnit { get; set; }
         public long? WageAmount { get; set; }
     }
 }
