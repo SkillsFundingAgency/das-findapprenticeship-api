@@ -11,6 +11,9 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         [Test, AutoData]
         public void Then_The_Fields_Are_Mapped(ApprenticeshipVacancyItem source)
         {
+            source.Course = null;
+            source.Wage = null;
+            
             var actual = (GetApprenticeshipVacancyDetailResponse)source;
 
             actual.Should().BeEquivalentTo(source, options=> options
@@ -19,6 +22,37 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.Wage)
                 .Excluding(c=>c.Course)
             );
+        }
+        [Test, AutoData]
+        public void Then_Maps_Fields_From_Azure_Search(ApprenticeshipVacancyItem source)
+        {
+            source.Category = null;
+            source.CategoryCode = null;
+            source.Location.Lon = 0;
+            source.Location.Lat = 0;
+            source.StandardLarsCode = null;
+            
+            var response = (GetApprenticeshipVacancyDetailResponse)source;
+
+            response.Should().BeEquivalentTo(source, options=>options
+                .Excluding(c=>c.Duration)
+                .Excluding(c=>c.DurationUnit)
+                .Excluding(c=>c.EmployerDescription)
+                .Excluding(c=>c.ExpectedDuration)
+                .Excluding(c=>c.Wage)
+                .Excluding(c=>c.Course)
+                .Excluding(c=>c.Category)
+                .Excluding(c=>c.CategoryCode)
+                .Excluding(c=>c.Location)
+                .Excluding(c=>c.StandardLarsCode)
+            );
+            response.StandardTitle.Should().Be(source.Course.Title);
+            response.Category.Should().Be(source.Course.Title);
+            response.CategoryCode.Should().Be("SSAT1.UNKNOWN");
+            response.StandardLarsCode.Should().Be(source.Course.LarsCode);
+            response.RouteCode.Should().Be(source.Course.RouteCode);
+            response.Location.Lon.Should().Be(source.Address.Longitude);
+            response.Location.Lat.Should().Be(source.Address.Latitude);
         }
         
         

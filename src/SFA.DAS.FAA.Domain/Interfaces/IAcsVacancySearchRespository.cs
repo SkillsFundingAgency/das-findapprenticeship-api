@@ -6,4 +6,5 @@ namespace SFA.DAS.FAA.Domain.Interfaces;
 public interface IAcsVacancySearchRespository
 {
     Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
+    Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
 }

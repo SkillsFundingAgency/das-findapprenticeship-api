@@ -6,4 +6,5 @@ namespace SFA.DAS.FAA.Domain.Interfaces;
 public interface IAzureSearchHelper
 {
     Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
+    Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
 }

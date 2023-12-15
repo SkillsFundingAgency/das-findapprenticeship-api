@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Linq;
 using SFA.DAS.FAA.Domain.Entities;
 
@@ -24,8 +22,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 Id = source.Id,
                 AnonymousEmployerName = source.AnonymousEmployerName,
                 ApprenticeshipLevel = source.ApprenticeshipLevel,
-                Category = source.Category,
-                CategoryCode = source.CategoryCode,
+                Category = source.Category ?? source.Course?.Title,
+                CategoryCode = source.CategoryCode ?? "SSAT1.UNKNOWN",
                 ClosingDate = source.ClosingDate,
                 Description = source.Description,
                 EmployerName = source.EmployerName,
@@ -35,16 +33,16 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 IsEmployerAnonymous = source.IsEmployerAnonymous,
                 IsPositiveAboutDisability = source.IsPositiveAboutDisability,
                 IsRecruitVacancy = source.IsRecruitVacancy,
-                Location = source.Location,
+                Location =  source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location,
                 NumberOfPositions = source.NumberOfPositions,
                 PostedDate = source.PostedDate,
                 ProviderName = source.ProviderName,
-                StandardTitle = source.Course.Title,
-                StandardLarsCode = source.StandardLarsCode ?? source.Course.LarsCode,
-                RouteCode = source.Course.RouteCode,
+                StandardTitle = source.Course?.Title,
+                StandardLarsCode = source.StandardLarsCode ?? source.Course?.LarsCode,
+                RouteCode = source.Course?.RouteCode,
                 StartDate = source.StartDate,
-                SubCategory = source.SubCategory,
-                SubCategoryCode = source.SubCategoryCode,
+                SubCategory = source.SubCategory?? source.Course?.Title,
+                SubCategoryCode = source.SubCategoryCode?? source.Course?.Title,
                 Title = source.Title,
                 Ukprn = source.Ukprn,
                 VacancyLocationType = source.VacancyLocationType,
@@ -55,7 +53,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageText = source.WageText,
                 WageUnit = source.WageUnit,
                 WageType = source.WageType,
-                WorkingWeek = source.WorkingWeek,
+                WorkingWeek = source.WorkingWeek ?? source.Wage?.WorkingWeekDescription,
                 Distance = source.Distance,
                 Score = source.Score,
                 LongDescription = source.LongDescription,
@@ -81,7 +79,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
     
     public class Qualification
     {
-        public QualificationWeighting Weighting { get ; set ; }
+        public string Weighting { get ; set ; }
         public string QualificationType { get ; set ; }
         public string Subject { get ; set ; }
         public string Grade { get ; set ; }
@@ -92,16 +90,10 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             {
                 Grade = source.Grade,
                 Subject = source.Subject,
-                Weighting = (QualificationWeighting)source.Weighting,
+                Weighting = source.Weighting,
                 QualificationType = source.QualificationType
 
             };
         }
-    }
-
-    public enum QualificationWeighting
-    {
-        Essential,
-        Desired
     }
 }

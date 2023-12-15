@@ -14,12 +14,30 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
     public class WhenGettingApprenticeshipVacancy
     {
         [Test, MoqAutoData]
-        public async Task Then_Gets_Vacancies_From_Repository(
+        public async Task Then_Gets_Vacancies_From_Elastic_Repository_When_Source_Is_Elastic(
             GetApprenticeshipVacancyQuery query,
             ApprenticeshipVacancyItem responseFromRepository,
             [Frozen] Mock<IVacancySearchRepository> mockVacancyIndexRepository,
             GetApprenticeshipVacancyQueryHandler handler)
         {
+            query.Source = "Elastic";
+            mockVacancyIndexRepository
+                .Setup(repository => repository.Get(query.VacancyReference))
+                .ReturnsAsync(responseFromRepository);
+            
+            var result = await handler.Handle(query, CancellationToken.None);
+
+            result.ApprenticeshipVacancy
+                .Should().BeEquivalentTo(responseFromRepository);
+        }
+        [Test, MoqAutoData]
+        public async Task Then_Gets_Vacancies_From_Azure_Repository_When_Source_Is_Azure(
+            GetApprenticeshipVacancyQuery query,
+            ApprenticeshipVacancyItem responseFromRepository,
+            [Frozen] Mock<IAcsVacancySearchRespository> mockVacancyIndexRepository,
+            GetApprenticeshipVacancyQueryHandler handler)
+        {
+            query.Source = "ACS";
             mockVacancyIndexRepository
                 .Setup(repository => repository.Get(query.VacancyReference))
                 .ReturnsAsync(responseFromRepository);

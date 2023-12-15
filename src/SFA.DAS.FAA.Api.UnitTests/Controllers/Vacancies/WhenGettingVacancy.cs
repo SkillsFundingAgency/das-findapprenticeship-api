@@ -26,7 +26,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetApprenticeshipVacancyQuery>(query =>
-                        query.VacancyReference == vacancyReference), 
+                        query.VacancyReference == vacancyReference && query.Source.Equals("Elastic")), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mediatorResult);
 
@@ -48,7 +48,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetApprenticeshipVacancyQuery>(query =>
-                        query.VacancyReference == vacancyReference), 
+                        query.VacancyReference == vacancyReference && query.Source.Equals("Elastic")), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GetApprenticeshipVacancyResult());
 

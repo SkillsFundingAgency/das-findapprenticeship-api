@@ -4,11 +4,11 @@ using FluentAssertions.Execution;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.FAA.Data.Repository;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading.Tasks;
+using SFA.DAS.FAA.Data.AzureSearch;
 
 namespace SFA.DAS.FAA.Data.UnitTests.AzureCognitiveSearchRepository;
 public class WhenFindingApprenticeshipVacancies
