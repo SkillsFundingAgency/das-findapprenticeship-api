@@ -42,6 +42,7 @@ namespace SFA.DAS.FAA.Api.Controllers
         {
             var result = await mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
+                SearchTerm = request.SearchTerm,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
                 Ukprn = request.Ukprn,
