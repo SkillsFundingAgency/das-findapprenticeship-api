@@ -10,6 +10,7 @@ using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
@@ -26,7 +27,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetApprenticeshipVacancyQuery>(query =>
-                        query.VacancyReference == vacancyReference && query.Source.Equals("Elastic")), 
+                        query.VacancyReference == vacancyReference && query.Source == SearchSource.Elastic), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mediatorResult);
 
@@ -48,7 +49,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetApprenticeshipVacancyQuery>(query =>
-                        query.VacancyReference == vacancyReference && query.Source.Equals("Elastic")), 
+                        query.VacancyReference == vacancyReference && query.Source == SearchSource.Elastic), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GetApprenticeshipVacancyResult());
 

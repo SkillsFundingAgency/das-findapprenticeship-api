@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Interfaces;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy
@@ -18,7 +19,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy
         
         public async Task<GetApprenticeshipVacancyResult> Handle(GetApprenticeshipVacancyQuery request, CancellationToken cancellationToken)
         {
-            var vacancy = request.Source == "Elastic" 
+            var vacancy = request.Source == SearchSource.Elastic
                 ? await _vacancySearchRepository.Get(request.VacancyReference) 
                 : await _acsVacancySearchRepository.Get(request.VacancyReference);
 

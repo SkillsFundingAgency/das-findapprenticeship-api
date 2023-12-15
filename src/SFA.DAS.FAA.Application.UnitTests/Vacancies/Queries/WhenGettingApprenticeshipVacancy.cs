@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -20,7 +21,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IVacancySearchRepository> mockVacancyIndexRepository,
             GetApprenticeshipVacancyQueryHandler handler)
         {
-            query.Source = "Elastic";
+            query.Source = SearchSource.Elastic;
             mockVacancyIndexRepository
                 .Setup(repository => repository.Get(query.VacancyReference))
                 .ReturnsAsync(responseFromRepository);
@@ -37,7 +38,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IAcsVacancySearchRespository> mockVacancyIndexRepository,
             GetApprenticeshipVacancyQueryHandler handler)
         {
-            query.Source = "ACS";
+            query.Source = SearchSource.AzureSearch;
             mockVacancyIndexRepository
                 .Setup(repository => repository.Get(query.VacancyReference))
                 .ReturnsAsync(responseFromRepository);

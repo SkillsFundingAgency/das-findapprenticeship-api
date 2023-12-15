@@ -11,6 +11,7 @@ using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.ApRequests;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -41,7 +42,7 @@ public class WhenGettingVacancySearch
                     query.Categories == request.Categories &&
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                     query.VacancySort.Equals(request.Sort) &&
-                    query.Source.Equals("ACS")
+                    query.Source == SearchSource.AzureSearch
                 ),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(mediatorResult);

@@ -10,12 +10,13 @@ using SFA.DAS.FAA.Api.ApRequests;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
 
-    public abstract class VacanciesControllerBase(IMediator mediator, string searchSource) : ControllerBase
+    public abstract class VacanciesControllerBase(IMediator mediator, SearchSource searchSource) : ControllerBase
     {
         [HttpGet]
         [Route("{vacancyReference}")]
@@ -99,10 +100,10 @@ namespace SFA.DAS.FAA.Api.Controllers
     [ApiVersion("1.0")]
     [ApiController]
     [Route("/api/Vacancies/")]
-    public class VacanciesController(IMediator mediator) : VacanciesControllerBase(mediator, "Elastic");
+    public class VacanciesController(IMediator mediator) : VacanciesControllerBase(mediator, SearchSource.Elastic);
     
     [ApiVersion("2.0")]
     [ApiController]
     [Route("/api/Vacancies/")]
-    public class VacanciesV2Controller(IMediator mediator) : VacanciesControllerBase(mediator, "ACS");
+    public class VacanciesV2Controller(IMediator mediator) : VacanciesControllerBase(mediator, SearchSource.AzureSearch);
 }

@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
@@ -21,7 +22,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IVacancySearchRepository> mockVacancyIndexRepository,
             SearchApprenticeshipVacanciesQueryHandler handler)
         {
-            query.Source = "Elastic";
+            query.Source = SearchSource.Elastic;
             mockVacancyIndexRepository
                 .Setup(repository => repository.Find(It.Is<FindVacanciesModel>(c =>
                         c.PageNumber.Equals(query.PageNumber) &&
@@ -55,7 +56,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IAcsVacancySearchRespository> mockAcsVacancySearchRepository,
             SearchApprenticeshipVacanciesQueryHandler handler)
         {
-            query.Source = "Acs";
+            query.Source = SearchSource.AzureSearch;
             mockAcsVacancySearchRepository
                 .Setup(repository => repository.Find(It.Is<FindVacanciesModel>(c =>
                         c.PageNumber.Equals(query.PageNumber) &&
