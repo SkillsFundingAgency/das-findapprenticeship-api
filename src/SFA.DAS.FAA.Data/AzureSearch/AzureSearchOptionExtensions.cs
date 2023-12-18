@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Azure.Search.Documents;
+using Azure.Search.Documents.Indexes.Models;
+using Azure.Search.Documents.Models;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
@@ -100,6 +102,20 @@ public static class AzureSearchOptionExtensions
         {
             var numberOfDays = Convert.ToDouble(findVacanciesModel.PostedInLastNumberOfDays);
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays)}");
+        }
+
+        if (findVacanciesModel.SearchTerm != null)
+        {
+                searchOptions.QueryType = SearchQueryType.Full;
+                searchOptions.SearchFields.Add("Title");
+                searchOptions.SearchFields.Add("Category");
+                searchOptions.SearchFields.Add("StandardTitle");
+                searchOptions.SearchFields.Add("EmployerName");
+                searchOptions.SearchFields.Add("ProviderName");
+                searchOptions.SearchFields.Add("Ukprn");
+                searchOptions.SearchFields.Add("VacancyReference");
+
+                searchFilters.Add($"SearchTerm eq {findVacanciesModel.SearchTerm}");
         }
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
