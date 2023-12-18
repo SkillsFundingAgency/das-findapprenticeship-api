@@ -52,7 +52,6 @@ public static class AzureSearchOptionExtensions
 
     public static SearchOptions BuildFilters(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
-        findVacanciesModel.SearchTerm += "*";
         List<string> searchFilters = new();
 
         if (findVacanciesModel.Ukprn.HasValue)
@@ -105,20 +104,20 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays)}");
         }
 
-        if (findVacanciesModel.SearchTerm != null)
-        {
-                searchOptions.QueryType = SearchQueryType.Full;
-                searchOptions.SearchFields.Add("Title");
-                //searchOptions.SearchFields.Add("StandardTitle");
-                searchOptions.SearchFields.Add("EmployerName");
-                searchOptions.SearchFields.Add("ProviderName");
-                //searchOptions.SearchFields.Add("Ukprn");
-                //searchOptions.SearchFields.Add("VacancyReference");
-
-                searchFilters.Add($"SearchTerm eq {findVacanciesModel.SearchTerm}");
-        }
-
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+        return searchOptions;
+    }
+
+    public static SearchOptions BuildSearch(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
+    {
+        searchOptions.QueryType = SearchQueryType.Full;
+        searchOptions.SearchFields.Add("Title");
+        //searchOptions.SearchFields.Add("StandardTitle");
+        searchOptions.SearchFields.Add("EmployerName");
+        searchOptions.SearchFields.Add("ProviderName");
+        //searchOptions.SearchFields.Add("Ukprn");
+        //searchOptions.SearchFields.Add("VacancyReference");
+
         return searchOptions;
     }
 }
