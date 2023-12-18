@@ -52,6 +52,7 @@ public static class AzureSearchOptionExtensions
 
     public static SearchOptions BuildFilters(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
+        findVacanciesModel.SearchTerm += "*";
         List<string> searchFilters = new();
 
         if (findVacanciesModel.Ukprn.HasValue)
@@ -108,12 +109,11 @@ public static class AzureSearchOptionExtensions
         {
                 searchOptions.QueryType = SearchQueryType.Full;
                 searchOptions.SearchFields.Add("Title");
-                searchOptions.SearchFields.Add("Category");
-                searchOptions.SearchFields.Add("StandardTitle");
+                //searchOptions.SearchFields.Add("StandardTitle");
                 searchOptions.SearchFields.Add("EmployerName");
                 searchOptions.SearchFields.Add("ProviderName");
-                searchOptions.SearchFields.Add("Ukprn");
-                searchOptions.SearchFields.Add("VacancyReference");
+                //searchOptions.SearchFields.Add("Ukprn");
+                //searchOptions.SearchFields.Add("VacancyReference");
 
                 searchFilters.Add($"SearchTerm eq {findVacanciesModel.SearchTerm}");
         }

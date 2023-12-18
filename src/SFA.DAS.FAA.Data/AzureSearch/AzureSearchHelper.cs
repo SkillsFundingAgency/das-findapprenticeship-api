@@ -44,7 +44,7 @@ public class AzureSearchHelper : IAzureSearchHelper
             .BuildFilters(findVacanciesModel);
         searchOptions.IncludeTotalCount = true;
 
-        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>(searchOptions.Filter, searchOptions);
+        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>(findVacanciesModel.SearchTerm, searchOptions);
         var totalVacanciesCountTask = _searchClient.GetDocumentCountAsync();
 
         await Task.WhenAll(searchResultsTask, totalVacanciesCountTask);
