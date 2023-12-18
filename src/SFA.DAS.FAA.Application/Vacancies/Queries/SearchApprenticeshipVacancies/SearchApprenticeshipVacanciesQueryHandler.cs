@@ -23,6 +23,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
         {
             var model = new FindVacanciesModel
             {
+                SearchTerm = request.SearchTerm,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
                 Ukprn = request.Ukprn,
