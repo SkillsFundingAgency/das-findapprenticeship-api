@@ -24,6 +24,12 @@ public static class AzureSearchOptionExtensions
             case VacancySort.ExpectedStartDateDesc:
                 searchOptions.OrderBy.Add("StartDate desc");
                 break;
+            case VacancySort.SalaryAsc:
+                searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                break;
+            case VacancySort.SalaryDesc:
+                searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                break;
             case VacancySort.DistanceAsc:
                 if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
                 {
@@ -74,7 +80,7 @@ public static class AzureSearchOptionExtensions
 
         if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Any())
         {
-            findVacanciesModel.Categories.ForEach(category => searchFilters.Add($"Route eq {category}"));
+            findVacanciesModel.Categories.ForEach(category => searchFilters.Add($"Route eq '{category}'"));
         }
 
         if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue && findVacanciesModel.DistanceInMiles.HasValue)
@@ -102,7 +108,7 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays)}");
         }
 
-        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+        searchOptions.Filter = string.Join(" or ", searchFilters.ToArray());
         return searchOptions;
     }
 }
