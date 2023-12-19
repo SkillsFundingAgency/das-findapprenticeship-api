@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Azure.Search.Documents;
+using Azure.Search.Documents.Indexes.Models;
+using Azure.Search.Documents.Models;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
@@ -109,6 +111,21 @@ public static class AzureSearchOptionExtensions
         }
 
         searchOptions.Filter = string.Join(" or ", searchFilters.ToArray());
+        return searchOptions;
+    }
+
+    public static SearchOptions BuildSearch(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
+    {
+        findVacanciesModel.Ukprn.ToString();
+
+        searchOptions.QueryType = SearchQueryType.Full;
+        searchOptions.SearchFields.Add("Title");
+        searchOptions.SearchFields.Add("Course/Title");
+        searchOptions.SearchFields.Add("EmployerName");
+        searchOptions.SearchFields.Add("ProviderName");
+        searchOptions.SearchFields.Add("Ukprn");
+        //searchOptions.SearchFields.Add("VacancyReference");
+
         return searchOptions;
     }
 }

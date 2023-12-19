@@ -7,6 +7,8 @@ namespace SFA.DAS.FAA.Api.ApRequests
     public class SearchVacancyRequest
     {
         [FromQuery]
+        public string? SearchTerm { get; set; }
+        [FromQuery]
         public int PageNumber { get; set; } = 1;
         [FromQuery]
         public int PageSize { get; set; } = 10;

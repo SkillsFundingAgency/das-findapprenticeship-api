@@ -41,10 +41,11 @@ public class AzureSearchHelper : IAzureSearchHelper
         var searchOptions = new SearchOptions()
             .BuildSort(findVacanciesModel)
             .BuildPaging(findVacanciesModel)
-            .BuildFilters(findVacanciesModel);
+            .BuildFilters(findVacanciesModel)
+            .BuildSearch(findVacanciesModel);
         searchOptions.IncludeTotalCount = true;
 
-        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>(searchOptions.Filter, searchOptions);
+        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>($"{findVacanciesModel.SearchTerm}*", searchOptions);
         var totalVacanciesCountTask = _searchClient.GetDocumentCountAsync();
 
         await Task.WhenAll(searchResultsTask, totalVacanciesCountTask);
