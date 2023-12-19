@@ -110,12 +110,14 @@ public static class AzureSearchOptionExtensions
 
     public static SearchOptions BuildSearch(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
+        findVacanciesModel.Ukprn.ToString();
+
         searchOptions.QueryType = SearchQueryType.Full;
         searchOptions.SearchFields.Add("Title");
         //searchOptions.SearchFields.Add("StandardTitle");
         searchOptions.SearchFields.Add("EmployerName");
         searchOptions.SearchFields.Add("ProviderName");
-        //searchOptions.SearchFields.Add("Ukprn");
+        searchOptions.SearchFields.Add("Ukprn");
         //searchOptions.SearchFields.Add("VacancyReference");
 
         return searchOptions;

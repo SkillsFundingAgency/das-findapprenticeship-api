@@ -28,7 +28,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string SubCategory { get; set; }
         public string SubCategoryCode { get; set; }
         public string Title { get; set; }
-        public long Ukprn { get; set; }
+        public string Ukprn { get; set; }
         public string VacancyLocationType { get; set; }
         public string VacancyReference { get; set; }
         public decimal? WageAmount { get; set; }
