@@ -114,7 +114,7 @@ public static class AzureSearchOptionExtensions
 
         searchOptions.QueryType = SearchQueryType.Full;
         searchOptions.SearchFields.Add("Title");
-        //searchOptions.SearchFields.Add("StandardTitle");
+        searchOptions.SearchFields.Add("Course/Title");
         searchOptions.SearchFields.Add("EmployerName");
         searchOptions.SearchFields.Add("ProviderName");
         searchOptions.SearchFields.Add("Ukprn");
