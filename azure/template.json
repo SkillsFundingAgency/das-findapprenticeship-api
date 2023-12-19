@@ -48,7 +48,7 @@
         "keyVaultCertificateName": {
             "type": "string"
         },
-        "sharedBackEndAppServicePlanName": { 
+        "sharedBackEndAppServicePlanName": {
             "type": "string"
         },
         "sharedBackEndSubnetResourceId": {
@@ -75,6 +75,7 @@
             "apiVersion": "2021-04-01",
             "name": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/resourceGroups",
+            "location": "[parameters('resourceGroupLocation')]",
             "tags": "[parameters('tags')]",
             "properties": {}
         },
@@ -166,11 +167,11 @@
                                 {
                                     "name": "Environment",
                                     "value": "[parameters('environmentName')]"
-                                },    
+                                },
                                 {
                                     "name": "ResourceEnvironmentName",
                                     "value": "[parameters('resourceEnvironmentName')]"
-                                },                                
+                                },
                                 {
                                     "name": "ConfigurationStorageConnectionString",
                                     "value": "[parameters('configurationStorageConnectionString')]"
