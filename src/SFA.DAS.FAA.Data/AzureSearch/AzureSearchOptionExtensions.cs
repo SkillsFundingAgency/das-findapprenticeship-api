@@ -62,17 +62,17 @@ public static class AzureSearchOptionExtensions
 
         if (findVacanciesModel.Ukprn.HasValue)
         {
-            searchFilters.Add($"Ukprn eq {findVacanciesModel.Ukprn}");
+            searchFilters.Add($"Ukprn eq '{findVacanciesModel.Ukprn}'");
         }
 
         if (!string.IsNullOrEmpty(findVacanciesModel.AccountPublicHashedId))
         {
-            searchFilters.Add($"AccountPublicHashedId eq {findVacanciesModel.AccountPublicHashedId}");
+            searchFilters.Add($"AccountPublicHashedId eq '{findVacanciesModel.AccountPublicHashedId}'");
         }
 
         if (!string.IsNullOrEmpty(findVacanciesModel.AccountLegalEntityPublicHashedId))
         {
-            searchFilters.Add($"AccountLegalEntityPublicHashedId eq {findVacanciesModel.AccountLegalEntityPublicHashedId}");
+            searchFilters.Add($"AccountLegalEntityPublicHashedId eq '{findVacanciesModel.AccountLegalEntityPublicHashedId}'");
         }
 
         if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Any())
