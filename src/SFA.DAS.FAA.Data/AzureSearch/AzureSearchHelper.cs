@@ -64,6 +64,7 @@ public class AzureSearchHelper : IAzureSearchHelper
 
     public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
     {
+        vacancyReference = vacancyReference.Replace("VAC", "", StringComparison.CurrentCultureIgnoreCase);
         var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
         return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
     }
