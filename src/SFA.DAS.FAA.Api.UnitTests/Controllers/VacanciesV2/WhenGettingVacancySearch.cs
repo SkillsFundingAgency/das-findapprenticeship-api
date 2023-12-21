@@ -41,7 +41,8 @@ public class WhenGettingVacancySearch
                     query.Categories == request.Categories &&
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                     query.VacancySort.Equals(request.Sort) &&
-                    query.Source.Equals("ACS")
+                    query.Source.Equals("ACS") &&
+                    query.SearchTerm == request.SearchTerm
                 ),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(mediatorResult);
