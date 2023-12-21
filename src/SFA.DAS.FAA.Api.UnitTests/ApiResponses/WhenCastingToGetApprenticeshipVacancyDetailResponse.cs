@@ -78,9 +78,9 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         }
         
         [Test]
-        [InlineAutoData(1, WageUnit.Year, "1 year")]
-        [InlineAutoData(3, WageUnit.Month, "3 months")]
-        [InlineAutoData(3, WageUnit.Week, "3 weeks")]
+        [InlineAutoData(1, WageUnit.Year, "1 Year")]
+        [InlineAutoData(3, WageUnit.Month, "3 Months")]
+        [InlineAutoData(3, WageUnit.Week, "3 Weeks")]
         public void Then_The_Expected_Duration_Is_Set_For_Azure(int duration, WageUnit unit, string expectedText, ApprenticeshipVacancyItem source)
         {
             source.ExpectedDuration = null;

@@ -18,7 +18,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public static implicit operator GetApprenticeshipVacancyDetailResponse(ApprenticeshipVacancyItem source)
         {
             var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
-            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName().ToLower() : source.DurationUnit;
+            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
             
             return new GetApprenticeshipVacancyDetailResponse
             {
