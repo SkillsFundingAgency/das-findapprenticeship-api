@@ -3,6 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
 {
@@ -70,6 +71,26 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             source.ExpectedDuration = null;
             source.Duration = duration;
             source.DurationUnit = unit;
+            source.Wage = null;
+            var response = (GetApprenticeshipVacancyDetailResponse)source;
+
+            response.ExpectedDuration.Should().Be(expectedText);
+        }
+        
+        [Test]
+        [InlineAutoData(1, WageUnit.Year, "1 year")]
+        [InlineAutoData(3, WageUnit.Month, "3 months")]
+        [InlineAutoData(3, WageUnit.Week, "3 weeks")]
+        public void Then_The_Expected_Duration_Is_Set_For_Azure(int duration, WageUnit unit, string expectedText, ApprenticeshipVacancyItem source)
+        {
+            source.ExpectedDuration = null;
+            source.Duration = 0;
+            source.DurationUnit = null;
+            source.Wage = new WageSearchDocument
+            {
+                WageUnit = unit,
+                Duration = duration
+            };
             var response = (GetApprenticeshipVacancyDetailResponse)source;
 
             response.ExpectedDuration.Should().Be(expectedText);

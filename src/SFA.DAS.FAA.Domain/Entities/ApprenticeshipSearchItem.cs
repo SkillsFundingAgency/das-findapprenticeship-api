@@ -93,5 +93,6 @@ namespace SFA.DAS.FAA.Domain.Entities
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public WageUnit WageUnit { get; set; }
         public long? WageAmount { get; set; }
+        public int Duration { get; set; }
     }
 }

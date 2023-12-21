@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
@@ -16,6 +17,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 
         public static implicit operator GetApprenticeshipVacancyDetailResponse(ApprenticeshipVacancyItem source)
         {
+            var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
+            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName().ToLower() : source.DurationUnit;
+            
             return new GetApprenticeshipVacancyDetailResponse
             {
                 
@@ -64,7 +68,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 Qualifications = source.Qualifications.Select(c=> (Qualification)c).ToList(),
                 ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) 
                     ? source.ExpectedDuration 
-                    : $"{source.Duration} {(source.Duration == 1 || string.IsNullOrEmpty(source.DurationUnit) || source.DurationUnit.EndsWith("s") ? source.DurationUnit : $"{source.DurationUnit}s")}",
+                    : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,
