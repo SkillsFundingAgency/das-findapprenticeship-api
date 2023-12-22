@@ -55,6 +55,8 @@ namespace SFA.DAS.FAA.Domain.Entities
         public WageSearchDocument Wage { get; set; }
         public CourseSearchDocument Course { get; set; }
         public GeoPoint SearchGeoPoint { get; set; }
+        public string ApplicationMethod { get; set; }
+        public string ApplicationUrl { get; set; }
     }
     
     
