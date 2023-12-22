@@ -79,7 +79,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 EmployerContactPhone = source.EmployerContactPhone,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
                 EmployerDescription = source.EmployerDescription,
-                Address = source.Address
+                Address = source.Address,
+                ApplicationMethod = source.ApplicationMethod,
+                ApplicationUrl = source.ApplicationUrl
             };
         }
 
