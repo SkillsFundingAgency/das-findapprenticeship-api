@@ -28,6 +28,41 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             );
             response.ExpectedDuration.Should().Be($"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}");
         }
+
+        [Test, AutoData]
+        public void Then_If_No_Location_Search_Maps_Zero_Distance_For_Azure_Search(ApprenticeshipSearchItem source)
+        {
+            source.ExpectedDuration = null;
+            source.Category = null;
+            source.CategoryCode = null;
+            source.Location.Lon = 0;
+            source.Location.Lat = 0;
+            source.Address.Latitude = 54.6;
+            source.Address.Longitude = -2.44;
+            source.StandardLarsCode = null;
+            source.SearchGeoPoint = null;
+            source.Distance = null;
+            
+            var response = (GetApprenticeshipVacancyResponse)source;
+
+            response.Should().BeEquivalentTo(source, options=>options
+                .Excluding(c=>c.Duration)
+                .Excluding(c=>c.DurationUnit)
+                .Excluding(c=>c.EmployerDescription)
+                .Excluding(c=>c.ExpectedDuration)
+                .Excluding(c=>c.Wage)
+                .Excluding(c=>c.Course)
+                .Excluding(c=>c.Category)
+                .Excluding(c=>c.CategoryCode)
+                .Excluding(c=>c.Location)
+                .Excluding(c=>c.StandardLarsCode)
+                .Excluding(c => c.WageType)
+                .Excluding(c => c.WageUnit)
+                .Excluding(c=>c.SearchGeoPoint)
+                .Excluding(c=>c.Distance));
+
+            response.Distance.Should().Be(0);
+        }
         
         [Test, AutoData]
         public void Then_Maps_Fields_From_Azure_Search_With_Distance(ApprenticeshipSearchItem source)
