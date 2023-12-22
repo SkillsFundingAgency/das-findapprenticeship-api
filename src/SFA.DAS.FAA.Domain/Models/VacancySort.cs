@@ -10,6 +10,7 @@ namespace SFA.DAS.FAA.Domain.Models
         ExpectedStartDateAsc,
         SalaryDesc,
         SalaryAsc,
-        ClosingDesc
+        ClosingDesc,
+        ClosingAsc
     }
 }
