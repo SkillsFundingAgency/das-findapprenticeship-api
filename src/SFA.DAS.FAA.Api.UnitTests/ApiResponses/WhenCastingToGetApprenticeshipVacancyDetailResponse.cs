@@ -62,6 +62,47 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             response.WageType.Should().Be((int)source.Wage.WageType);
         }
         
+        [Test, AutoData]
+        public void Then_Maps_Fields_From_Azure_Search_For_No_Location(ApprenticeshipVacancyItem source)
+        {
+            source.Category = null;
+            source.CategoryCode = null;
+            source.Location.Lon = 0;
+            source.Location.Lat = 0;
+            source.StandardLarsCode = null;
+            source.SearchGeoPoint = null;
+            source.Distance = null;
+            
+            var response = (GetApprenticeshipVacancyDetailResponse)source;
+
+            response.Should().BeEquivalentTo(source, options=>options
+                .Excluding(c=>c.Duration)
+                .Excluding(c=>c.DurationUnit)
+                .Excluding(c=>c.EmployerDescription)
+                .Excluding(c=>c.ExpectedDuration)
+                .Excluding(c=>c.Wage)
+                .Excluding(c=>c.Course)
+                .Excluding(c=>c.Category)
+                .Excluding(c=>c.CategoryCode)
+                .Excluding(c=>c.Location)
+                .Excluding(c=>c.StandardLarsCode)
+                .Excluding(c => c.WageType)
+                .Excluding(c => c.WageUnit)
+                .Excluding(c=>c.SearchGeoPoint)
+                .Excluding(c=>c.Distance)
+            );
+            response.StandardTitle.Should().Be(source.Course.Title);
+            response.Category.Should().Be(source.Course.Title);
+            response.CategoryCode.Should().Be("SSAT1.UNKNOWN");
+            response.StandardLarsCode.Should().Be(source.Course.LarsCode);
+            response.RouteCode.Should().Be(source.Course.RouteCode);
+            response.Location.Lon.Should().Be(source.Address.Longitude);
+            response.Location.Lat.Should().Be(source.Address.Latitude);
+            response.WageUnit.Should().Be(4);
+            response.Distance.Should().Be(0);
+            response.WageType.Should().Be((int)source.Wage.WageType);
+        }
+        
         
         [Test]
         [InlineAutoData(1, "year", "1 year")]
