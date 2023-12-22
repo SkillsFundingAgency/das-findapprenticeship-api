@@ -20,7 +20,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public bool IsDisabilityConfident { get; set; }
         public bool IsEmployerAnonymous { get; set; }
         public bool IsPositiveAboutDisability { get; set; }
-        public bool IsRecruitVacancy { get; set; }
+        public bool IsRecruitVacancy { get; set; } = true;
         public GeoPoint Location { get; set; }
         public int NumberOfPositions { get; set; }
         public DateTime PostedDate { get; set; }
@@ -54,6 +54,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public double Score { get; set; }
         public WageSearchDocument Wage { get; set; }
         public CourseSearchDocument Course { get; set; }
+        public GeoPoint SearchGeoPoint { get; set; }
     }
     
     

@@ -35,13 +35,13 @@ public static class AzureSearchOptionExtensions
             case VacancySort.DistanceAsc:
                 if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
                 {
-                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lat} {searchVacanciesModel.Lon})') asc");
+                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
                 }
                 break;
             case VacancySort.DistanceDesc:
                 if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
                 {
-                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lat} {searchVacanciesModel.Lon})') desc");
+                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') desc");
                 }
                 break;
         }
@@ -89,7 +89,7 @@ public static class AzureSearchOptionExtensions
         {
             var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
             var distanceInKm = (distanceInMiles - (distanceInMiles / 5)) * 2;
-            searchFilters.Add($"geo.distance(Location, geography'POINT({findVacanciesModel.Lat} {findVacanciesModel.Lon})') le {distanceInKm}");
+            searchFilters.Add($"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}");
         }
 
         if (findVacanciesModel.NationWideOnly.HasValue)

@@ -22,6 +22,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.DurationUnit)
                 .Excluding(c=>c.Wage)
                 .Excluding(c=>c.Course)
+                .Excluding(c=>c.SearchGeoPoint)
             );
         }
         [Test, AutoData]
@@ -48,6 +49,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.StandardLarsCode)
                 .Excluding(c => c.WageType)
                 .Excluding(c => c.WageUnit)
+                .Excluding(c=>c.SearchGeoPoint)
             );
             response.StandardTitle.Should().Be(source.Course.Title);
             response.Category.Should().Be(source.Course.Title);
@@ -56,7 +58,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             response.RouteCode.Should().Be(source.Course.RouteCode);
             response.Location.Lon.Should().Be(source.Address.Longitude);
             response.Location.Lat.Should().Be(source.Address.Latitude);
-            response.WageUnit.Should().Be((int)source.Wage.WageUnit);
+            response.WageUnit.Should().Be(4);
             response.WageType.Should().Be((int)source.Wage.WageType);
         }
         

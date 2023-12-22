@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.Spatial;
 using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
@@ -19,6 +20,10 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         {
             var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
             var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
+
+            var sourceLocation = source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;
+
+            var distance = source.Distance ?? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat);
             
             return new GetApprenticeshipVacancyDetailResponse
             {
@@ -37,7 +42,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 IsEmployerAnonymous = source.IsEmployerAnonymous,
                 IsPositiveAboutDisability = source.IsPositiveAboutDisability,
                 IsRecruitVacancy = source.IsRecruitVacancy,
-                Location =  source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location,
+                Location =  sourceLocation,
                 NumberOfPositions = source.NumberOfPositions,
                 PostedDate = source.PostedDate,
                 ProviderName = source.ProviderName,
@@ -55,10 +60,10 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageAmountLowerBound = source.WageAmountLowerBound,
                 WageAmountUpperBound = source.WageAmountUpperBound,
                 WageText = source.WageText,
-                WageUnit = source.Wage != null ? (int)source.Wage.WageUnit : source.WageUnit,
+                WageUnit = source.Wage != null ? 4 : source.WageUnit,//Always annual for v2 TODO look at removing
                 WageType = source.Wage != null ? (int)source.Wage.WageType : source.WageType,
                 WorkingWeek = source.WorkingWeek ?? source.Wage?.WorkingWeekDescription,
-                Distance = source.Distance,
+                Distance = source.Distance ?? (decimal)distance,
                 Score = source.Score,
                 LongDescription = source.LongDescription,
                 OutcomeDescription = source.OutcomeDescription,

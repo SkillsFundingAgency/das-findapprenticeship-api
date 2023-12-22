@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.Spatial;
 using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
@@ -54,6 +56,13 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
+            var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
+            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
+
+            var sourceLocation = source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;
+
+            var distance = source.Distance ?? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat);
+            
             return new GetApprenticeshipVacancyResponse
             {
                 Id = source.Id,
@@ -88,20 +97,39 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageAmountLowerBound = source.WageAmountLowerBound,
                 WageAmountUpperBound = source.WageAmountUpperBound,
                 WageText = source.WageText,
-                WageUnit = source.Wage != null ? (int)source.Wage.WageUnit : source.WageUnit,
+                WageUnit = source.Wage != null ? 4 : source.WageUnit,//Always annual for v2 TODO look at removing
                 WageType = source.Wage != null ? (int)source.Wage.WageType : source.WageType,
                 WorkingWeek = source.WorkingWeek ?? source.Wage.WorkingWeekDescription,
-                Distance = source.Distance,
+                Distance = source.Distance ?? (decimal)distance,
                 Score = source.Score,
                 ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) 
                     ? source.ExpectedDuration 
-                    : $"{source.Duration} {(source.Duration == 1 || string.IsNullOrEmpty(source.DurationUnit) || source.DurationUnit.EndsWith("s") ? source.DurationUnit : $"{source.DurationUnit}s")}",
+                    : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
                 Address = source.Address
             };
+        }
+
+        internal static double GetDistanceBetweenPointsInMiles(
+            double lon1,
+            double lat1,
+            double lon2,
+            double lat2)
+        {
+            const double radiusOfEarth = 6378.1;
+            var longitudeDelta =  CalculateRadians(lon2 - lon1);
+            var latitudeDelta =  CalculateRadians(lat2 - lat1);
+
+            var a = (Math.Sin(latitudeDelta / 2) * Math.Sin(latitudeDelta / 2)) + Math.Cos(CalculateRadians(lat1)) * Math.Cos(CalculateRadians(lat2)) * (Math.Sin(longitudeDelta / 2) * Math.Sin(longitudeDelta / 2));
+            var angle = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return (angle * radiusOfEarth) * 0.6213711922;//distance in miles
+        }
+        private static double CalculateRadians(double x)
+        {
+            return x * Math.PI / 180;
         }
     }
     
