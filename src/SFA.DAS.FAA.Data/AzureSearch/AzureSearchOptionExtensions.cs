@@ -76,7 +76,7 @@ public static class AzureSearchOptionExtensions
 
         if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Any())
         {
-            findVacanciesModel.Categories.ForEach(category => searchFilters.Add($"Route eq {category}"));
+            findVacanciesModel.Categories.ForEach(category => searchFilters.Add($"Route eq '{category}'"));
         }
 
         if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue && findVacanciesModel.DistanceInMiles.HasValue)
