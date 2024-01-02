@@ -26,6 +26,12 @@ public static class AzureSearchOptionExtensions
             case VacancySort.ExpectedStartDateDesc:
                 searchOptions.OrderBy.Add("StartDate desc");
                 break;
+            case VacancySort.SalaryAsc:
+                searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                break;
+            case VacancySort.SalaryDesc:
+                searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                break;
             case VacancySort.DistanceAsc:
                 if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
                 {
