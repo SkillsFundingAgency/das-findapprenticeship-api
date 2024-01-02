@@ -26,6 +26,12 @@ public static class AzureSearchOptionExtensions
             case VacancySort.ExpectedStartDateDesc:
                 searchOptions.OrderBy.Add("StartDate desc");
                 break;
+            case VacancySort.ClosingAsc:
+                searchOptions.OrderBy.Add("ClosingDate asc");
+                break;
+            case VacancySort.ClosingDesc:
+                searchOptions.OrderBy.Add("ClosingDate desc");
+                break;
             case VacancySort.SalaryAsc:
                 searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
                 break;
