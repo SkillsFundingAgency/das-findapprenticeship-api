@@ -1,5 +1,4 @@
 ﻿using System;
-using Azure.Search.Documents.Models;
 
 namespace SFA.DAS.FAA.Domain.Entities
 {
@@ -76,7 +75,7 @@ namespace SFA.DAS.FAA.Domain.Entities
     {
         public int? LarsCode { get; set; }
         public string Title { get; set; }
-        public int? Level { get; set; }
+        public string Level { get; set; }
         public int? RouteCode { get; set; }
         public string Route { get; set; }
     }
