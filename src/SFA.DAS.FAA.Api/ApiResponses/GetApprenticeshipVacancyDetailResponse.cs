@@ -48,6 +48,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ProviderName = source.ProviderName,
                 StandardTitle = source.Course?.Title,
                 StandardLarsCode = source.StandardLarsCode ?? source.Course?.LarsCode,
+                StandardLevel = source.Course?.Level ?? 0,
                 RouteCode = source.Course?.RouteCode,
                 StartDate = source.StartDate,
                 SubCategory = source.SubCategory?? source.Course?.Title,

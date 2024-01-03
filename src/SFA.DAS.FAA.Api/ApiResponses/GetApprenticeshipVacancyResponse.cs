@@ -26,6 +26,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public DateTime PostedDate { get; set; }
         public string ProviderName { get; set; }
         public int? StandardLarsCode { get; set; }
+        public int? StandardLevel { get; set; }
         public DateTime StartDate { get; set; }
         public string SubCategory { get; set; }
         public string SubCategoryCode { get; set; }
@@ -87,6 +88,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ProviderName = source.ProviderName,
                 StandardTitle = source.Course?.Title,
                 StandardLarsCode = source.StandardLarsCode ?? source.Course?.LarsCode,
+                StandardLevel = source.Course?.Level,
                 RouteCode = source.Course?.RouteCode,
                 StartDate = source.StartDate,
                 SubCategory = source.SubCategory?? source.Course?.Title,
