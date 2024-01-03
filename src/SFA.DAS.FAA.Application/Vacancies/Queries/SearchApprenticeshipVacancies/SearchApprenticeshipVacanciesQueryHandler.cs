@@ -36,7 +36,8 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
                 DistanceInMiles = request.DistanceInMiles,
                 NationWideOnly = request.NationWideOnly,
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
-                VacancySort = request.VacancySort
+                VacancySort = request.VacancySort,
+                Levels = request.Levels,
             };
 
             ApprenticeshipSearchResponse searchResult;

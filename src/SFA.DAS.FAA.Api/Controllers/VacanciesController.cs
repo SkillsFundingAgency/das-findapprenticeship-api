@@ -50,6 +50,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                 AccountPublicHashedId = request.AccountPublicHashedId,
                 AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
                 Categories = request.Categories,
+                Levels = request.Levels,
                 Lat = request.Lat,
                 Lon = request.Lon,
                 DistanceInMiles = request.DistanceInMiles,

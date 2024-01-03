@@ -39,6 +39,7 @@ public class WhenGettingVacancySearch
                     query.Lon.Equals(request.Lon) &&
                     query.DistanceInMiles == request.DistanceInMiles &&
                     query.Categories == request.Categories &&
+                    query.Levels == request.Levels &&
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                     query.VacancySort.Equals(request.Sort) &&
                     query.Source.Equals("ACS") &&
@@ -50,8 +51,8 @@ public class WhenGettingVacancySearch
         var result = await controller.Search(request) as OkObjectResult;
 
         result.Should().NotBeNull();
-        result.StatusCode.Should().Be((int)HttpStatusCode.OK);
-        var apiModel = result.Value as GetSearchApprenticeshipVacanciesResponse;
+        result?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        var apiModel = result?.Value as GetSearchApprenticeshipVacanciesResponse;
         apiModel.Should().NotBeNull();
         apiModel.Should().BeEquivalentTo((GetSearchApprenticeshipVacanciesResponse)mediatorResult);
     }

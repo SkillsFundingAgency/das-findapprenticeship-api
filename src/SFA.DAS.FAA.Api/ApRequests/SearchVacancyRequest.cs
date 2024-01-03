@@ -34,5 +34,6 @@ namespace SFA.DAS.FAA.Api.ApRequests
         public uint? PostedInLastNumberOfDays  { get; set; } = null;
         [FromQuery]
         public VacancySort? Sort  { get; set; } = VacancySort.AgeDesc;
+        [FromQuery] public List<string>? Levels { get; set; } = null;
     }
 }
