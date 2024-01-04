@@ -26,7 +26,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public DateTime PostedDate { get; set; }
         public string ProviderName { get; set; }
         public int? StandardLarsCode { get; set; }
-        public int? StandardLevel { get; set; }
+        public string? StandardLevel { get; set; }
         public DateTime StartDate { get; set; }
         public string SubCategory { get; set; }
         public string SubCategoryCode { get; set; }

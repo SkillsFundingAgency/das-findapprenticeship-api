@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
-using SFA.DAS.FAA.Api.ApRequests;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
+using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
@@ -51,6 +49,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                 AccountPublicHashedId = request.AccountPublicHashedId,
                 AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
                 Categories = request.Categories,
+                Levels = request.Levels,
                 Lat = request.Lat,
                 Lon = request.Lon,
                 DistanceInMiles = request.DistanceInMiles,

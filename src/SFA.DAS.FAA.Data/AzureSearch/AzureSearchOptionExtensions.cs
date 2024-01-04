@@ -81,16 +81,23 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"AccountLegalEntityPublicHashedId eq '{findVacanciesModel.AccountLegalEntityPublicHashedId}'");
         }
 
-        if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Any())
+        if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Count != 0)
         {
             findVacanciesModel.StandardLarsCode.ForEach(larsCode => searchFilters.Add(($"Course/any(c: c/LarsCode eq {larsCode})")));
         }
 
-        if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Any())
+        if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Count != 0)
         {
             var categoryClauses = new List<string>();
             findVacanciesModel.Categories.ForEach(category => categoryClauses.Add($"Route eq '{category}'"));
-            searchFilters.Add($"({string.Join(" or ", categoryClauses.ToArray())})");
+            searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
+        }
+
+        if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
+        {
+            var levelClauses = new List<string>();
+            findVacanciesModel.Levels.ForEach(level => levelClauses.Add($"Course/Level eq '{level}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. levelClauses])})");
         }
 
         if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue && findVacanciesModel.DistanceInMiles.HasValue)
