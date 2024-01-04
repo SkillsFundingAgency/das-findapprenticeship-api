@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.FAA.Api.Extensions;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiRequests;
@@ -28,9 +29,10 @@ public class SearchVacancyRequest
     public double? Lon  { get; set; } = null;
     [FromQuery]
     public uint? DistanceInMiles  { get; set; } = null;
-    [FromQuery]
+    [FromQuery] [ModelBinder(typeof(NonNullListStringModelBinder))]
     public List<string> Categories  { get; set; } = null;
-    [FromQuery] 
+    [FromQuery]
+    [ModelBinder(typeof(NonNullListStringModelBinder))]
     public List<string> Levels { get; set; } = null;
     [FromQuery]
     public uint? PostedInLastNumberOfDays  { get; set; } = null;
