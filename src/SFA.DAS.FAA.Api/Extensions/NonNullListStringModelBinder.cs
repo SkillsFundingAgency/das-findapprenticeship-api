@@ -13,14 +13,18 @@ namespace SFA.DAS.FAA.Api.Extensions
 
             if (valueProviderResult != ValueProviderResult.None)
             {
+                var listString = new List<string>();
+
                 // Get the raw value from the query string
-                var rawValue = valueProviderResult.FirstValue;
+                var rawValue = valueProviderResult.ToList();
 
-                // Split the raw value into individual items, removing null or empty items
-                var list = rawValue?.Split(',').Where(item => !string.IsNullOrEmpty(item)).ToList() ?? new List<string>();
+                foreach (var item in rawValue.Where(item => !string.IsNullOrEmpty(item)))
+                {
+                    listString.Add(item);
+                }
 
-                bindingContext.Model = list;
-                bindingContext.Result = ModelBindingResult.Success(list);
+                bindingContext.Model = listString;
+                bindingContext.Result = ModelBindingResult.Success(listString);
             }
 
             return Task.CompletedTask;

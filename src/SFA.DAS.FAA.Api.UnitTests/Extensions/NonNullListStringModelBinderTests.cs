@@ -12,7 +12,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Extensions
     public class NonNullListStringModelBinderTests
     {
         [Test]
-        [InlineAutoData("value1,value2,,value3")]
+        [InlineAutoData("value1")]
         public void BindModelAsync_ValidQueryString_ReturnsNonNullableList(string query)
         {
             // Arrange
@@ -25,10 +25,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.Extensions
             // Assert
             var result = bindingContext.Result.Model as List<string>;
 
-            result.Count.Should().Be(3);
+            result.Count.Should().Be(1);
             result.Should().Contain("value1");
-            result.Should().Contain("value2");
-            result.Should().Contain("value3");
         }
 
         [Test]        
