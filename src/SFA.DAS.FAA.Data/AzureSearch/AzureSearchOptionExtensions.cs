@@ -15,10 +15,10 @@ public static class AzureSearchOptionExtensions
         switch (searchVacanciesModel.VacancySort)
         {
             case VacancySort.AgeAsc:
-                searchOptions.OrderBy.Add("PostedDate asc");
+                searchOptions.OrderBy.Add("PostedDate desc");
                 break;
             case VacancySort.AgeDesc:
-                searchOptions.OrderBy.Add("PostedDate desc");
+                searchOptions.OrderBy.Add("PostedDate asc");
                 break;
             case VacancySort.ExpectedStartDateAsc:
                 searchOptions.OrderBy.Add("StartDate asc");
