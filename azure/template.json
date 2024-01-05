@@ -61,27 +61,14 @@
             "type": "string",
             "defaultValue": "[utcNow()]"
         },
-        "azureSearchSku": {
-            "type": "string",
-            "defaultValue": "free",
-            "allowedValues": [
-                "free",
-                "basic",
-                "standard",
-                "standard2",
-                "standard3"
-            ],
-            "metadata": {
-                "description": "The SKU of the search service you want to create. E.g. free or standard"
-            }
+        "tenant": {
+            "type": "string"
         },
-        "azureSearchLocation": {
-            "type": "string",
-            "defaultValue": "North Europe",
-            "allowedValues": [
-                "North Europe",
-                "West Europe"
-            ]
+        "azureSearchResourceGroup": {
+            "type": "string"
+        },
+        "azureSearchName": {
+            "type": "string"
         }
     },
     "variables": {
@@ -89,8 +76,7 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "apiAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
-        "configNames": "SFA.DAS.FindApprenticeships.Api",
-        "azureSearchName": "[concat(variables('resourceNamePrefix'), '-srch')]"
+        "configNames": "SFA.DAS.FindApprenticeships.Api"
     },
     "resources": [
         {
@@ -232,30 +218,6 @@
                     }
                 }
             }
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[concat(variables('azureSearchName'), '-', parameters('utcValue'))]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[variables('resourceGroupName')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'azure-search.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "azureSearchName": {
-                        "value": "[variables('azureSearchName')]"
-                    },
-                    "azureSearchSku": {
-                        "value": "[parameters('azureSearchSku')]"
-                    },
-                    "azureSearchLocation": {
-                        "value": "[parameters('azureSearchLocation')]"
-                    }
-                }
-            }
         }
     ],
     "outputs": {
@@ -266,6 +228,18 @@
         "ApiAppServiceName": {
             "type": "string",
             "value": "[variables('apiAppServiceName')]"
+        },
+        "AzureSearchResource": {
+            "type": "string",
+            "value": "[concat('https://', parameters('tenant'), '/', parameters('azureSearchName'))]"
+        },
+        "AzureSearchBaseUrl": {
+            "type": "string",
+            "value": "[concat('https://', parameters('azureSearchName'), '.search.windows.net')]"
+        },
+        "AzureSearchKey": {
+            "type": "string",
+            "value": "[listQueryKeys(resourceId(parameters('logAnalyticsSubscriptionId'), parameters('azureSearchResourceGroup'), 'Microsoft.Search/searchServices', parameters('azureSearchName')), '2015-08-19').value[0].key]"
         }
     }
 }
