@@ -237,7 +237,7 @@
             "type": "string",
             "value": "[concat('https://', parameters('azureSearchName'), '.search.windows.net')]"
         },
-        "AzureSearchKey": {
+        "AzureSearchQueryKey": {
             "type": "string",
             "value": "[listQueryKeys(resourceId(parameters('logAnalyticsSubscriptionId'), parameters('azureSearchResourceGroup'), 'Microsoft.Search/searchServices', parameters('azureSearchName')), '2015-08-19').value[0].key]"
         }
