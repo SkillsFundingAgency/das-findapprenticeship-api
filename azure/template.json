@@ -48,7 +48,7 @@
         "keyVaultCertificateName": {
             "type": "string"
         },
-        "sharedBackEndAppServicePlanName": { 
+        "sharedBackEndAppServicePlanName": {
             "type": "string"
         },
         "sharedBackEndSubnetResourceId": {
@@ -60,6 +60,15 @@
         "utcValue": {
             "type": "string",
             "defaultValue": "[utcNow()]"
+        },
+        "tenant": {
+            "type": "string"
+        },
+        "azureSearchResourceGroup": {
+            "type": "string"
+        },
+        "azureSearchName": {
+            "type": "string"
         }
     },
     "variables": {
@@ -166,11 +175,11 @@
                                 {
                                     "name": "Environment",
                                     "value": "[parameters('environmentName')]"
-                                },    
+                                },
                                 {
                                     "name": "ResourceEnvironmentName",
                                     "value": "[parameters('resourceEnvironmentName')]"
-                                },                                
+                                },
                                 {
                                     "name": "ConfigurationStorageConnectionString",
                                     "value": "[parameters('configurationStorageConnectionString')]"
@@ -219,6 +228,18 @@
         "ApiAppServiceName": {
             "type": "string",
             "value": "[variables('apiAppServiceName')]"
+        },
+        "AzureSearchResource": {
+            "type": "string",
+            "value": "[concat('https://', parameters('tenant'), '/', parameters('azureSearchName'))]"
+        },
+        "AzureSearchBaseUrl": {
+            "type": "string",
+            "value": "[concat('https://', parameters('azureSearchName'), '.search.windows.net')]"
+        },
+        "AzureSearchQueryKey": {
+            "type": "string",
+            "value": "[listQueryKeys(resourceId(parameters('logAnalyticsSubscriptionId'), parameters('azureSearchResourceGroup'), 'Microsoft.Search/searchServices', parameters('azureSearchName')), '2015-08-19').value[0].key]"
         }
     }
 }
