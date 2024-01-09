@@ -15,7 +15,7 @@ using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
+namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2
 {
     public class WhenGettingVacancyCount
     {
@@ -24,7 +24,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             SearchVacancyTotalRequest request,
             int mediatorResult,
             [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] VacanciesController controller)
+            [Greedy] VacanciesV2Controller controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
@@ -39,7 +39,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
                         query.DistanceInMiles == request.DistanceInMiles &&
                         query.Categories == request.Categories &&
                         query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
-                        query.Source == SearchSource.Elastic),
+                        query.Source == SearchSource.AzureSearch),
                     It.IsAny<CancellationToken>()))
 
                 .ReturnsAsync(mediatorResult);
@@ -58,7 +58,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             SearchVacancyTotalRequest request,
             int mediatorResult,
             [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] VacanciesController controller)
+            [Greedy] VacanciesV2Controller controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(

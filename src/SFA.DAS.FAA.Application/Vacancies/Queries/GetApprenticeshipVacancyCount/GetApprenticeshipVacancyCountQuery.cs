@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using MediatR;
+using SFA.DAS.FAA.Domain.Enums;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount
 {
@@ -15,5 +17,6 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
         public List<string> Categories { get; set; }
         public double? Lat { get; set; }
         public double? Lon { get; set; }
+        public SearchSource Source { get; set; }
     }
 }

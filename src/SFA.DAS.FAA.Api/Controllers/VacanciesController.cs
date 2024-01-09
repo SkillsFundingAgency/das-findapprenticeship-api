@@ -83,7 +83,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                     NationWideOnly = request.NationWideOnly,
                     StandardLarsCode = request.StandardLarsCode,
                     PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
-
+                    Source = searchSource
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
             }
