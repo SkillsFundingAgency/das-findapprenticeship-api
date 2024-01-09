@@ -35,7 +35,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
         public async Task Then_Gets_Vacancies_From_Azure_Repository_When_Source_Is_Azure(
             GetApprenticeshipVacancyQuery query,
             ApprenticeshipVacancyItem responseFromRepository,
-            [Frozen] Mock<IAcsVacancySearchRespository> mockVacancyIndexRepository,
+            [Frozen] Mock<IAcsVacancySearchRepository> mockVacancyIndexRepository,
             GetApprenticeshipVacancyQueryHandler handler)
         {
             query.Source = SearchSource.AzureSearch;

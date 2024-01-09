@@ -5,7 +5,7 @@ using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
-public class AcsVacancySearchRepository : IAcsVacancySearchRespository
+public class AcsVacancySearchRepository : IAcsVacancySearchRepository
 {
     private readonly ILogger<AcsVacancySearchRepository> _logger;
     private readonly IAzureSearchHelper _searchHelper;
@@ -25,5 +25,10 @@ public class AcsVacancySearchRepository : IAcsVacancySearchRespository
     public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
     {
         return await _searchHelper.Get(vacancyReference);
+    }
+
+    public async Task<int> Count()
+    {
+        return await _searchHelper.Count();
     }
 }

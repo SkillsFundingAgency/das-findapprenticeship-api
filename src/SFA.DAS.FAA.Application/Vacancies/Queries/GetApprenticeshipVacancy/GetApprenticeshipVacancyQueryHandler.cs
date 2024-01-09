@@ -9,9 +9,9 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy
     public class GetApprenticeshipVacancyQueryHandler : IRequestHandler<GetApprenticeshipVacancyQuery, GetApprenticeshipVacancyResult>
     {
         private readonly IVacancySearchRepository _vacancySearchRepository;
-        private readonly IAcsVacancySearchRespository _acsVacancySearchRepository;
+        private readonly IAcsVacancySearchRepository _acsVacancySearchRepository;
 
-        public GetApprenticeshipVacancyQueryHandler(IVacancySearchRepository vacancySearchRepository,IAcsVacancySearchRespository acsVacancySearchRepository)
+        public GetApprenticeshipVacancyQueryHandler(IVacancySearchRepository vacancySearchRepository,IAcsVacancySearchRepository acsVacancySearchRepository)
         {
             _vacancySearchRepository = vacancySearchRepository;
             _acsVacancySearchRepository = acsVacancySearchRepository;

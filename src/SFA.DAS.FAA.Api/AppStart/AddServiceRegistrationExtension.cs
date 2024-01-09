@@ -15,7 +15,7 @@ namespace SFA.DAS.FAA.Api.AppStart
             services.AddTransient<IElasticSearchQueries, ElasticSearchQueries>();
             services.AddTransient<IElasticSearchQueryBuilder, ElasticSearchQueryBuilder>();
             services.AddTransient<IVacancySearchRepository, ApprenticeshipVacancySearchRepository>();
-            services.AddTransient<IAcsVacancySearchRespository, AcsVacancySearchRepository>();
+            services.AddTransient<IAcsVacancySearchRepository, AcsVacancySearchRepository>();
             services.AddTransient<IAzureSearchHelper, AzureSearchHelper>();
         }
         

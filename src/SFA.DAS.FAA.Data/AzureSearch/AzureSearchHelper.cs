@@ -74,4 +74,10 @@ public class AzureSearchHelper : IAzureSearchHelper
         var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
         return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
     }
+
+    public async Task<int> Count()
+    {
+        var count = await _searchClient.GetDocumentCountAsync();
+        return Convert.ToInt32(count);
+    }
 }
