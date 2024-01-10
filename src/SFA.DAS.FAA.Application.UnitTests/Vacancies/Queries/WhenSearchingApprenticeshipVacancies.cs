@@ -38,7 +38,8 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                         c.NationWideOnly.Equals(query.NationWideOnly) &&
                         c.PostedInLastNumberOfDays.Equals(query.PostedInLastNumberOfDays) &&
                         c.VacancySort.Equals(query.VacancySort) &&
-                        c.SearchTerm.Equals(query.SearchTerm)
+                        c.SearchTerm.Equals(query.SearchTerm) &&
+                        c.DisabilityConfident.Equals(query.DisabilityConfident)
                         )))
                 .ReturnsAsync(responseFromRepository);
 
@@ -74,7 +75,8 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                         c.NationWideOnly.Equals(query.NationWideOnly) &&
                         c.PostedInLastNumberOfDays.Equals(query.PostedInLastNumberOfDays) &&
                         c.VacancySort.Equals(query.VacancySort) &&
-                        c.SearchTerm.Equals(query.SearchTerm)
+                        c.SearchTerm.Equals(query.SearchTerm) &&
+                        c.DisabilityConfident.Equals(query.DisabilityConfident)
                         )))
                 .ReturnsAsync(responseFromRepository);
 
