@@ -29,16 +29,6 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetApprenticeshipVacancyCountQuery>(query =>
-                        query.Ukprn == request.Ukprn &&
-                        query.AccountPublicHashedId == request.AccountPublicHashedId &&
-                        query.AccountLegalEntityPublicHashedId == request.AccountLegalEntityPublicHashedId &&
-                        query.StandardLarsCode == request.StandardLarsCode &&
-                        query.NationWideOnly == request.NationWideOnly &&
-                        query.Lat.Equals(request.Lat) &&
-                        query.Lon.Equals(request.Lon) &&
-                        query.DistanceInMiles == request.DistanceInMiles &&
-                        query.Categories == request.Categories &&
-                        query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                         query.Source == SearchSource.AzureSearch),
                     It.IsAny<CancellationToken>()))
 
@@ -56,7 +46,6 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2
         [Test, MoqAutoData]
         public async Task Then_Gets_Count_And_If_Error_Returns_Status_Code_Result_InternalServerError(
             SearchVacancyTotalRequest request,
-            int mediatorResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] VacanciesV2Controller controller)
         {

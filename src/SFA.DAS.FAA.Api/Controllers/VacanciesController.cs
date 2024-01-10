@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
-
     public abstract class VacanciesControllerBase(IMediator mediator, SearchSource searchSource) : ControllerBase
     {
         [HttpGet]
@@ -73,16 +72,6 @@ namespace SFA.DAS.FAA.Api.Controllers
             {
                 var result = await mediator.Send(new GetApprenticeshipVacancyCountQuery
                 {
-                    Ukprn = request.Ukprn,
-                    AccountPublicHashedId = request.AccountPublicHashedId,
-                    AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
-                    Categories = request.Categories,
-                    Lat = request.Lat,
-                    Lon = request.Lon,
-                    DistanceInMiles = request.DistanceInMiles,
-                    NationWideOnly = request.NationWideOnly,
-                    StandardLarsCode = request.StandardLarsCode,
-                    PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                     Source = searchSource
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
@@ -93,10 +82,7 @@ namespace SFA.DAS.FAA.Api.Controllers
             }
         }
     }
-    
-    
-    
-    
+
     [ApiVersion("1.0")]
     [ApiController]
     [Route("/api/Vacancies/")]
