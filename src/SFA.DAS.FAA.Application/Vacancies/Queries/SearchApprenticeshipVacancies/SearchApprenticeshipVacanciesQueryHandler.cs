@@ -39,6 +39,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                 VacancySort = request.VacancySort,
                 Levels = request.Levels,
+                DisabilityConfident = request.DisabilityConfident,
             };
 
             ApprenticeshipSearchResponse searchResult;
