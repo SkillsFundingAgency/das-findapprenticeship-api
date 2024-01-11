@@ -7,10 +7,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
-using SFA.DAS.FAA.Api.ApRequests;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -39,10 +40,11 @@ public class WhenGettingVacancySearch
                     query.Lon.Equals(request.Lon) &&
                     query.DistanceInMiles == request.DistanceInMiles &&
                     query.Categories == request.Categories &&
+                    query.Levels == request.Levels &&
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                     query.VacancySort.Equals(request.Sort) &&
-                    query.Source.Equals("ACS") &&
-                    query.SearchTerm == request.SearchTerm
+                    query.Source == SearchSource.AzureSearch &&
+					query.SearchTerm == request.SearchTerm
                 ),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(mediatorResult);
@@ -50,8 +52,8 @@ public class WhenGettingVacancySearch
         var result = await controller.Search(request) as OkObjectResult;
 
         result.Should().NotBeNull();
-        result.StatusCode.Should().Be((int)HttpStatusCode.OK);
-        var apiModel = result.Value as GetSearchApprenticeshipVacanciesResponse;
+        result?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        var apiModel = result?.Value as GetSearchApprenticeshipVacanciesResponse;
         apiModel.Should().NotBeNull();
         apiModel.Should().BeEquivalentTo((GetSearchApprenticeshipVacanciesResponse)mediatorResult);
     }

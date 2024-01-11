@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
 
@@ -36,11 +37,12 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
                 DistanceInMiles = request.DistanceInMiles,
                 NationWideOnly = request.NationWideOnly,
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
-                VacancySort = request.VacancySort
+                VacancySort = request.VacancySort,
+                Levels = request.Levels,
             };
 
             ApprenticeshipSearchResponse searchResult;
-            if (request.Source == "Elastic")
+            if (request.Source == SearchSource.Elastic)
             {
                 searchResult = await _vacancySearchRepository.Find(model);
             }

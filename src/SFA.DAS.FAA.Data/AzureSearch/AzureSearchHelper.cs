@@ -53,6 +53,12 @@ public class AzureSearchHelper : IAzureSearchHelper
         var searchResults = searchResultsTask.Result;
         var totalVacanciesCount = totalVacanciesCountTask.Result;
         var result = searchResults.Value.GetResults().ToList().Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString())).ToList();
+
+        if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
+        {
+            result.ForEach(c=>c.SearchGeoPoint = new GeoPoint{Lat= findVacanciesModel.Lat.Value, Lon = findVacanciesModel.Lon.Value});
+        }
+        
         return new ApprenticeshipSearchResponse
         {
             ApprenticeshipVacancies = result.Select(c=>c)
@@ -64,6 +70,7 @@ public class AzureSearchHelper : IAzureSearchHelper
 
     public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
     {
+        vacancyReference = vacancyReference.Replace("VAC", "", StringComparison.CurrentCultureIgnoreCase);
         var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
         return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
     }

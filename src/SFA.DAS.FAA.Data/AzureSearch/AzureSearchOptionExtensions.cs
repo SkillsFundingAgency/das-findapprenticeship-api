@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using SFA.DAS.FAA.Domain.Models;
@@ -40,13 +39,13 @@ public static class AzureSearchOptionExtensions
             case VacancySort.DistanceAsc:
                 if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
                 {
-                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lat} {searchVacanciesModel.Lon})') asc");
+                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
                 }
                 break;
             case VacancySort.DistanceDesc:
                 if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
                 {
-                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lat} {searchVacanciesModel.Lon})') desc");
+                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') desc");
                 }
                 break;
         }
@@ -82,7 +81,7 @@ public static class AzureSearchOptionExtensions
 
         if (findVacanciesModel.Ukprn.HasValue)
         {
-            searchFilters.Add($"Ukprn eq {findVacanciesModel.Ukprn}");
+            searchFilters.Add($"Ukprn eq '{findVacanciesModel.Ukprn}'");
         }
 
         if (!string.IsNullOrEmpty(findVacanciesModel.AccountPublicHashedId))
@@ -95,23 +94,30 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"AccountLegalEntityPublicHashedId eq '{findVacanciesModel.AccountLegalEntityPublicHashedId}'");
         }
 
-        if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Any())
+        if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Count != 0)
         {
             findVacanciesModel.StandardLarsCode.ForEach(larsCode => searchFilters.Add(($"Course/any(c: c/LarsCode eq {larsCode})")));
         }
 
-        if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Any())
+        if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Count != 0)
         {
             var categoryClauses = new List<string>();
             findVacanciesModel.Categories.ForEach(category => categoryClauses.Add($"Route eq '{category}'"));
-            searchFilters.Add($"({string.Join(" or ", categoryClauses.ToArray())})");
+            searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
+        }
+
+        if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
+        {
+            var levelClauses = new List<string>();
+            findVacanciesModel.Levels.ForEach(level => levelClauses.Add($"Course/Level eq '{level}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. levelClauses])})");
         }
 
         if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue && findVacanciesModel.DistanceInMiles.HasValue)
         {
             var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
             var distanceInKm = (distanceInMiles - (distanceInMiles / 5)) * 2;
-            searchFilters.Add($"geo.distance(Location, geography'POINT({findVacanciesModel.Lat} {findVacanciesModel.Lon})') le {distanceInKm}");
+            searchFilters.Add($"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}");
         }
 
         if (findVacanciesModel.NationWideOnly.HasValue)
@@ -132,7 +138,7 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays)}");
         }
 
-        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+        searchOptions.Filter = string.Join(" or ", searchFilters.ToArray());
         return searchOptions;
     }
 

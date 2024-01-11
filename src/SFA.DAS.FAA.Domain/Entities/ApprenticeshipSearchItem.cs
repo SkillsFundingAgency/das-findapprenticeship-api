@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Domain.Entities
 {
@@ -17,7 +19,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public bool IsDisabilityConfident { get; set; }
         public bool IsEmployerAnonymous { get; set; }
         public bool IsPositiveAboutDisability { get; set; }
-        public bool IsRecruitVacancy { get; set; }
+        public bool IsRecruitVacancy { get; set; } = true;
         public GeoPoint Location { get; set; }
         public int NumberOfPositions { get; set; }
         public DateTime PostedDate { get; set; }
@@ -52,6 +54,9 @@ namespace SFA.DAS.FAA.Domain.Entities
         public double Score { get; set; }
         public WageSearchDocument Wage { get; set; }
         public CourseSearchDocument Course { get; set; }
+        public GeoPoint SearchGeoPoint { get; set; }
+        public string ApplicationMethod { get; set; }
+        public string ApplicationUrl { get; set; }
     }
     
     
@@ -85,9 +90,12 @@ namespace SFA.DAS.FAA.Domain.Entities
     public class WageSearchDocument
     {
         public string WageAdditionalInformation { get; set; }
-        public string WageType { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public WageType WageType { get; set; }
         public string WorkingWeekDescription { get; set; }
-        public string WageUnit { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public WageUnit WageUnit { get; set; }
         public long? WageAmount { get; set; }
+        public int Duration { get; set; }
     }
 }
