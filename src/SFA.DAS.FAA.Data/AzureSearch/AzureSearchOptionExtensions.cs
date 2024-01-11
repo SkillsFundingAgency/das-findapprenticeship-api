@@ -138,7 +138,13 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays)}");
         }
 
+        if(findVacanciesModel.DisabilityConfident != false)
+        {
+            searchFilters.Add("IsDisabilityConfident eq true");
+        }
+
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+      
         return searchOptions;
     }
 

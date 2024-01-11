@@ -15,6 +15,7 @@ namespace SFA.DAS.FAA.Domain.Models
         public List<string> Levels { get; init; }
         public uint? PostedInLastNumberOfDays { get; set; }
         public VacancySort VacancySort { get; set; }
+        public bool DisabilityConfident { get; set; }
     }
 
     public class FindFilteredVacanciesModel
