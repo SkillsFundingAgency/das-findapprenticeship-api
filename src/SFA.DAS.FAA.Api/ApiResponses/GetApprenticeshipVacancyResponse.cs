@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.Spatial;
 using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.ApiResponses

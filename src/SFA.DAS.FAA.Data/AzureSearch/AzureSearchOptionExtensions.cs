@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Azure.Search.Documents;
-using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
 using SFA.DAS.FAA.Domain.Models;
 
@@ -51,6 +49,21 @@ public static class AzureSearchOptionExtensions
                 }
                 break;
         }
+
+        searchOptions.BuildSortTiesBreakers();
+        return searchOptions;
+    }
+
+    public static SearchOptions BuildSortTiesBreakers(this SearchOptions searchOptions)
+    {
+        searchOptions.OrderBy.Add("Title asc");
+        searchOptions.OrderBy.Add("TypicalJobTitles asc");
+        searchOptions.OrderBy.Add("Course/Title asc");
+        searchOptions.OrderBy.Add("EmployerName asc");
+        searchOptions.OrderBy.Add("ProviderName asc");
+        searchOptions.OrderBy.Add("Ukprn asc");
+        searchOptions.OrderBy.Add("VacancyReference asc");
+
         return searchOptions;
     }
 
@@ -125,7 +138,7 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays)}");
         }
 
-        searchOptions.Filter = string.Join(" or ", searchFilters.ToArray());
+        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
         return searchOptions;
     }
 
@@ -139,7 +152,6 @@ public static class AzureSearchOptionExtensions
         searchOptions.SearchFields.Add("EmployerName");
         searchOptions.SearchFields.Add("ProviderName");
         searchOptions.SearchFields.Add("Ukprn");
-
 
         return searchOptions;
     }
