@@ -138,7 +138,7 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays)}");
         }
 
-        searchOptions.Filter = string.Join(" or ", searchFilters.ToArray());
+        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
         return searchOptions;
     }
 
