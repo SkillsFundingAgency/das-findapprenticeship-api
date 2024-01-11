@@ -3,8 +3,9 @@ using SFA.DAS.FAA.Domain.Models;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Domain.Interfaces;
-public interface IAcsVacancySearchRespository
+public interface IAcsVacancySearchRepository
 {
     Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
     Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
+    Task<int> Count();
 }

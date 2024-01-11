@@ -15,7 +15,7 @@ using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
+namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2
 {
     public class WhenGettingVacancyCount
     {
@@ -24,12 +24,12 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
             SearchVacancyTotalRequest request,
             int mediatorResult,
             [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] VacanciesController controller)
+            [Greedy] VacanciesV2Controller controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetApprenticeshipVacancyCountQuery>(query =>
-                        query.Source == SearchSource.Elastic),
+                        query.Source == SearchSource.AzureSearch),
                     It.IsAny<CancellationToken>()))
 
                 .ReturnsAsync(mediatorResult);
@@ -47,7 +47,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
         public async Task Then_Gets_Count_And_If_Error_Returns_Status_Code_Result_InternalServerError(
             SearchVacancyTotalRequest request,
             [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] VacanciesController controller)
+            [Greedy] VacanciesV2Controller controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
