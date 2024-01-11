@@ -21,6 +21,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.DurationUnit)
                 .Excluding(c=>c.Wage)
                 .Excluding(c=>c.Course)
+                .Excluding(c => c.TypicalJobTitles)
             );
         }
         [Test, AutoData]
@@ -45,6 +46,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.CategoryCode)
                 .Excluding(c=>c.Location)
                 .Excluding(c=>c.StandardLarsCode)
+                .Excluding(c=>c.TypicalJobTitles)
             );
             response.StandardTitle.Should().Be(source.Course.Title);
             response.Category.Should().Be(source.Course.Title);
