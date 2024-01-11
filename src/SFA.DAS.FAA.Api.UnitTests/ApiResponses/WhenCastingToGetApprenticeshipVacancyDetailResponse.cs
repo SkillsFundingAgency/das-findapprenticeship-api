@@ -22,6 +22,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.DurationUnit)
                 .Excluding(c=>c.Wage)
                 .Excluding(c=>c.Course)
+                .Excluding(c => c.TypicalJobTitles)
                 .Excluding(c=>c.SearchGeoPoint)
             );
         }
@@ -42,12 +43,13 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.EmployerDescription)
                 .Excluding(c=>c.ExpectedDuration)
                 .Excluding(c=>c.Wage)
+                .Excluding(c=>c.WageType)
                 .Excluding(c=>c.Course)
                 .Excluding(c=>c.Category)
                 .Excluding(c=>c.CategoryCode)
                 .Excluding(c=>c.Location)
                 .Excluding(c=>c.StandardLarsCode)
-                .Excluding(c => c.WageType)
+                .Excluding(c=>c.TypicalJobTitles)
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
             );
@@ -90,6 +92,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
                 .Excluding(c=>c.Distance)
+                .Excluding(c => c.TypicalJobTitles)
             );
             response.StandardTitle.Should().Be(source.Course.Title);
             response.Category.Should().Be(source.Course.Title);
