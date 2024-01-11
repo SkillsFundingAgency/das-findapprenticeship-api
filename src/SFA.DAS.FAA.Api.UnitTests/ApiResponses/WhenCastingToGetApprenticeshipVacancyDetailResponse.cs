@@ -43,6 +43,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.EmployerDescription)
                 .Excluding(c=>c.ExpectedDuration)
                 .Excluding(c=>c.Wage)
+                .Excluding(c=>c.WageType)
                 .Excluding(c=>c.Course)
                 .Excluding(c=>c.Category)
                 .Excluding(c=>c.CategoryCode)
