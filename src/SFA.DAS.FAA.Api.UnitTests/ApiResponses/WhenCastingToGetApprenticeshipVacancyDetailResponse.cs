@@ -52,7 +52,6 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.TypicalJobTitles)
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
-                .Excluding(c=>c.TypicalJobTitles)
             );
             response.StandardTitle.Should().Be(source.Course.Title);
             response.Category.Should().Be(source.Course.Title);
