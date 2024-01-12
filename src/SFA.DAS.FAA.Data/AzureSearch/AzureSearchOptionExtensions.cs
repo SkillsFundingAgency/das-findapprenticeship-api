@@ -54,17 +54,15 @@ public static class AzureSearchOptionExtensions
         return searchOptions;
     }
 
-    public static SearchOptions BuildSortTiesBreakers(this SearchOptions searchOptions)
+    public static void BuildSortTiesBreakers(this SearchOptions searchOptions)
     {
         searchOptions.OrderBy.Add("Title asc");
-        searchOptions.OrderBy.Add("TypicalJobTitles asc");
         searchOptions.OrderBy.Add("Course/Title asc");
+        searchOptions.OrderBy.Add("TypicalJobTitles asc");
         searchOptions.OrderBy.Add("EmployerName asc");
         searchOptions.OrderBy.Add("ProviderName asc");
         searchOptions.OrderBy.Add("Ukprn asc");
         searchOptions.OrderBy.Add("VacancyReference asc");
-
-        return searchOptions;
     }
 
     public static SearchOptions BuildPaging(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
