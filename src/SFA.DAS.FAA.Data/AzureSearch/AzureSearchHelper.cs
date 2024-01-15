@@ -88,7 +88,7 @@ public class AzureSearchHelper : IAzureSearchHelper
     {
         if (string.IsNullOrEmpty(searchTerm)) { return "*"; }
 
-        var alphaRegex = new Regex("[a-zA-Z0-9 ]");
+        var alphaRegex = new Regex("[a-zA-Z0-9 ]", RegexOptions.None, TimeSpan.FromMilliseconds(1000));
         var illegalChars = searchTerm.Where(x => !alphaRegex.IsMatch(x.ToString())).ToList();
 
         while (illegalChars.Contains(searchTerm[0]))
