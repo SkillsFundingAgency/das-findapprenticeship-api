@@ -59,12 +59,12 @@ public class AzureSearchHelper : IAzureSearchHelper
 
         if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
         {
-            result.ForEach(c=>c.SearchGeoPoint = new GeoPoint{Lat= findVacanciesModel.Lat.Value, Lon = findVacanciesModel.Lon.Value});
+            result.ForEach(c => c.SearchGeoPoint = new GeoPoint { Lat = findVacanciesModel.Lat.Value, Lon = findVacanciesModel.Lon.Value });
         }
 
         return new ApprenticeshipSearchResponse
         {
-            ApprenticeshipVacancies = result.Select(c=>c)
+            ApprenticeshipVacancies = result.Select(c => c)
                 .ToList(),
             TotalFound = Convert.ToInt32(searchResults.Value.TotalCount),
             Total = Convert.ToInt32(totalVacanciesCount)
@@ -88,14 +88,16 @@ public class AzureSearchHelper : IAzureSearchHelper
     {
         if (string.IsNullOrEmpty(searchTerm)) { return "*"; }
 
-        var alphaRegex = new Regex("[a-zA-Z ]");
+        var alphaRegex = new Regex("[a-zA-Z0-9 ]");
         var illegalChars = searchTerm.Where(x => !alphaRegex.IsMatch(x.ToString())).ToList();
-        foreach (var character in searchTerm)
+
+        while (illegalChars.Contains(searchTerm[0]))
         {
-            if (illegalChars.Contains(character))
-            {
-                searchTerm = searchTerm.Replace($"{character}", string.Empty);
-            }
+            searchTerm = searchTerm.Substring(1);
+        }
+        while (illegalChars.Contains(searchTerm[searchTerm.Length - 1]))
+        {
+            searchTerm = searchTerm.Substring(0, searchTerm.Length - 1);
         }
         return string.IsNullOrEmpty(searchTerm) ? "*" : $"\"{searchTerm}*\"";
     }
