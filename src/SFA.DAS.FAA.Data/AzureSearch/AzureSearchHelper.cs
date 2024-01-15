@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Core.Serialization;
@@ -31,9 +32,9 @@ public class AzureSearchHelper : IAzureSearchHelper
         };
 
         _searchClient = new SearchClient(
-            new Uri(configuration.AzureSearchBaseUrl), 
-            IndexName, 
-            new AzureKeyCredential(configuration.AzureSearchKey), 
+            new Uri(configuration.AzureSearchBaseUrl),
+            IndexName,
+            new AzureKeyCredential(configuration.AzureSearchKey),
             clientOptions);
     }
     public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)
@@ -45,7 +46,9 @@ public class AzureSearchHelper : IAzureSearchHelper
             .BuildSearch(findVacanciesModel);
         searchOptions.IncludeTotalCount = true;
 
-        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>($"\"{findVacanciesModel.SearchTerm}*\"", searchOptions);
+        var searchTerm = BuildSearchTerm(findVacanciesModel.SearchTerm);
+
+        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
         var totalVacanciesCountTask = _searchClient.GetDocumentCountAsync();
 
         await Task.WhenAll(searchResultsTask, totalVacanciesCountTask);
@@ -58,7 +61,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         {
             result.ForEach(c=>c.SearchGeoPoint = new GeoPoint{Lat= findVacanciesModel.Lat.Value, Lon = findVacanciesModel.Lon.Value});
         }
-        
+
         return new ApprenticeshipSearchResponse
         {
             ApprenticeshipVacancies = result.Select(c=>c)
@@ -79,5 +82,21 @@ public class AzureSearchHelper : IAzureSearchHelper
     {
         var count = await _searchClient.GetDocumentCountAsync();
         return Convert.ToInt32(count);
+    }
+
+    public string BuildSearchTerm(string? searchTerm)
+    {
+        if (string.IsNullOrEmpty(searchTerm)) { return "*"; }
+
+        var alphaRegex = new Regex("[a-zA-Z ]");
+        var illegalChars = searchTerm.Where(x => !alphaRegex.IsMatch(x.ToString())).ToList();
+        foreach (var character in searchTerm)
+        {
+            if (illegalChars.Contains(character))
+            {
+                searchTerm = searchTerm.Replace($"{character}", string.Empty);
+            }
+        }
+        return string.IsNullOrEmpty(searchTerm) ? "*" : $"\"{searchTerm}*\"";
     }
 }
