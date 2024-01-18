@@ -25,6 +25,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.Wage)
                 .Excluding(c=>c.Course)
                 .Excluding(c=>c.SearchGeoPoint)
+                .Excluding(c => c.AdditionalQuestion1)
+                .Excluding(c => c.AdditionalQuestion2)
             );
             response.ExpectedDuration.Should().Be($"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}");
         }
@@ -59,7 +61,10 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.WageType)
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
-                .Excluding(c=>c.Distance));
+                .Excluding(c=>c.Distance)
+                .Excluding(c => c.AdditionalQuestion1)
+                .Excluding(c => c.AdditionalQuestion2)
+            );
 
             response.Distance.Should().Be(0);
         }
@@ -96,6 +101,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
                 .Excluding(c=>c.Distance)
+                .Excluding(c => c.AdditionalQuestion1)
+                .Excluding(c => c.AdditionalQuestion2)
             );
             response.ExpectedDuration.Should().Be($"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}");
             response.StandardTitle.Should().Be(source.Course.Title);
@@ -141,6 +148,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.WageType)
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
+                .Excluding(c => c.AdditionalQuestion1)
+                .Excluding(c => c.AdditionalQuestion2)
             );
             response.WageUnit.Should().Be(4);
             response.WageType.Should().Be((int)source.Wage.WageType);
