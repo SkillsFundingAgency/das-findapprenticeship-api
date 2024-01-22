@@ -1,4 +1,4 @@
-﻿using AutoFixture.NUnit3;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
@@ -26,6 +26,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.Course)
                 .Excluding(c => c.TypicalJobTitles)
                 .Excluding(c=>c.SearchGeoPoint)
+                .Excluding(c => c.AdditionalQuestion1)
+                .Excluding(c => c.AdditionalQuestion2)
             );
             response.ExpectedDuration.Should().Be($"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}");
         }
@@ -61,6 +63,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
                 .Excluding(c=>c.Distance)
+                .Excluding(c => c.AdditionalQuestion1)
+                .Excluding(c => c.AdditionalQuestion2)
                 .Excluding(c => c.TypicalJobTitles)
                 );
 
@@ -100,6 +104,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
                 .Excluding(c=>c.Distance)
+                .Excluding(c => c.AdditionalQuestion1)
+                .Excluding(c => c.AdditionalQuestion2)
             );
             response.ExpectedDuration.Should().Be($"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}");
             response.StandardTitle.Should().Be(source.Course.Title);
@@ -146,6 +152,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.WageType)
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
+                .Excluding(c => c.AdditionalQuestion1)
+                .Excluding(c => c.AdditionalQuestion2)
             );
             response.WageUnit.Should().Be(4);
             response.WageType.Should().Be((int)source.Wage.WageType);
