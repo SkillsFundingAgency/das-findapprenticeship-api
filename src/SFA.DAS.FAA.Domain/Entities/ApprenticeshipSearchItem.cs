@@ -48,6 +48,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public int Duration { get; set; }
         public string DurationUnit { get; set; }
         public string ExpectedDuration { get; set; }
+        public string TypicalJobTitles { get; set; }
         //Calculated after search
         public decimal? Distance { get; set; }
         public double Score { get; set; }

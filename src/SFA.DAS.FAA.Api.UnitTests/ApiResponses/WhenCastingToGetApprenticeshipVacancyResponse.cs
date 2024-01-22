@@ -1,4 +1,4 @@
-﻿using AutoFixture.NUnit3;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
@@ -24,6 +24,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.ExpectedDuration)
                 .Excluding(c=>c.Wage)
                 .Excluding(c=>c.Course)
+                .Excluding(c => c.TypicalJobTitles)
                 .Excluding(c=>c.SearchGeoPoint)
                 .Excluding(c => c.AdditionalQuestion1)
                 .Excluding(c => c.AdditionalQuestion2)
@@ -64,7 +65,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.Distance)
                 .Excluding(c => c.AdditionalQuestion1)
                 .Excluding(c => c.AdditionalQuestion2)
-            );
+                .Excluding(c => c.TypicalJobTitles)
+                );
 
             response.Distance.Should().Be(0);
         }
@@ -97,6 +99,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.CategoryCode)
                 .Excluding(c=>c.Location)
                 .Excluding(c=>c.StandardLarsCode)
+                .Excluding(c => c.TypicalJobTitles)
                 .Excluding(c => c.WageType)
                 .Excluding(c => c.WageUnit)
                 .Excluding(c=>c.SearchGeoPoint)
@@ -144,6 +147,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.DurationUnit)
                 .Excluding(c=>c.EmployerDescription)
                 .Excluding(c=>c.Wage)
+                .Excluding(c=>c.TypicalJobTitles)
                 .Excluding(c=>c.Course)
                 .Excluding(c => c.WageType)
                 .Excluding(c => c.WageUnit)

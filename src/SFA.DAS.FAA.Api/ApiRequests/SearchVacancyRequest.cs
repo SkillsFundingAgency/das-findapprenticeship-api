@@ -38,4 +38,6 @@ public class SearchVacancyRequest
     public uint? PostedInLastNumberOfDays  { get; set; } = null;
     [FromQuery]
     public VacancySort? Sort  { get; set; } = VacancySort.AgeDesc;
+    [FromQuery]
+    public bool DisabilityConfident { get; set; }
 }

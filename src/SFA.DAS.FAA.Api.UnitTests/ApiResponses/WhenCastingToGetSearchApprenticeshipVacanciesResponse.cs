@@ -24,6 +24,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.ExpectedDuration)
                 .Excluding(c=>c.Wage)
                 .Excluding(c=>c.Course)
+                .Excluding(c => c.TypicalJobTitles)
                 .Excluding(c=>c.SearchGeoPoint)
                 .Excluding(c => c.AdditionalQuestion1)
                 .Excluding(c => c.AdditionalQuestion2)

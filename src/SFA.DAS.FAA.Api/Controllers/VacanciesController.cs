@@ -56,7 +56,8 @@ namespace SFA.DAS.FAA.Api.Controllers
                 StandardLarsCode = request.StandardLarsCode,
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                 VacancySort = request.Sort ?? VacancySort.AgeDesc,
-                Source = searchSource
+                Source = searchSource,
+                DisabilityConfident = request.DisabilityConfident,  
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse)result;

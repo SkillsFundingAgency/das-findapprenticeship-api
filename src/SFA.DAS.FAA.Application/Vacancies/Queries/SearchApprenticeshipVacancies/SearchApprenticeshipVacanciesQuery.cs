@@ -23,5 +23,6 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
         public double? Lon { get ; init ; }
         public VacancySort VacancySort { get ; init ; }
         public SearchSource Source { get; set; }
+        public bool DisabilityConfident { get; set; }
     }
 }
