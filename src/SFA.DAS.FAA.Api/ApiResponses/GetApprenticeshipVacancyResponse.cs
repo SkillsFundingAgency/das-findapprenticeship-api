@@ -51,6 +51,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string EmployerContactPhone { get ; set ; }
         public string EmployerContactEmail { get ; set ; }
         public string EmployerContactName { get ; set ; }
+        public string ProviderContactEmail { get; set; }
+        public string ProviderContactName { get; set; }
+        public string ProviderContactPhone { get; set; }
         public int? RouteCode { get ; set ; }
         public string StandardTitle { get; set; }
         public string ApplicationMethod { get; set; }
@@ -112,6 +115,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
+                ProviderContactEmail = source.ProviderContactEmail,
+                ProviderContactName = source.ProviderContactName,
+                ProviderContactPhone = source.ProviderContactPhone,
                 Address = source.Address,
                 ApplicationMethod = source.ApplicationMethod,
                 ApplicationUrl = source.ApplicationUrl
