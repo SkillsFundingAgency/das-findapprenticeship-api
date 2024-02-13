@@ -50,6 +50,7 @@ jobs:
             TableName: Configuration
             ConfigurationSecrets:
               ElasticSearchPassword: $(ElasticSearchPassword)
+              AzureSearchQueryKey: $(AzureSearchQueryKey)
         - template: azure-pipelines-templates/deploy/step/app-deploy.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
