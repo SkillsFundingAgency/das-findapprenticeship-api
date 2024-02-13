@@ -35,10 +35,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         _searchClient = new SearchClient(
             new Uri(configuration.AzureSearchBaseUrl), 
             IndexName, 
-            new AzureCliCredential(new AzureCliCredentialOptions
-            {
-                TenantId = configuration.AzureSearchResource
-            }), 
+            new DefaultAzureCredential(), 
             clientOptions);
     }
     public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)
