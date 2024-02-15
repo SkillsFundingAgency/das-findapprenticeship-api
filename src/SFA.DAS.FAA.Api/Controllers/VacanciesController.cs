@@ -1,38 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
-using SFA.DAS.FAA.Api.ApRequests;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
+using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
-    [ApiVersion("1.0")]
-    [ApiController]
-    [Route("/api/[controller]/")]
-    public class VacanciesController : ControllerBase
+    public abstract class VacanciesControllerBase(IMediator mediator, SearchSource searchSource) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public VacanciesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-        
         [HttpGet]
         [Route("{vacancyReference}")]
         public async Task<IActionResult> Get(string vacancyReference)
         {
-            var result = await _mediator.Send(new GetApprenticeshipVacancyQuery
+            var result = await mediator.Send(new GetApprenticeshipVacancyQuery
             {
-                VacancyReference = vacancyReference
+                VacancyReference = vacancyReference,
+                Source = searchSource
             });
 
             if (result.ApprenticeshipVacancy == null)
@@ -40,63 +30,67 @@ namespace SFA.DAS.FAA.Api.Controllers
                 return NotFound();
             }
 
-            var apiResponse = (GetApprenticeshipVacancyDetailResponse) result.ApprenticeshipVacancy;
-            
+            var apiResponse = (GetApprenticeshipVacancyDetailResponse)result.ApprenticeshipVacancy;
+
             return Ok(apiResponse);
         }
-
+        
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> Search([FromQuery]SearchVacancyRequest request)
+        public async Task<IActionResult> Search([FromQuery] SearchVacancyRequest request)
         {
-            var result = await _mediator.Send(new SearchApprenticeshipVacanciesQuery
+            var result = await mediator.Send(new SearchApprenticeshipVacanciesQuery
             {
-                PageNumber = request.PageNumber, 
+                SearchTerm = request.SearchTerm,
+                PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
                 Ukprn = request.Ukprn,
                 AccountPublicHashedId = request.AccountPublicHashedId,
                 AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
                 Categories = request.Categories,
+                Levels = request.Levels,
                 Lat = request.Lat,
                 Lon = request.Lon,
                 DistanceInMiles = request.DistanceInMiles,
                 NationWideOnly = request.NationWideOnly,
                 StandardLarsCode = request.StandardLarsCode,
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
-                VacancySort = request.Sort ?? VacancySort.AgeDesc
+                VacancySort = request.Sort ?? VacancySort.AgeDesc,
+                Source = searchSource,
+                DisabilityConfident = request.DisabilityConfident,  
             });
 
-            var apiResponse = (GetSearchApprenticeshipVacanciesResponse) result;
-            
+            var apiResponse = (GetSearchApprenticeshipVacanciesResponse)result;
+
             return Ok(apiResponse);
         }
-
+        
         [HttpGet]
         [Route("count")]
         public async Task<IActionResult> GetVacancyCount([FromQuery] SearchVacancyTotalRequest request)
         {
             try
             {
-                var result = await _mediator.Send(new GetApprenticeshipVacancyCountQuery
+                var result = await mediator.Send(new GetApprenticeshipVacancyCountQuery
                 {
-                    Ukprn = request.Ukprn,
-                    AccountPublicHashedId = request.AccountPublicHashedId,
-                    AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
-                    Categories = request.Categories,
-                    Lat = request.Lat,
-                    Lon = request.Lon,
-                    DistanceInMiles = request.DistanceInMiles,
-                    NationWideOnly = request.NationWideOnly,
-                    StandardLarsCode = request.StandardLarsCode,
-                    PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
-
+                    Source = searchSource
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
             }
             catch (Exception)
             {
-                return new StatusCodeResult((int) HttpStatusCode.InternalServerError);
+                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
             }
         }
     }
+
+    [ApiVersion("1.0")]
+    [ApiController]
+    [Route("/api/Vacancies/")]
+    public class VacanciesController(IMediator mediator) : VacanciesControllerBase(mediator, SearchSource.Elastic);
+    
+    [ApiVersion("2.0")]
+    [ApiController]
+    [Route("/api/Vacancies/")]
+    public class VacanciesV2Controller(IMediator mediator) : VacanciesControllerBase(mediator, SearchSource.AzureSearch);
 }

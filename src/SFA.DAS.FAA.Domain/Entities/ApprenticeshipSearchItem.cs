@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Domain.Entities
 {
     public class ApprenticeshipSearchItem
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string AnonymousEmployerName { get; set; }
-        public ApprenticeshipLevel ApprenticeshipLevel { get; set; }
+        public string ApprenticeshipLevel { get; set; } 
         public string Category { get; set; }
         public string CategoryCode { get; set; }
         public DateTime ClosingDate { get; set; }
@@ -17,7 +19,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public bool IsDisabilityConfident { get; set; }
         public bool IsEmployerAnonymous { get; set; }
         public bool IsPositiveAboutDisability { get; set; }
-        public bool IsRecruitVacancy { get; set; }
+        public bool IsRecruitVacancy { get; set; } = true;
         public GeoPoint Location { get; set; }
         public int NumberOfPositions { get; set; }
         public DateTime PostedDate { get; set; }
@@ -27,8 +29,8 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string SubCategory { get; set; }
         public string SubCategoryCode { get; set; }
         public string Title { get; set; }
-        public long Ukprn { get; set; }
-        public VacancyLocationType VacancyLocationType { get; set; }
+        public string Ukprn { get; set; }
+        public string VacancyLocationType { get; set; }
         public string VacancyReference { get; set; }
         public decimal? WageAmount { get; set; }
         public decimal? WageAmountLowerBound { get; set; }
@@ -46,35 +48,27 @@ namespace SFA.DAS.FAA.Domain.Entities
         public int Duration { get; set; }
         public string DurationUnit { get; set; }
         public string ExpectedDuration { get; set; }
+        public string TypicalJobTitles { get; set; }
         //Calculated after search
         public decimal? Distance { get; set; }
         public double Score { get; set; }
+        public WageSearchDocument Wage { get; set; }
+        public CourseSearchDocument Course { get; set; }
+        public GeoPoint SearchGeoPoint { get; set; }
+        public string ApplicationMethod { get; set; }
+        public string ApplicationUrl { get; set; }
+        public string AdditionalQuestion1 { get; set; }
+        public string AdditionalQuestion2 { get; set; }
     }
+    
+    
     
     public class GeoPoint
     {
-        public double lon { get; set; }
-        public double lat { get; set; }
+        public double Lon { get; set; }
+        public double Lat { get; set; }
     }
     
-    public enum ApprenticeshipLevel
-    {
-        Unknown = 0,
-        Intermediate,
-        Advanced,
-        Higher,
-        Degree,
-        Foundation,
-        Masters
-    }
-    
-    public enum VacancyLocationType
-    {
-        Unknown = 0,
-        NonNational,
-        National
-    }
-
     public class Address
     {
         public string AddressLine1 { get; set; }
@@ -82,5 +76,28 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string AddressLine3 { get; set; }
         public string AddressLine4 { get; set; }
         public string Postcode { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
+    }
+    public class CourseSearchDocument
+    {
+        public int? LarsCode { get; set; }
+        public string Title { get; set; }
+        public string Level { get; set; }
+        public int? RouteCode { get; set; }
+        public string Route { get; set; }
+    }
+
+
+    public class WageSearchDocument
+    {
+        public string WageAdditionalInformation { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public WageType WageType { get; set; }
+        public string WorkingWeekDescription { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public WageUnit WageUnit { get; set; }
+        public long? WageAmount { get; set; }
+        public int Duration { get; set; }
     }
 }

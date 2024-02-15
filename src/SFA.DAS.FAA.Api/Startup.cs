@@ -4,7 +4,6 @@ using System.IO;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +31,7 @@ namespace SFA.DAS.FAA.Api
                 .AddConfiguration(configuration)
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddEnvironmentVariables();
-            
+
             if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
 
@@ -54,7 +53,7 @@ namespace SFA.DAS.FAA.Api
 
             _configuration = config.Build();
         }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
@@ -62,7 +61,7 @@ namespace SFA.DAS.FAA.Api
             services.AddSingleton(cfg => cfg.GetService<IOptions<FindApprenticeshipsApiConfiguration>>().Value);
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
-            
+
 #if DEBUG
             services.AddSingleton(new ElasticEnvironment("TEST"));
 #else
@@ -72,9 +71,9 @@ namespace SFA.DAS.FAA.Api
             var apiConfig = _configuration
                 .GetSection("FindApprenticeshipsApi")
                 .Get<FindApprenticeshipsApiConfiguration>();
-            
+
             services.AddElasticSearch(apiConfig);
-            
+
             if (!ConfigurationIsLocalOrDev())
             {
                 var azureAdConfiguration = _configuration
@@ -93,10 +92,10 @@ namespace SFA.DAS.FAA.Api
             {
                 services.AddHealthChecks();
             }
-            
-            services.AddMediatR(_=> _.RegisterServicesFromAssembly(typeof(SearchApprenticeshipVacanciesQuery).Assembly));
+
+            services.AddMediatR(_ => _.RegisterServicesFromAssembly(typeof(SearchApprenticeshipVacanciesQuery).Assembly));
             services.AddServiceRegistration();
-            
+
             services
                 .AddMvc(o =>
                 {
@@ -116,32 +115,35 @@ namespace SFA.DAS.FAA.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FindApprenticeshipsApi", Version = "v1" });
+                c.SwaggerDoc("v2", new OpenApiInfo { Title = "FindApprenticeshipsApi", Version = "v2" });
                 c.OperationFilter<SwaggerVersionHeaderFilter>();
             });
-            
-            services.AddApiVersioning(opt => {
+
+            services.AddApiVersioning(opt =>
+            {
                 opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
             });
 
             services.AddLogging();
         }
-        
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "FindApprenticeshipsApi v1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "FindApprenticeshipsApi v2");
                 c.RoutePrefix = string.Empty;
             });
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.ConfigureExceptionHandler(logger);
-            
+
             app.UseAuthentication();
 
             if (!_configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
@@ -158,7 +160,7 @@ namespace SFA.DAS.FAA.Api
                     pattern: "api/{controller=Vacancies}/{action=Get}/{id?}");
             });
         }
-        
+
         private bool ConfigurationIsLocalOrDev()
         {
             return _configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase) ||

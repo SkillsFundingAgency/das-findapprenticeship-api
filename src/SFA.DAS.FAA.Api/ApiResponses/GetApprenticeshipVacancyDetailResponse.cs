@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.Spatial;
 using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
@@ -13,18 +14,26 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public List<string> Skills { get; set; }
         public List<Qualification> Qualifications { get; set; }
         public string ThingsToConsider { get; set; }
-
+        public string AdditionalQuestion1 { get; set; }
+        public string AdditionalQuestion2 { get; set; }
 
         public static implicit operator GetApprenticeshipVacancyDetailResponse(ApprenticeshipVacancyItem source)
         {
+            var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
+            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
+
+            var sourceLocation = source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;
+
+            var distance = source.Distance ?? (source.SearchGeoPoint != null ? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat) : 0);
+            
             return new GetApprenticeshipVacancyDetailResponse
             {
                 
                 Id = source.Id,
                 AnonymousEmployerName = source.AnonymousEmployerName,
-                ApprenticeshipLevel = (ApprenticeshipLevel) source.ApprenticeshipLevel,
-                Category = source.Category,
-                CategoryCode = source.CategoryCode,
+                ApprenticeshipLevel = source.ApprenticeshipLevel,
+                Category = source.Category ?? source.Course?.Title,
+                CategoryCode = source.CategoryCode ?? "SSAT1.UNKNOWN",
                 ClosingDate = source.ClosingDate,
                 Description = source.Description,
                 EmployerName = source.EmployerName,
@@ -34,26 +43,29 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 IsEmployerAnonymous = source.IsEmployerAnonymous,
                 IsPositiveAboutDisability = source.IsPositiveAboutDisability,
                 IsRecruitVacancy = source.IsRecruitVacancy,
-                Location = source.Location,
+                Location =  sourceLocation,
                 NumberOfPositions = source.NumberOfPositions,
                 PostedDate = source.PostedDate,
                 ProviderName = source.ProviderName,
-                StandardLarsCode = source.StandardLarsCode,
+                StandardTitle = source.Course?.Title,
+                StandardLarsCode = source.StandardLarsCode ?? source.Course?.LarsCode,
+                StandardLevel = source.Course?.Level ?? "0",
+                RouteCode = source.Course?.RouteCode,
                 StartDate = source.StartDate,
-                SubCategory = source.SubCategory,
-                SubCategoryCode = source.SubCategoryCode,
+                SubCategory = source.SubCategory?? source.Course?.Title,
+                SubCategoryCode = source.SubCategoryCode?? source.Course?.Title,
                 Title = source.Title,
                 Ukprn = source.Ukprn,
-                VacancyLocationType = (VacancyLocationType) source.VacancyLocationType,
+                VacancyLocationType = source.VacancyLocationType,
                 VacancyReference = source.VacancyReference,
                 WageAmount = source.WageAmount,
                 WageAmountLowerBound = source.WageAmountLowerBound,
                 WageAmountUpperBound = source.WageAmountUpperBound,
                 WageText = source.WageText,
-                WageUnit = source.WageUnit,
-                WageType = source.WageType,
-                WorkingWeek = source.WorkingWeek,
-                Distance = source.Distance,
+                WageUnit = source.Wage != null ? 4 : source.WageUnit,//Always annual for v2 TODO look at removing
+                WageType = source.Wage != null ? (int)source.Wage.WageType : source.WageType,
+                WorkingWeek = source.WorkingWeek ?? source.Wage?.WorkingWeekDescription,
+                Distance = source.Distance ?? (decimal)distance,
                 Score = source.Score,
                 LongDescription = source.LongDescription,
                 OutcomeDescription = source.OutcomeDescription,
@@ -63,20 +75,26 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 Qualifications = source.Qualifications.Select(c=> (Qualification)c).ToList(),
                 ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) 
                     ? source.ExpectedDuration 
-                    : $"{source.Duration} {(source.Duration == 1 || string.IsNullOrEmpty(source.DurationUnit) || source.DurationUnit.EndsWith("s") ? source.DurationUnit : $"{source.DurationUnit}s")}",
+                    : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
                 EmployerDescription = source.EmployerDescription,
-                Address = source.Address
+                Address = source.Address,
+                ApplicationMethod = source.ApplicationMethod,
+                ApplicationUrl = source.ApplicationUrl,
+                AdditionalQuestion1 = source.AdditionalQuestion1,
+                AdditionalQuestion2 = source.AdditionalQuestion2
             };
         }
+
+        
     }
     
     public class Qualification
     {
-        public QualificationWeighting Weighting { get ; set ; }
+        public string Weighting { get ; set ; }
         public string QualificationType { get ; set ; }
         public string Subject { get ; set ; }
         public string Grade { get ; set ; }
@@ -87,16 +105,10 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             {
                 Grade = source.Grade,
                 Subject = source.Subject,
-                Weighting = (QualificationWeighting)source.Weighting,
+                Weighting = source.Weighting,
                 QualificationType = source.QualificationType
 
             };
         }
-    }
-
-    public enum QualificationWeighting
-    {
-        Essential,
-        Desired
     }
 }

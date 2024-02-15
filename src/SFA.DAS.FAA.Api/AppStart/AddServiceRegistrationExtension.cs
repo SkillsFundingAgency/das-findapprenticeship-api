@@ -1,8 +1,8 @@
 ﻿using System;
 using Elasticsearch.Net;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.FAA.Data.AzureSearch;
 using SFA.DAS.FAA.Data.ElasticSearch;
-using SFA.DAS.FAA.Data.Repository;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Interfaces;
 
@@ -15,6 +15,8 @@ namespace SFA.DAS.FAA.Api.AppStart
             services.AddTransient<IElasticSearchQueries, ElasticSearchQueries>();
             services.AddTransient<IElasticSearchQueryBuilder, ElasticSearchQueryBuilder>();
             services.AddTransient<IVacancySearchRepository, ApprenticeshipVacancySearchRepository>();
+            services.AddTransient<IAcsVacancySearchRepository, AcsVacancySearchRepository>();
+            services.AddTransient<IAzureSearchHelper, AzureSearchHelper>();
         }
         
         public static void AddElasticSearch(this IServiceCollection collection, FindApprenticeshipsApiConfiguration configuration)

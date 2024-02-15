@@ -7,10 +7,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
-using SFA.DAS.FAA.Api.ApRequests;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -41,7 +42,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
                         query.DistanceInMiles == request.DistanceInMiles &&
                         query.Categories == request.Categories &&
                         query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
-                        query.VacancySort.Equals(request.Sort)
+                        query.VacancySort.Equals(request.Sort) &&
+                        query.Source == SearchSource.Elastic
                     ), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mediatorResult);

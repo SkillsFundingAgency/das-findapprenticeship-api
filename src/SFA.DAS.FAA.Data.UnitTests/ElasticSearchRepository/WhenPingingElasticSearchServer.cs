@@ -4,11 +4,11 @@ using Elasticsearch.Net;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.FAA.Data.Repository;
+using SFA.DAS.FAA.Data.AzureSearch;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Interfaces;
 
-namespace SFA.DAS.FAA.Data.UnitTests.Repository
+namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearchRepository
 {
     public class WhenPingingElasticSearchServer
     {
@@ -16,16 +16,16 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
         private Mock<IElasticLowLevelClient> _mockClient;
         private ElasticEnvironment _apiEnvironment;
         private ApprenticeshipVacancySearchRepository _repository;
-        
+
         [SetUp]
         public void Init()
         {
             _mockClient = new Mock<IElasticLowLevelClient>();
             _apiEnvironment = new ElasticEnvironment("test");
             _repository = new ApprenticeshipVacancySearchRepository(
-                _mockClient.Object, 
-                _apiEnvironment, 
-                Mock.Of<IElasticSearchQueryBuilder>(), 
+                _mockClient.Object,
+                _apiEnvironment,
+                Mock.Of<IElasticSearchQueryBuilder>(),
                 Mock.Of<ILogger<ApprenticeshipVacancySearchRepository>>());
         }
 
@@ -40,7 +40,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockClient
                 .Setup(c => c.CountAsync<StringResponse>(IndexName, It.IsAny<PostData>(), It.IsAny<CountRequestParameters>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse {ApiCall = apiCallMock.Object});
+                .ReturnsAsync(new StringResponse { ApiCall = apiCallMock.Object });
 
             //Act
             var result = await _repository.PingAsync();
@@ -60,7 +60,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
 
             _mockClient
                 .Setup(c => c.CountAsync<StringResponse>(IndexName, It.IsAny<PostData>(), It.IsAny<CountRequestParameters>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new StringResponse {ApiCall = apiCallMock.Object});
+                .ReturnsAsync(new StringResponse { ApiCall = apiCallMock.Object });
 
             //Act
             var result = await _repository.PingAsync();

@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Linq;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
@@ -11,6 +12,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         [Test, AutoData]
         public void Then_Maps_Fields(SearchApprenticeshipVacanciesResult source)
         {
+            source.ApprenticeshipVacancies.ToList().ForEach(v => v.Wage = null);
+
             var response = (GetSearchApprenticeshipVacanciesResponse)source;
 
             response.Should().BeEquivalentTo(source, options=>options.Excluding(c=>c.ApprenticeshipVacancies));
@@ -19,6 +22,12 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.Duration)
                 .Excluding(c => c.DurationUnit)
                 .Excluding(c=>c.ExpectedDuration)
+                .Excluding(c=>c.Wage)
+                .Excluding(c=>c.Course)
+                .Excluding(c => c.TypicalJobTitles)
+                .Excluding(c=>c.SearchGeoPoint)
+                .Excluding(c => c.AdditionalQuestion1)
+                .Excluding(c => c.AdditionalQuestion2)
             );
         }
     }

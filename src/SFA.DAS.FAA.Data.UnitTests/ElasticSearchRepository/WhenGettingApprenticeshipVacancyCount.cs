@@ -1,21 +1,17 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Elasticsearch.Net;
 using FluentAssertions;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.FAA.Data.ElasticSearch;
-using SFA.DAS.FAA.Data.Repository;
+using SFA.DAS.FAA.Data.AzureSearch;
 using SFA.DAS.FAA.Domain.Configuration;
-using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.FAA.Data.UnitTests.Repository
+namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearchRepository
 {
     public class WhenGettingApprenticeshipVacancyCount
     {
@@ -36,7 +32,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<CountRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
-            
+
             //Act
             var results = await repository.Count();
 

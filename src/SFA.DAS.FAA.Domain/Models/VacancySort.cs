@@ -7,6 +7,10 @@ namespace SFA.DAS.FAA.Domain.Models
         DistanceDesc,
         DistanceAsc,
         ExpectedStartDateDesc,
-        ExpectedStartDateAsc
+        ExpectedStartDateAsc,
+        SalaryDesc,
+        SalaryAsc,
+        ClosingAsc,
+        ClosingDesc
     }
 }

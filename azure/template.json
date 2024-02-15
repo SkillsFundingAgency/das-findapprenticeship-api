@@ -48,7 +48,7 @@
         "keyVaultCertificateName": {
             "type": "string"
         },
-        "sharedBackEndAppServicePlanName": { 
+        "sharedBackEndAppServicePlanName": {
             "type": "string"
         },
         "sharedBackEndSubnetResourceId": {
@@ -60,6 +60,9 @@
         "utcValue": {
             "type": "string",
             "defaultValue": "[utcNow()]"
+        },
+        "tenant": {
+            "type": "string"
         }
     },
     "variables": {
@@ -166,11 +169,11 @@
                                 {
                                     "name": "Environment",
                                     "value": "[parameters('environmentName')]"
-                                },    
+                                },
                                 {
                                     "name": "ResourceEnvironmentName",
                                     "value": "[parameters('resourceEnvironmentName')]"
-                                },                                
+                                },
                                 {
                                     "name": "ConfigurationStorageConnectionString",
                                     "value": "[parameters('configurationStorageConnectionString')]"

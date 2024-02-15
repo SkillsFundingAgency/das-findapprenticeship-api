@@ -4,19 +4,19 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Elasticsearch.Net;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using SFA.DAS.FAA.Data.AzureSearch;
 using SFA.DAS.FAA.Data.ElasticSearch;
-using SFA.DAS.FAA.Data.Repository;
+using SFA.DAS.FAA.Data.UnitTests.Repository;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.FAA.Data.UnitTests.Repository
+namespace SFA.DAS.FAA.Data.UnitTests.ElasticSearchRepository
 {
     public class WhenFindingApprenticeshipVacancies
     {
@@ -34,7 +34,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var expectedVacancy = JsonConvert
                 .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(FakeElasticResponses.MoreThanOneHitResponse)
                 .Items.First();
-            
+
             mockElasticClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
                         $"{environment.Prefix}{IndexName}",
@@ -50,7 +50,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<CountRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
-            
+
             //Act
             var results = await repository.Find(model);
 
@@ -62,7 +62,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             vacancy.Should().BeEquivalentTo(expectedVacancy._source);
             vacancy.Distance.Should().BeNull();
         }
-        
+
         [Test, MoqAutoData]
         public async Task Then_Will_Return_ApprenticeshipVacancies_Found_And_Distance_If_Sort_And_GeoDistance(
             FindVacanciesModel model,
@@ -76,7 +76,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var expectedVacancy = JsonConvert
                 .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(FakeElasticResponses.MoreThanOneHitResponseWithSort)
                 .Items.First();
-            
+
             mockElasticClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
                         $"{environment.Prefix}{IndexName}",
@@ -92,7 +92,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<CountRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
-            
+
             //Act
             var results = await repository.Find(model);
 
@@ -101,11 +101,11 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             results.TotalFound.Should().Be(2);
             results.ApprenticeshipVacancies.Count().Should().Be(2);
             var vacancy = results.ApprenticeshipVacancies.First();
-            vacancy.Should().BeEquivalentTo(expectedVacancy._source, options=>options.Excluding(c=>c.Distance));
+            vacancy.Should().BeEquivalentTo(expectedVacancy._source, options => options.Excluding(c => c.Distance));
             vacancy.Distance.Should().Be(expectedVacancy.sort.FirstOrDefault());
         }
-        
-        
+
+
         [Test]
         [MoqInlineAutoData(null, null, null)]
         [MoqInlineAutoData(1.0, null, null)]
@@ -134,7 +134,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             var expectedVacancy = JsonConvert
                 .DeserializeObject<ElasticResponse<ApprenticeshipSearchItem>>(FakeElasticResponses.MoreThanOneHitResponseWithSort)
                 .Items.First();
-            
+
             mockElasticClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
                         $"{environment.Prefix}{IndexName}",
@@ -150,7 +150,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<CountRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(@"{""count"":10}"));
-            
+
             //Act
             var results = await repository.Find(model);
 
@@ -159,10 +159,10 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             results.TotalFound.Should().Be(2);
             results.ApprenticeshipVacancies.Count().Should().Be(2);
             var vacancy = results.ApprenticeshipVacancies.First();
-            vacancy.Should().BeEquivalentTo(expectedVacancy._source, options=>options.Excluding(c=>c.Distance));
+            vacancy.Should().BeEquivalentTo(expectedVacancy._source, options => options.Excluding(c => c.Distance));
             vacancy.Distance.Should().BeNull();
         }
-        
+
         [Test, MoqAutoData]
         public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Invalid_Response(
             FindVacanciesModel model,
@@ -188,7 +188,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             Assert.IsEmpty(result.ApprenticeshipVacancies);
             Assert.AreEqual(0, result.TotalFound);
         }
-        
+
         [Test, MoqAutoData]
         public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_No_results(
             FindVacanciesModel model,
@@ -198,7 +198,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             ApprenticeshipVacancySearchRepository repository)
         {
             //Arrange
-            var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1}}";
+            var response = @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1}}";
 
             mockElasticClient.Setup(c =>
                     c.SearchAsync<StringResponse>(
@@ -207,7 +207,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(response));
-            
+
             mockElasticClient.Setup(c =>
                     c.CountAsync<StringResponse>(
                         $"{environment.Prefix}{IndexName}",
@@ -224,7 +224,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             Assert.IsEmpty(result.ApprenticeshipVacancies);
             Assert.AreEqual(0, result.TotalFound);
         }
-        
+
         [Test, MoqAutoData]
         public async Task Then_Will_Return_Empty_Result_If_ApprenticeshipVacanciesIndex_Request_Returns_Failed_Response(
             FindVacanciesModel model,
@@ -234,7 +234,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
             ApprenticeshipVacancySearchRepository repository)
         {
             //Arrange
-            var response =  @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1},""hits"":{""total"":
+            var response = @"{""took"":0,""timed_out"":false,""_shards"":{""total"":1,""successful"":0,""skipped"":0,""failed"":1},""hits"":{""total"":
             {""value"":0,""relation"":""eq""},""max_score"":null,""hits"":[]}}";
 
             mockElasticClient.Setup(c =>
@@ -244,7 +244,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository
                         It.IsAny<SearchRequestParameters>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new StringResponse(response));
-            
+
             mockElasticClient.Setup(c =>
                     c.CountAsync<StringResponse>(
                         $"{environment.Prefix}{IndexName}",
