@@ -45,6 +45,9 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string EmployerContactName { get; set; }
         public string EmployerContactPhone { get; set; }
         public string EmployerContactEmail { get; set; }
+        public string ProviderContactEmail { get; set; }
+        public string ProviderContactName { get; set; }
+        public string ProviderContactPhone { get; set; }
         public int Duration { get; set; }
         public string DurationUnit { get; set; }
         public string ExpectedDuration { get; set; }
