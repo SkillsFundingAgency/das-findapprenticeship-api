@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Core.Serialization;
+using Azure.Identity;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using SFA.DAS.FAA.Domain.Configuration;
@@ -32,9 +33,9 @@ public class AzureSearchHelper : IAzureSearchHelper
         };
 
         _searchClient = new SearchClient(
-            new Uri(configuration.AzureSearchBaseUrl),
-            IndexName,
-            new AzureKeyCredential(configuration.AzureSearchKey),
+            new Uri(configuration.AzureSearchBaseUrl), 
+            IndexName, 
+            new DefaultAzureCredential(), 
             clientOptions);
     }
     public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)

@@ -57,17 +57,14 @@
         "backEndAccessRestrictions": {
             "type": "array"
         },
+        "sharedAiSearchName": {
+            "type": "string"
+        },
         "utcValue": {
             "type": "string",
             "defaultValue": "[utcNow()]"
         },
         "tenant": {
-            "type": "string"
-        },
-        "azureSearchResourceGroup": {
-            "type": "string"
-        },
-        "azureSearchName": {
             "type": "string"
         }
     },
@@ -218,6 +215,30 @@
                     }
                 }
             }
+        },
+        {
+            "apiVersion": "2021-04-01",
+            "name": "[concat('role-assignment-', variables('apiAppServiceName'), '-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'role-assignments/role-assignment-ai-search.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "principalId": {
+                        "value": "[reference(concat(variables('apiAppServiceName'), '-', parameters('utcValue'))).outputs.managedServiceIdentityId.value]"
+                    },
+                    "assignmentType": {
+                        "value": "SearchIndexDataReader"
+                    },
+                    "resourceName": {
+                        "value": "[parameters('sharedAiSearchName')]"
+                    }
+                }
+            }
         }
     ],
     "outputs": {
@@ -228,18 +249,6 @@
         "ApiAppServiceName": {
             "type": "string",
             "value": "[variables('apiAppServiceName')]"
-        },
-        "AzureSearchResource": {
-            "type": "string",
-            "value": "[concat('https://', parameters('tenant'), '/', parameters('azureSearchName'))]"
-        },
-        "AzureSearchBaseUrl": {
-            "type": "string",
-            "value": "[concat('https://', parameters('azureSearchName'), '.search.windows.net')]"
-        },
-        "AzureSearchQueryKey": {
-            "type": "string",
-            "value": "[listQueryKeys(resourceId(parameters('logAnalyticsSubscriptionId'), parameters('azureSearchResourceGroup'), 'Microsoft.Search/searchServices', parameters('azureSearchName')), '2015-08-19').value[0].key]"
         }
     }
 }
