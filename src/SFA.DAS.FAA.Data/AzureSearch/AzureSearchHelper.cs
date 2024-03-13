@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Azure;
 using Azure.Core.Serialization;
 using Azure.Identity;
 using Azure.Search.Documents;

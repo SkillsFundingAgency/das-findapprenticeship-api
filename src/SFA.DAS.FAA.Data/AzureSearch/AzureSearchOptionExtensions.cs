@@ -75,7 +75,7 @@ public static class AzureSearchOptionExtensions
 
     public static SearchOptions BuildFilters(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
-        List<string> searchFilters = new();
+        List<string> searchFilters = new() { "VacancySource eq 'RAA'" };
 
         if (findVacanciesModel.Ukprn.HasValue)
         {
@@ -136,13 +136,13 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays)}");
         }
 
-        if(findVacanciesModel.DisabilityConfident != false)
+        if (findVacanciesModel.DisabilityConfident != false)
         {
             searchFilters.Add("IsDisabilityConfident eq true");
         }
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
-      
+
         return searchOptions;
     }
 
