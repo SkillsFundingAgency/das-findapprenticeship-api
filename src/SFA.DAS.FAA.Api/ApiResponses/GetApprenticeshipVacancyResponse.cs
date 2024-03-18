@@ -58,6 +58,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string StandardTitle { get; set; }
         public string ApplicationMethod { get; set; }
         public string ApplicationUrl { get; set; }
+        public string VacancySource { get; set; }
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
@@ -120,7 +121,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ProviderContactPhone = source.ProviderContactPhone,
                 Address = source.Address,
                 ApplicationMethod = source.ApplicationMethod,
-                ApplicationUrl = source.ApplicationUrl
+                ApplicationUrl = source.ApplicationUrl,
+                VacancySource = source.VacancySource
             };
         }
 

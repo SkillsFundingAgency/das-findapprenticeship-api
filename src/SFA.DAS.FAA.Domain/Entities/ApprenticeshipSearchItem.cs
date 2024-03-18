@@ -62,6 +62,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string ApplicationUrl { get; set; }
         public string AdditionalQuestion1 { get; set; }
         public string AdditionalQuestion2 { get; set; }
+        public string VacancySource { get; set; }
     }
     
     
