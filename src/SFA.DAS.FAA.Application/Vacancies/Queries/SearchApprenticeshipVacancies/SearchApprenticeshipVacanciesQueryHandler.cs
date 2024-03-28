@@ -40,6 +40,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
                 VacancySort = request.VacancySort,
                 Levels = request.Levels,
                 DisabilityConfident = request.DisabilityConfident,
+                AdditionalDataSources = request.AdditionalDataSources
             };
 
             ApprenticeshipSearchResponse searchResult;

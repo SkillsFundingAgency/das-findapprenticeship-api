@@ -57,7 +57,8 @@ namespace SFA.DAS.FAA.Api.Controllers
                 PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                 VacancySort = request.Sort ?? VacancySort.AgeDesc,
                 Source = searchSource,
-                DisabilityConfident = request.DisabilityConfident,  
+                DisabilityConfident = request.DisabilityConfident,
+                AdditionalDataSources = request.AdditionalDataSources
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse)result;

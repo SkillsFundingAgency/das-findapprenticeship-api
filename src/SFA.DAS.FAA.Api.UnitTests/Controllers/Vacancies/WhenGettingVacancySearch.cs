@@ -43,7 +43,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Vacancies
                         query.Categories == request.Categories &&
                         query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                         query.VacancySort.Equals(request.Sort) &&
-                        query.Source == SearchSource.Elastic
+                        query.Source == SearchSource.Elastic &&
+                        query.AdditionalDataSources == request.AdditionalDataSources
                     ), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mediatorResult);

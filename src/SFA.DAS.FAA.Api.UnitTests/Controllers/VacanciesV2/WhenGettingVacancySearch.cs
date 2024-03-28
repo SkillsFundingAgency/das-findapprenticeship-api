@@ -44,7 +44,8 @@ public class WhenGettingVacancySearch
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                     query.VacancySort.Equals(request.Sort) &&
                     query.Source == SearchSource.AzureSearch &&
-					query.SearchTerm == request.SearchTerm
+					query.SearchTerm == request.SearchTerm &&
+                    query.AdditionalDataSources == request.AdditionalDataSources
                 ),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(mediatorResult);
