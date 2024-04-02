@@ -63,7 +63,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageAmountUpperBound = source.WageAmountUpperBound,
                 WageText = source.WageText,
                 WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
-                WageType = source.Wage != null ? (int)source.Wage.WageType : source.WageType ?? 0,
+                WageType = source.Wage != null && source.Wage.WageType.HasValue ? (int)source.Wage.WageType : source.WageType ?? 0,
                 WorkingWeek = source.WorkingWeek ?? source.Wage?.WorkingWeekDescription,
                 Distance = source.Distance ?? (decimal)distance,
                 Score = source.Score,
@@ -72,9 +72,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 TrainingDescription = source.TrainingDescription,
                 ThingsToConsider = source.ThingsToConsider,
                 Skills = source.Skills,
-                Qualifications = source.Qualifications.Select(c=> (Qualification)c).ToList(),
-                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) 
-                    ? source.ExpectedDuration 
+                Qualifications = source.Qualifications.Select(c => (Qualification)c).ToList(),
+                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration)
+                    ? source.ExpectedDuration
                     : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
