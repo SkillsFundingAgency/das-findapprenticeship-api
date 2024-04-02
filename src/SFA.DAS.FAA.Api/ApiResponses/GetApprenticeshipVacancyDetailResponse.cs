@@ -62,8 +62,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageAmountLowerBound = source.WageAmountLowerBound,
                 WageAmountUpperBound = source.WageAmountUpperBound,
                 WageText = source.WageText,
-                WageUnit = source.Wage != null ? 4 : source.WageUnit,//Always annual for v2 TODO look at removing
-                WageType = source.Wage != null ? (int)source.Wage.WageType : source.WageType,
+                WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
+                WageType = source.Wage != null ? (int)source.Wage.WageType : source.WageType ?? 0,
                 WorkingWeek = source.WorkingWeek ?? source.Wage?.WorkingWeekDescription,
                 Distance = source.Distance ?? (decimal)distance,
                 Score = source.Score,

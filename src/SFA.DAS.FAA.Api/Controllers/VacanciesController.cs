@@ -34,36 +34,44 @@ namespace SFA.DAS.FAA.Api.Controllers
 
             return Ok(apiResponse);
         }
-        
+
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> Search([FromQuery] SearchVacancyRequest request)
         {
-            var result = await mediator.Send(new SearchApprenticeshipVacanciesQuery
+            try
             {
-                SearchTerm = request.SearchTerm,
-                PageNumber = request.PageNumber,
-                PageSize = request.PageSize,
-                Ukprn = request.Ukprn,
-                AccountPublicHashedId = request.AccountPublicHashedId,
-                AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
-                Categories = request.Categories,
-                Levels = request.Levels,
-                Lat = request.Lat,
-                Lon = request.Lon,
-                DistanceInMiles = request.DistanceInMiles,
-                NationWideOnly = request.NationWideOnly,
-                StandardLarsCode = request.StandardLarsCode,
-                PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
-                VacancySort = request.Sort ?? VacancySort.AgeDesc,
-                Source = searchSource,
-                DisabilityConfident = request.DisabilityConfident,
-                AdditionalDataSources = request.AdditionalDataSources
-            });
+                var result = await mediator.Send(new SearchApprenticeshipVacanciesQuery
+                {
+                    SearchTerm = request.SearchTerm,
+                    PageNumber = request.PageNumber,
+                    PageSize = request.PageSize,
+                    Ukprn = request.Ukprn,
+                    AccountPublicHashedId = request.AccountPublicHashedId,
+                    AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
+                    Categories = request.Categories,
+                    Levels = request.Levels,
+                    Lat = request.Lat,
+                    Lon = request.Lon,
+                    DistanceInMiles = request.DistanceInMiles,
+                    NationWideOnly = request.NationWideOnly,
+                    StandardLarsCode = request.StandardLarsCode,
+                    PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
+                    VacancySort = request.Sort ?? VacancySort.AgeDesc,
+                    Source = searchSource,
+                    DisabilityConfident = request.DisabilityConfident,
+                    AdditionalDataSources = request.AdditionalDataSources
+                });
 
-            var apiResponse = (GetSearchApprenticeshipVacanciesResponse)result;
+                var apiResponse = (GetSearchApprenticeshipVacanciesResponse)result;
 
-            return Ok(apiResponse);
+                return Ok(apiResponse);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
         
         [HttpGet]

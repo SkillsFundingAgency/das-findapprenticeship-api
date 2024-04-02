@@ -36,8 +36,8 @@ namespace SFA.DAS.FAA.Domain.Entities
         public decimal? WageAmountLowerBound { get; set; }
         public decimal? WageAmountUpperBound { get; set; }
         public string WageText { get; set; }
-        public int WageUnit { get; set; }
-        public int WageType { get; set; }
+        public int? WageUnit { get; set; }
+        public int? WageType { get; set; }
         public string WorkingWeek { get; set; }
         public Address Address { get; set; }
         public string EmployerWebsiteUrl { get; set; }
@@ -97,10 +97,10 @@ namespace SFA.DAS.FAA.Domain.Entities
     {
         public string WageAdditionalInformation { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public WageType WageType { get; set; }
+        public WageType? WageType { get; set; }
         public string WorkingWeekDescription { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public WageUnit WageUnit { get; set; }
+        public WageUnit? WageUnit { get; set; }
         public long? WageAmount { get; set; }
         public int Duration { get; set; }
     }

@@ -63,7 +63,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
             var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
-            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
+            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit?.GetDisplayName() : source.DurationUnit;
 
             var sourceLocation = source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;
 
@@ -104,8 +104,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageAmountLowerBound = source.WageAmountLowerBound,
                 WageAmountUpperBound = source.WageAmountUpperBound,
                 WageText = source.WageText,
-                WageUnit = source.Wage != null ? 4 : source.WageUnit,//Always annual for v2 TODO look at removing
-                WageType = source.Wage != null ? (int)source.Wage.WageType : source.WageType,
+                WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
+                WageType = source.Wage != null && source.Wage.WageType.HasValue ? (int)source.Wage.WageType : source.WageType ?? 0,
                 WorkingWeek = source.WorkingWeek ?? source.Wage.WorkingWeekDescription,
                 Distance = source.Distance ?? (decimal)distance,
                 Score = source.Score,
