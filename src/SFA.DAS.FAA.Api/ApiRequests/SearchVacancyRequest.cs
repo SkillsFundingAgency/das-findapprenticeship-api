@@ -40,4 +40,7 @@ public class SearchVacancyRequest
     public VacancySort? Sort  { get; set; } = VacancySort.AgeDesc;
     [FromQuery]
     public bool DisabilityConfident { get; set; }
+    [FromQuery]
+    public List<AdditionalDataSource> AdditionalDataSources { get; set; } = null;
+
 }

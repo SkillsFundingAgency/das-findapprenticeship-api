@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
+using SFA.DAS.FAA.Data.Extensions;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
@@ -75,7 +76,18 @@ public static class AzureSearchOptionExtensions
 
     public static SearchOptions BuildFilters(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
-        List<string> searchFilters = new() { "VacancySource eq 'RAA'" };
+        List<string> searchFilters = new();
+
+        if (findVacanciesModel.AdditionalDataSources != null && findVacanciesModel.AdditionalDataSources.Count != 0)
+        {
+            var sourceClauses = new List<string> { "VacancySource eq 'RAA'" };
+            findVacanciesModel.AdditionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
+        }
+        else
+        {
+            searchFilters.Add("VacancySource eq 'RAA'");
+        }
 
         if (findVacanciesModel.Ukprn.HasValue)
         {
