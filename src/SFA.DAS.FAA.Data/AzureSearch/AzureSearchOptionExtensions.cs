@@ -134,11 +134,11 @@ public static class AzureSearchOptionExtensions
         {
             if (findVacanciesModel.NationWideOnly == true)
             {
-                searchFilters.Add("VacancyLocationType eq National");
+                searchFilters.Add("VacancyLocationType eq 'National'");
             }
             else
             {
-                searchFilters.Add("VacancyLocationType eq NonNational");
+                searchFilters.Add("VacancyLocationType eq 'NonNational'");
             }
         }
 
