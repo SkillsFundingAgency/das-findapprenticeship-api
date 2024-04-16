@@ -8,8 +8,10 @@ using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
@@ -32,6 +34,24 @@ namespace SFA.DAS.FAA.Api.Controllers
 
             var apiResponse = (GetApprenticeshipVacancyDetailResponse)result.ApprenticeshipVacancy;
 
+            return Ok(apiResponse);
+        }
+
+        [HttpGet]
+        [Route("multiple")]
+        public async Task<IActionResult> GetByVacancyReferences([FromQuery] List<string> vacancyReferences)
+        {
+            if (searchSource != SearchSource.AzureSearch)
+            {
+                throw new InvalidOperationException("Multi-reference query is only supported in x-version 2.0");
+            }
+
+            var result = await mediator.Send(new GetApprenticeshipVacanciesByReferenceQuery
+            {
+                VacancyReferences = vacancyReferences
+            });
+
+            var apiResponse = (GetApprenticeshipVacanciesByReferenceApiResponse) result;
             return Ok(apiResponse);
         }
 
