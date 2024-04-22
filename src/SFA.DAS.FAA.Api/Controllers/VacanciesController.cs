@@ -37,9 +37,9 @@ namespace SFA.DAS.FAA.Api.Controllers
             return Ok(apiResponse);
         }
 
-        [HttpGet]
-        [Route("multiple")]
-        public async Task<IActionResult> GetByVacancyReferences([FromQuery] List<string> vacancyReferences)
+        [HttpPost]
+        [Route("")]
+        public async Task<IActionResult> GetByVacancyReferences([FromBody] GetVacanciesByReferenceRequest request)
         {
             if (searchSource != SearchSource.AzureSearch)
             {
@@ -48,7 +48,7 @@ namespace SFA.DAS.FAA.Api.Controllers
 
             var result = await mediator.Send(new GetApprenticeshipVacanciesByReferenceQuery
             {
-                VacancyReferences = vacancyReferences
+                VacancyReferences = request.VacancyReferences
             });
 
             var apiResponse = (GetApprenticeshipVacanciesByReferenceApiResponse) result;
