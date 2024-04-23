@@ -42,7 +42,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             query.Source = SearchSource.AzureSearch;
 
             mockRepository
-                .Setup(repository => repository.Count())
+                .Setup(repository => repository.Count(query.AdditionalDataSources))
                 .ReturnsAsync(vacancyCount);
 
             var result = await handler.Handle(query, CancellationToken.None);

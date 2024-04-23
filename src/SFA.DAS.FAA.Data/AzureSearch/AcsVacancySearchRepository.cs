@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
@@ -27,8 +28,8 @@ public class AcsVacancySearchRepository : IAcsVacancySearchRepository
         return await _searchHelper.Get(vacancyReference);
     }
 
-    public async Task<int> Count()
+    public async Task<int> Count(List<AdditionalDataSource> additionalDataSources)
     {
-        return await _searchHelper.Count();
+        return await _searchHelper.Count(additionalDataSources);
     }
 }

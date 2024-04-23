@@ -24,7 +24,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
             }
             else
             {
-                return await _acsVacancySearchRepository.Count();
+                return await _acsVacancySearchRepository.Count(request.AdditionalDataSources);
             }
         }
     }

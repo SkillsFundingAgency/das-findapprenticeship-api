@@ -74,6 +74,26 @@ public static class AzureSearchOptionExtensions
         return searchOptions;
     }
 
+    public static SearchOptions BuildFiltersForTotalCount(this SearchOptions searchOptions, List<AdditionalDataSource> additionalDataSources)
+    {
+        List<string> searchFilters = new();
+
+        if (additionalDataSources != null && additionalDataSources.Count != 0)
+        {
+            var sourceClauses = new List<string> { "VacancySource eq 'RAA'" };
+            additionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
+        }
+        else
+        {
+            searchFilters.Add("VacancySource eq 'RAA'");
+        }
+
+        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+        searchOptions.IncludeTotalCount = true;
+        return searchOptions;
+    }
+
     public static SearchOptions BuildFilters(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
         List<string> searchFilters = new();
