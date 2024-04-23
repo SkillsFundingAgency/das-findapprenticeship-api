@@ -29,7 +29,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetApprenticeshipVacancyCountQuery>(query =>
-                        query.Source == SearchSource.AzureSearch),
+                        query.Source == SearchSource.AzureSearch && query.AdditionalDataSources == request.AdditionalDataSources),
                     It.IsAny<CancellationToken>()))
 
                 .ReturnsAsync(mediatorResult);
