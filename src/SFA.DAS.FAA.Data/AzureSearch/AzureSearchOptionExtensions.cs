@@ -74,19 +74,39 @@ public static class AzureSearchOptionExtensions
         return searchOptions;
     }
 
+    public static SearchOptions BuildFiltersForTotalCount(this SearchOptions searchOptions, List<AdditionalDataSource> additionalDataSources)
+    {
+        List<string> searchFilters = new();
+
+        if (additionalDataSources != null && additionalDataSources.Count != 0)
+        {
+            var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
+            additionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
+        }
+        else
+        {
+            searchFilters.Add(AzureSearchConstants.VacancySourceEqualsRaa);
+        }
+
+        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+        searchOptions.IncludeTotalCount = true;
+        return searchOptions;
+    }
+
     public static SearchOptions BuildFilters(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
         List<string> searchFilters = new();
 
         if (findVacanciesModel.AdditionalDataSources != null && findVacanciesModel.AdditionalDataSources.Count != 0)
         {
-            var sourceClauses = new List<string> { "VacancySource eq 'RAA'" };
+            var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
             findVacanciesModel.AdditionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
             searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
         }
         else
         {
-            searchFilters.Add("VacancySource eq 'RAA'");
+            searchFilters.Add(AzureSearchConstants.VacancySourceEqualsRaa);
         }
 
         if (findVacanciesModel.Ukprn.HasValue)

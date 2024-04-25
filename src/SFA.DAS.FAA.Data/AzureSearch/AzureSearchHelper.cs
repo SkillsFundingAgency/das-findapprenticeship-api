@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -49,7 +50,9 @@ public class AzureSearchHelper : IAzureSearchHelper
         var searchTerm = BuildSearchTerm(findVacanciesModel.SearchTerm);
 
         var searchResultsTask = _searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
-        var totalVacanciesCountTask = _searchClient.GetDocumentCountAsync();
+
+        var totalCountSearchOptions = new SearchOptions().BuildFiltersForTotalCount(findVacanciesModel.AdditionalDataSources);
+        var totalVacanciesCountTask = _searchClient.SearchAsync<SearchDocument>("*", totalCountSearchOptions);
 
         await Task.WhenAll(searchResultsTask, totalVacanciesCountTask);
 
@@ -67,7 +70,7 @@ public class AzureSearchHelper : IAzureSearchHelper
             ApprenticeshipVacancies = result.Select(c => c)
                 .ToList(),
             TotalFound = Convert.ToInt32(searchResults.Value.TotalCount),
-            Total = Convert.ToInt32(totalVacanciesCount)
+            Total = Convert.ToInt32(totalVacanciesCount.Value.TotalCount)
         };
     }
 
@@ -78,10 +81,11 @@ public class AzureSearchHelper : IAzureSearchHelper
         return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
     }
 
-    public async Task<int> Count()
+    public async Task<int> Count(List<AdditionalDataSource> additionalDataSources)
     {
-        var count = await _searchClient.GetDocumentCountAsync();
-        return Convert.ToInt32(count);
+        var totalCountSearchOptions = new SearchOptions().BuildFiltersForTotalCount(additionalDataSources);
+        var count = await _searchClient.SearchAsync<SearchDocument>("*", totalCountSearchOptions);
+        return Convert.ToInt32(count.Value.TotalCount);
     }
 
     public string BuildSearchTerm(string? searchTerm)

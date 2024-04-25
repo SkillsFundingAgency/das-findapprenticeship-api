@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
 
@@ -7,5 +8,5 @@ public interface IAzureSearchHelper
 {
     Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
     Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
-    Task<int> Count();
+    Task<int> Count(List<AdditionalDataSource> additionalDataSources);
 }
