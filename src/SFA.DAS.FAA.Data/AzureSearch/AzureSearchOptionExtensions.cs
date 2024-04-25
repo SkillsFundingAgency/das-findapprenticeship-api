@@ -106,7 +106,9 @@ public static class AzureSearchOptionExtensions
 
         if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Count != 0)
         {
-            findVacanciesModel.StandardLarsCode.ForEach(larsCode => searchFilters.Add(($"Course/any(c: c/LarsCode eq {larsCode})")));
+            var larsCodeClauses = new List<string>();
+            findVacanciesModel.StandardLarsCode.ForEach(larsCode => larsCodeClauses.Add($"Course/LarsCode eq {larsCode}"));
+            searchFilters.Add($"({string.Join(" or ", [.. larsCodeClauses])})");
         }
 
         if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Count != 0)
