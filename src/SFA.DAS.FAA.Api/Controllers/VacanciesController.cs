@@ -102,7 +102,8 @@ namespace SFA.DAS.FAA.Api.Controllers
             {
                 var result = await mediator.Send(new GetApprenticeshipVacancyCountQuery
                 {
-                    Source = searchSource
+                    Source = searchSource,
+                    AdditionalDataSources = request.AdditionalDataSources
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
             }
