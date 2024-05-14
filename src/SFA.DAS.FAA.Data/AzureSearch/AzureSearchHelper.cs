@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -79,6 +80,29 @@ public class AzureSearchHelper : IAzureSearchHelper
         vacancyReference = vacancyReference.Replace("VAC", "", StringComparison.CurrentCultureIgnoreCase);
         var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
         return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
+    }
+
+    public async Task<List<ApprenticeshipSearchItem>> Get(List<string> vacancyReferences)
+    {
+        var filters = new StringBuilder();
+        var count = 0;
+
+        foreach (var reference in vacancyReferences)
+        {
+            if (count > 0)
+                filters.Append(" or ");
+
+            count++;
+            filters.Append($"VacancyReference eq '{reference}'");
+        }
+
+        var searchOptions = new SearchOptions { Filter = filters.ToString() };
+        var searchResults = await _searchClient.SearchAsync<SearchDocument>("*", searchOptions);
+        var results = searchResults.Value.GetResults()
+            .Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString()))
+            .ToList();
+
+        return results;
     }
 
     public async Task<int> Count(List<AdditionalDataSource> additionalDataSources)
