@@ -167,7 +167,7 @@ public static class AzureSearchOptionExtensions
         if (findVacanciesModel.PostedInLastNumberOfDays.HasValue)
         {
             var numberOfDays = Convert.ToDouble(findVacanciesModel.PostedInLastNumberOfDays);
-            searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays)}");
+            searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays):O}");
         }
 
         if (findVacanciesModel.DisabilityConfident != false)
