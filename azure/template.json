@@ -66,7 +66,15 @@
         },
         "tenant": {
             "type": "string"
+        },
+        "healthCheckPath": {
+            "type": "string",
+            "allowedValues": [
+                "/health",
+                "/ping"
+            ]
         }
+
     },
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
