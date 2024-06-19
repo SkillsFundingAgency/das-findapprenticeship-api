@@ -48,17 +48,8 @@
         "keyVaultCertificateName": {
             "type": "string"
         },
-        "sharedBackEndAppServicePlanName": {
-            "type": "string"
-        },
-        "sharedBackEndSubnetResourceId": {
-            "type": "string"
-        },
         "backEndAccessRestrictions": {
             "type": "array"
-        },
-        "sharedAiSearchName": {
-            "type": "string"
         },
         "utcValue": {
             "type": "string",
@@ -66,6 +57,32 @@
         },
         "tenant": {
             "type": "string"
+        },
+        "azureSearchResourceGroup": {
+            "type": "string"
+        },
+        "azureSearchName": {
+            "type": "string"
+        },
+        "aspSize": {
+            "type": "string",
+            "defaultValue": "1"
+        },
+        "aspInstances": {
+            "type": "int",
+            "defaultValue": 1
+        },
+        "sharedEnvVirtualNetworkName": {
+            "type": "string"
+        },
+        "subnetObject": {
+            "type": "object"
+        },
+        "subnetServiceEndpointList": {
+            "type": "array"
+        },
+        "subnetDelegations": {
+            "type": "array"
         }
     },
     "variables": {
@@ -73,6 +90,7 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "apiAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
+        "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]",
         "configNames": "SFA.DAS.FindApprenticeships.Api"
     },
     "resources": [
@@ -83,6 +101,66 @@
             "location": "[parameters('resourceGroupLocation')]",
             "tags": "[parameters('tags')]",
             "properties": {}
+        },
+        {
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('subnetObject').name, '-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('sharedEnvVirtualNetworkName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetObject').name]"
+                    },
+                    "subnetAddressPrefix": {
+                        "value": "[parameters('subnetObject').addressSpace]"
+                    },
+                    "serviceEndpointList": {
+                        "value": "[parameters('subnetServiceEndpointList')]"
+                    },
+                    "delegations": {
+                        "value": "[parameters('subnetDelegations')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('resourceGroupName')]"
+            ]
+        },
+        {
+            "apiVersion": "2021-04-01",
+            "name": "[concat(variables('apiAppServiceName'), '-app-service-plan-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServicePlanName": {
+                        "value": "[variables('appServicePlanName')]"
+                    },
+                    "aspSize": {
+                        "value": "[parameters('aspSize')]"
+                    },
+                    "aspInstances": {
+                        "value": "[parameters('aspInstances')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('resourceGroupName')]"
+            ]
         },
         {
             "apiVersion": "2021-04-01",
@@ -154,13 +232,13 @@
                         "value": "[variables('apiAppServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('sharedBackEndAppServicePlanName')]"
+                        "value": "[variables('appServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
                         "value": "[parameters('sharedEnvResourceGroup')]"
                     },
                     "subnetResourceId": {
-                        "value": "[parameters('sharedBackEndSubnetResourceId')]"
+                        "value": "[reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.subnetResourceId.value]"
                     },
                     "appServiceAppSettings": {
                         "value": {
@@ -214,31 +292,10 @@
                         "value": "[parameters('backEndAccessRestrictions')]"
                     }
                 }
-            }
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[concat('role-assignment-', variables('apiAppServiceName'), '-', parameters('utcValue'))]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'role-assignments/role-assignment-ai-search.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "principalId": {
-                        "value": "[reference(concat(variables('apiAppServiceName'), '-', parameters('utcValue'))).outputs.managedServiceIdentityId.value]"
-                    },
-                    "assignmentType": {
-                        "value": "SearchIndexDataReader"
-                    },
-                    "resourceName": {
-                        "value": "[parameters('sharedAiSearchName')]"
-                    }
-                }
-            }
+            },
+            "dependsOn": [
+                "[concat(variables('apiAppServiceName'), '-app-service-plan-', parameters('utcValue'))]"
+            ]
         }
     ],
     "outputs": {
@@ -249,6 +306,18 @@
         "ApiAppServiceName": {
             "type": "string",
             "value": "[variables('apiAppServiceName')]"
+        },
+        "AzureSearchResource": {
+            "type": "string",
+            "value": "[concat('https://', parameters('tenant'), '/', parameters('azureSearchName'))]"
+        },
+        "AzureSearchBaseUrl": {
+            "type": "string",
+            "value": "[concat('https://', parameters('azureSearchName'), '.search.windows.net')]"
+        },
+        "AzureSearchQueryKey": {
+            "type": "string",
+            "value": "[listQueryKeys(resourceId(parameters('logAnalyticsSubscriptionId'), parameters('azureSearchResourceGroup'), 'Microsoft.Search/searchServices', parameters('azureSearchName')), '2015-08-19').value[0].key]"
         }
     }
 }
