@@ -48,12 +48,6 @@
         "keyVaultCertificateName": {
             "type": "string"
         },
-        "sharedBackEndAppServicePlanName": {
-            "type": "string"
-        },
-        "sharedBackEndSubnetResourceId": {
-            "type": "string"
-        },
         "backEndAccessRestrictions": {
             "type": "array"
         },
@@ -242,13 +236,13 @@
                         "value": "[variables('apiAppServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('sharedBackEndAppServicePlanName')]"
+                        "value": "[variables('appServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
                         "value": "[parameters('sharedEnvResourceGroup')]"
                     },
                     "subnetResourceId": {
-                        "value": "[parameters('sharedBackEndSubnetResourceId')]"
+                        "value": "[reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.subnetResourceId.value]"
                     },
                     "appServiceAppSettings": {
                         "value": {
