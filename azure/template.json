@@ -75,6 +75,10 @@
             "type": "int",
             "defaultValue": 1
         },
+        "nonASETier": {
+            "type": "string",
+            "defaultValue": "PremiumV2"
+        },
         "sharedEnvVirtualNetworkName": {
             "type": "string"
         },
@@ -158,6 +162,9 @@
                     },
                     "aspInstances": {
                         "value": "[parameters('aspInstances')]"
+                    },
+                    "nonASETier": {
+                        "value": "[parameters('nonASETier')]"
                     }
                 }
             },
