@@ -15,6 +15,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             public string EmployerName { get; set; }
             public string Title { get; set; }
             public DateTime ClosingDate { get; set; }
+            public string City { get; set; }
+            public string Postcode { get; set; }
+            public string ApplicationUrl { get; set; }
         }
 
         public static implicit operator GetApprenticeshipVacanciesByReferenceApiResponse(
@@ -28,6 +31,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                     VacancyReference = x.VacancyReference,
                     Title = x.Title,
                     ClosingDate = x.ClosingDate,
+                    City = x.City,
+                    Postcode = x.Postcode,
+                    ApplicationUrl = x.ApplicationUrl
                 })
             };
         }

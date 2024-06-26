@@ -23,6 +23,9 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
             public string EmployerName { get; set; }
             public string Title { get; set; }
             public DateTime ClosingDate { get; set; }
+            public string City { get; set; }
+            public string Postcode { get; set; }
+            public string ApplicationUrl { get; set; }
         }
     }
 
@@ -41,6 +44,10 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
                         VacancyReference = x.VacancyReference,
                         Title = x.Title,
                         ClosingDate = x.ClosingDate,
+                        City = x.Address.AddressLine4,
+                        Postcode = x.Address.Postcode,
+                        ApplicationUrl = x.ApplicationUrl
+
                     }).ToList()
             };
         }
