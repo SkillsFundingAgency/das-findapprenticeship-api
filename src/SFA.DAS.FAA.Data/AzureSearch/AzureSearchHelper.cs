@@ -127,6 +127,6 @@ public class AzureSearchHelper : IAzureSearchHelper
         {
             searchTerm = searchTerm.Substring(0, searchTerm.Length - 1);
         }
-        return string.IsNullOrEmpty(searchTerm) ? "*" : $"\"{searchTerm}*\"";
+        return string.IsNullOrEmpty(searchTerm) ? "*" : $"{searchTerm}*";
     }
 }
