@@ -62,6 +62,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string ApplicationUrl { get; set; }
         public string AdditionalQuestion1 { get; set; }
         public string AdditionalQuestion2 { get; set; }
+        public string? AdditionalTrainingDescription { get; set; }
         public string VacancySource { get; set; }
     }
     
@@ -103,5 +104,6 @@ namespace SFA.DAS.FAA.Domain.Entities
         public WageUnit? WageUnit { get; set; }
         public long? WageAmount { get; set; }
         public int Duration { get; set; }
+        public string? CompanyBenefitsInformation { get; set; }
     }
 }

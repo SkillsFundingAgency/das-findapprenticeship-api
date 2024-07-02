@@ -88,7 +88,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ApplicationMethod = source.ApplicationMethod,
                 ApplicationUrl = source.ApplicationUrl,
                 AdditionalQuestion1 = source.AdditionalQuestion1,
-                AdditionalQuestion2 = source.AdditionalQuestion2
+                AdditionalQuestion2 = source.AdditionalQuestion2,
+                AdditionalTrainingDescription = source.AdditionalTrainingDescription,
+                CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation
             };
         }
 
