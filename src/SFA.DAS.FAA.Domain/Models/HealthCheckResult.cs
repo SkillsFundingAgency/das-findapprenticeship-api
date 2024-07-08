@@ -3,6 +3,7 @@
     public enum HealthCheckResult
     {
         Healthy = 0,
-        UnHealthy = 1
+        UnHealthy = 1,
+        Degraded = 2
     }
 }

@@ -22,8 +22,8 @@ namespace SFA.DAS.FAA.Data.UnitTests.AzureCognitiveSearchRepository
         [MoqInlineAutoData(0, HealthCheckResult.Healthy)]
         [MoqInlineAutoData(-30, HealthCheckResult.Healthy)]
         [MoqInlineAutoData(-59, HealthCheckResult.Healthy)]
-        [MoqInlineAutoData(-180, HealthCheckResult.UnHealthy)]
-        [MoqInlineAutoData(-61, HealthCheckResult.UnHealthy)]
+        [MoqInlineAutoData(-180, HealthCheckResult.Degraded)]
+        [MoqInlineAutoData(-61, HealthCheckResult.Degraded)]
         public async Task Then_Returns_HealthCheckResult(
             double minutes,
             HealthCheckResult expectedResult,
@@ -56,7 +56,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.AzureCognitiveSearchRepository
 
             using (new AssertionScope())
             {
-                actual.Should().Be(HealthCheckResult.UnHealthy);
+                actual.Should().Be(HealthCheckResult.Degraded);
             }
         }
     }

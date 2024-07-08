@@ -94,7 +94,9 @@ namespace SFA.DAS.FAA.Api
             {
                 services
                     .AddHealthChecks()
-                    .AddCheck<AzureSearchHealthCheck>("Azure search re-indexing health", failureStatus: HealthStatus.Unhealthy, tags: new[] { "ready" }); ;
+                    .AddCheck<AzureSearchHealthCheck>("Azure search re-indexing health",
+                        failureStatus: HealthStatus.Degraded, tags: new[] {"ready"});
+                
             }
 
             services.AddMediatR(_ => _.RegisterServicesFromAssembly(typeof(SearchApprenticeshipVacanciesQuery).Assembly));

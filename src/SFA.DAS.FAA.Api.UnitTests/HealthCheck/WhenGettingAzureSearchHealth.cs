@@ -20,24 +20,24 @@ namespace SFA.DAS.FAA.Api.UnitTests.HealthCheck
             AzureSearchHealthCheck healthCheck)
         {
             acsVacancySearchRepository.Setup(x => x.GetHealthCheckStatus(CancellationToken.None))
-                .ReturnsAsync(Domain.Models.HealthCheckResult.UnHealthy);
-
-            var actual = await healthCheck.CheckHealthAsync(context);
-
-            actual.Status.Should().Be(HealthStatus.Unhealthy);
-        }
-        [Test, MoqAutoData]
-        public async Task Then_UnHealthy_Returned_If_Returns_UnHealthy_From_Repository(
-            HealthCheckContext context,
-            [Frozen] Mock<IAcsVacancySearchRepository> acsVacancySearchRepository,
-            AzureSearchHealthCheck healthCheck)
-        {
-            acsVacancySearchRepository.Setup(x => x.GetHealthCheckStatus(CancellationToken.None))
                 .ReturnsAsync(Domain.Models.HealthCheckResult.Healthy);
 
             var actual = await healthCheck.CheckHealthAsync(context);
 
             actual.Status.Should().Be(HealthStatus.Healthy);
+        }
+        [Test, MoqAutoData]
+        public async Task Then_Degraded_Returned_If_Returns_Degraded_From_Repository(
+            HealthCheckContext context,
+            [Frozen] Mock<IAcsVacancySearchRepository> acsVacancySearchRepository,
+            AzureSearchHealthCheck healthCheck)
+        {
+            acsVacancySearchRepository.Setup(x => x.GetHealthCheckStatus(CancellationToken.None))
+                .ReturnsAsync(Domain.Models.HealthCheckResult.Degraded);
+
+            var actual = await healthCheck.CheckHealthAsync(context);
+
+            actual.Status.Should().Be(HealthStatus.Degraded);
         }
     }
 }

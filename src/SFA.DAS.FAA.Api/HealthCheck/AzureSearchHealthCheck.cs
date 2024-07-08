@@ -15,7 +15,7 @@ namespace SFA.DAS.FAA.Api.HealthCheck
 
             return result == Domain.Models.HealthCheckResult.Healthy 
                 ? HealthCheckResult.Healthy(HealthCheckResultDescription) 
-                : HealthCheckResult.Unhealthy(HealthCheckResultDescription);
+                : HealthCheckResult.Degraded(HealthCheckResultDescription);
         }
     }
 }

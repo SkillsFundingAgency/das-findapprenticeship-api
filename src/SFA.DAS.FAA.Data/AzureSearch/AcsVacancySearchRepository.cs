@@ -49,13 +49,13 @@ public class AcsVacancySearchRepository : IAcsVacancySearchRepository
 
             if (indexCreatedDateTime < DateTime.UtcNow.AddHours(-1))
             {
-                return HealthCheckResult.UnHealthy;
+                return HealthCheckResult.Degraded;
             }
         }
         catch (Exception ex)
         {
             _logger.LogError("Unable to communicate with Azure search. Details: {details}", ex.Message);
-            return HealthCheckResult.UnHealthy;
+            return HealthCheckResult.Degraded;
         }
 
         return HealthCheckResult.Healthy;
