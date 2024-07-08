@@ -18,6 +18,8 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
         }
         public async Task<int> Handle(GetApprenticeshipVacancyCountQuery request, CancellationToken cancellationToken)
         {
+            var result = await _acsVacancySearchRepository.GetHealthCheckStatus(cancellationToken);
+
             if (request.Source == SearchSource.Elastic)
             {
                 return await _vacancySearchRepository.Count();

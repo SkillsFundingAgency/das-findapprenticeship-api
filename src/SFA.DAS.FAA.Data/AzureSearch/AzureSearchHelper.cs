@@ -1,24 +1,27 @@
+using Azure.Core.Serialization;
+using Azure.Identity;
+using Azure.Search.Documents;
+using Azure.Search.Documents.Indexes;
+using Azure.Search.Documents.Models;
+using SFA.DAS.FAA.Domain.Configuration;
+using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Interfaces;
+using SFA.DAS.FAA.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
-using Azure.Core.Serialization;
-using Azure.Identity;
-using Azure.Search.Documents;
-using Azure.Search.Documents.Models;
-using SFA.DAS.FAA.Domain.Configuration;
-using SFA.DAS.FAA.Domain.Entities;
-using SFA.DAS.FAA.Domain.Interfaces;
-using SFA.DAS.FAA.Domain.Models;
+using SFA.DAS.FAA.Domain.Constants;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
 public class AzureSearchHelper : IAzureSearchHelper
 {
-    private const string IndexName = "apprenticeships";
     private readonly SearchClient _searchClient;
+    private readonly SearchIndexClient _searchIndexerClient;
 
     public AzureSearchHelper(FindApprenticeshipsApiConfiguration configuration)
     {
@@ -35,9 +38,11 @@ public class AzureSearchHelper : IAzureSearchHelper
 
         _searchClient = new SearchClient(
             new Uri(configuration.AzureSearchBaseUrl), 
-            IndexName, 
+            AzureSearchIndex.IndexName, 
             new DefaultAzureCredential(), 
             clientOptions);
+
+        _searchIndexerClient = new SearchIndexClient(new Uri(configuration.AzureSearchBaseUrl), new DefaultAzureCredential());
     }
     public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)
     {
@@ -103,6 +108,12 @@ public class AzureSearchHelper : IAzureSearchHelper
             .ToList();
 
         return results;
+    }
+
+    public async Task<string> GetIndexName(CancellationToken cancellationToken)
+    {
+        var result = await _searchIndexerClient.GetIndexAsync(AzureSearchIndex.IndexName, cancellationToken);
+        return result.Value.Name;
     }
 
     public async Task<int> Count(List<AdditionalDataSource> additionalDataSources)
