@@ -10,7 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="Azure.Identity" Version="1.11.0" />
-      <PackageReference Include="Azure.Search.Documents" Version="11.5.1" />
+      <PackageReference Include="Azure.Search.Documents" Version="11.5.0-beta.5" />
       <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
       <PackageReference Include="Microsoft.Azure.Core.Spatial" Version="1.1.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
