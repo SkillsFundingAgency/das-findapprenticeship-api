@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using SFA.DAS.FAA.Domain.Entities;
+﻿using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Domain.Interfaces;
 public interface IAzureSearchHelper
@@ -10,4 +11,5 @@ public interface IAzureSearchHelper
     Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
     Task<int> Count(List<AdditionalDataSource> additionalDataSources);
     Task<List<ApprenticeshipSearchItem>> Get(List<string> vacancyReferences);
+    Task<string> GetIndexName(CancellationToken cancellationToken);
 }

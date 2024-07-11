@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,8 +13,13 @@ using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.FAA.Api.AppStart;
+using SFA.DAS.FAA.Api.HealthCheck;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json.Serialization;
 
 namespace SFA.DAS.FAA.Api
 {
@@ -90,7 +92,11 @@ namespace SFA.DAS.FAA.Api
 
             if (_configuration["Environment"] != "DEV")
             {
-                services.AddHealthChecks();
+                services
+                    .AddHealthChecks()
+                    .AddCheck<AzureSearchHealthCheck>("Azure search re-indexing health",
+                        failureStatus: HealthStatus.Degraded, tags: new[] {"ready"});
+                
             }
 
             services.AddMediatR(_ => _.RegisterServicesFromAssembly(typeof(SearchApprenticeshipVacanciesQuery).Assembly));
