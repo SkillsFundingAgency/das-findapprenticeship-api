@@ -43,17 +43,13 @@ public class AcsVacancySearchRepository : IAcsVacancySearchRepository
         {
             var indexName = await _searchHelper.GetIndexName(cancellationToken);
 
-            _logger.LogInformation("Search Index name retrieved:{indexName}", indexName);
             var indexCreatedDateTime = DateTime.ParseExact(
                 indexName.Replace($"{AzureSearchIndex.IndexName}-", string.Empty),
                 "yyyy-MM-dd-HH-mm",
                 CultureInfo.InvariantCulture);
 
-            _logger.LogInformation("Search Index name created date time :{indexCreatedDateTime}", indexCreatedDateTime);
-
             if (indexCreatedDateTime < DateTime.UtcNow.AddHours(-1))
             {
-                _logger.LogInformation("Search Index date time :{dateTime}", DateTime.UtcNow.AddHours(-1).ToString("O"));
                 return HealthCheckResult.Degraded;
             }
         }
