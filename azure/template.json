@@ -87,7 +87,7 @@
         }
     },
     "variables": {
-        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
+        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/DASD-11224-update-ai-search-roles/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "apiAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
@@ -317,7 +317,7 @@
                         "value": "[reference(concat(variables('apiAppServiceName'), '-', parameters('utcValue'))).outputs.managedServiceIdentityId.value]"
                     },
                     "assignmentType": {
-                        "value": "SearchIndexDataReader"
+                        "value": "AiSearchIndexReader"
                     },
                     "resourceName": {
                         "value": "[parameters('sharedAiSearchName')]"
