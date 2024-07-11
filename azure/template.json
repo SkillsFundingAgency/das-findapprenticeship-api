@@ -317,7 +317,7 @@
                         "value": "[reference(concat(variables('apiAppServiceName'), '-', parameters('utcValue'))).outputs.managedServiceIdentityId.value]"
                     },
                     "assignmentType": {
-                        "value": "SearchIndexDataReader"
+                        "value": "AiSearchIndexReader"
                     },
                     "resourceName": {
                         "value": "[parameters('sharedAiSearchName')]"
