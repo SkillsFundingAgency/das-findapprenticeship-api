@@ -23,6 +23,29 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
             public string EmployerName { get; set; }
             public string Title { get; set; }
             public DateTime ClosingDate { get; set; }
+            public string ApplicationUrl { get; set; }
+            public Address Address { get; set; }
+        }
+
+        public class Address
+        {
+            public string AddressLine1 { get; set; }
+            public string AddressLine2 { get; set; }
+            public string AddressLine3 { get; set; }
+            public string AddressLine4 { get; set; }
+            public string Postcode { get; set; }
+
+            public static implicit operator Address(Domain.Entities.Address source)
+            {
+                return new Address
+                {
+                    AddressLine4 = source.AddressLine4,
+                    AddressLine3 = source.AddressLine3,
+                    AddressLine2 = source.AddressLine2,
+                    AddressLine1 = source.AddressLine1,
+                    Postcode = source.Postcode
+                };
+            }
         }
     }
 
@@ -41,6 +64,9 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
                         VacancyReference = x.VacancyReference,
                         Title = x.Title,
                         ClosingDate = x.ClosingDate,
+                        Address = x.Address,
+                        ApplicationUrl = x.ApplicationUrl
+
                     }).ToList()
             };
         }
