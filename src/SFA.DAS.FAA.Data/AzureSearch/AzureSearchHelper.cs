@@ -22,6 +22,9 @@ public class AzureSearchHelper : IAzureSearchHelper
 {
     private readonly SearchClient _searchClient;
     private readonly SearchIndexClient _searchIndexerClient;
+    private const int MaxRetries = 2;
+    private readonly TimeSpan _networkTimeout = TimeSpan.FromSeconds(1);
+    private readonly TimeSpan _delay = TimeSpan.FromMilliseconds(100);
 
     public AzureSearchHelper(FindApprenticeshipsApiConfiguration configuration)
     {
@@ -39,7 +42,23 @@ public class AzureSearchHelper : IAzureSearchHelper
         _searchClient = new SearchClient(
             new Uri(configuration.AzureSearchBaseUrl), 
             AzureSearchIndex.IndexName, 
-            new DefaultAzureCredential(), 
+            new ChainedTokenCredential(
+                new ManagedIdentityCredential(options: new TokenCredentialOptions
+                {
+                    Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
+                }),
+                new AzureCliCredential(options: new AzureCliCredentialOptions
+                {
+                    Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
+                }),
+                new VisualStudioCredential(options: new VisualStudioCredentialOptions
+                {
+                    Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
+                }),
+                new VisualStudioCodeCredential(options: new VisualStudioCodeCredentialOptions()
+                {
+                    Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
+                })), 
             clientOptions);
 
         _searchIndexerClient = new SearchIndexClient(new Uri(configuration.AzureSearchBaseUrl), new DefaultAzureCredential());
@@ -52,6 +71,8 @@ public class AzureSearchHelper : IAzureSearchHelper
             .BuildFilters(findVacanciesModel)
             .BuildSearch(findVacanciesModel);
         searchOptions.IncludeTotalCount = true;
+        searchOptions.SearchMode = SearchMode.All;
+        searchOptions.QueryType = SearchQueryType.Simple;
 
         var searchTerm = BuildSearchTerm(findVacanciesModel.SearchTerm);
 
@@ -131,7 +152,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         }
         if (searchTerm.Contains(' '))
         {
-            return $"'{searchTerm}'*";
+            return $"{searchTerm}";
         }
         return $"{searchTerm}*";
     }
