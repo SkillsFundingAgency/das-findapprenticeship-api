@@ -15,6 +15,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Primitives;
 using SFA.DAS.FAA.Domain.Constants;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
@@ -152,7 +153,15 @@ public class AzureSearchHelper : IAzureSearchHelper
         }
         if (searchTerm.Contains(' '))
         {
-            return $"{searchTerm}";
+            var searchTermArray = searchTerm.Split(' ');
+            var newSearch = new StringBuilder();
+            foreach (var s in searchTermArray)
+            {
+                newSearch.Append('+');
+                newSearch.Append(s);
+                newSearch.Append('*');
+            }
+            return newSearch.ToString();
         }
         return $"{searchTerm}*";
     }
