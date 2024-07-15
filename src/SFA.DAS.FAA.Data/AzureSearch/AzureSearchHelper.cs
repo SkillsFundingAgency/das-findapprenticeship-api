@@ -55,7 +55,7 @@ public class AzureSearchHelper : IAzureSearchHelper
 
         var searchTerm = BuildSearchTerm(findVacanciesModel.SearchTerm);
 
-        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>($"'{searchTerm}'", searchOptions);
+        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
 
         var totalCountSearchOptions = new SearchOptions().BuildFiltersForTotalCount(findVacanciesModel.AdditionalDataSources);
         var totalVacanciesCountTask = _searchClient.SearchAsync<SearchDocument>("*", totalCountSearchOptions);
@@ -125,6 +125,14 @@ public class AzureSearchHelper : IAzureSearchHelper
 
     private string BuildSearchTerm(string? searchTerm)
     {
-        return string.IsNullOrEmpty(searchTerm) ? "*" : $"{searchTerm}*";
+        if (string.IsNullOrEmpty(searchTerm))
+        {
+            return "*";
+        }
+        if (searchTerm.Contains(' '))
+        {
+            return $"'{searchTerm}'*";
+        }
+        return $"{searchTerm}*";
     }
 }
