@@ -15,6 +15,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure;
 using Microsoft.Extensions.Primitives;
 using SFA.DAS.FAA.Domain.Constants;
 
@@ -105,8 +106,15 @@ public class AzureSearchHelper : IAzureSearchHelper
     public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
     {
         vacancyReference = vacancyReference.Replace("VAC", "", StringComparison.CurrentCultureIgnoreCase);
-        var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
-        return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
+        try
+        {
+            var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
+            return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
+        }
+        catch (RequestFailedException)
+        {
+            return null;
+        }
     }
 
     public async Task<List<ApprenticeshipSearchItem>> Get(List<string> vacancyReferences)
