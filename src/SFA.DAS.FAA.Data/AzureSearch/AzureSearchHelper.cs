@@ -123,9 +123,9 @@ public class AzureSearchHelper : IAzureSearchHelper
             filters.Append($"VacancyReference eq '{reference}'");
         }
 
-        var searchOptions = new SearchOptions { Filter = filters.ToString() };
+        var searchOptions = new SearchOptions { Filter = filters.ToString(),QueryType = SearchQueryType.Full, Size = 500};
         var searchResults = await _searchClient.SearchAsync<SearchDocument>("*", searchOptions);
-        var results = searchResults.Value.GetResults()
+        var results = searchResults.Value.GetResults().ToList()
             .Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString()))
             .ToList();
 
