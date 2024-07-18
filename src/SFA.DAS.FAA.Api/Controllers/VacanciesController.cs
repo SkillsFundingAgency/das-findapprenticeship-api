@@ -107,7 +107,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
             }

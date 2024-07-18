@@ -19,9 +19,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 
         public static implicit operator GetApprenticeshipVacancyDetailResponse(ApprenticeshipVacancyItem source)
         {
-            var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
-            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
-
             var sourceLocation = source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;
 
             var distance = source.Distance ?? (source.SearchGeoPoint != null ? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat) : 0);
@@ -73,9 +70,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ThingsToConsider = source.ThingsToConsider,
                 Skills = source.Skills,
                 Qualifications = source.Qualifications.Select(c => (Qualification)c).ToList(),
-                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration)
-                    ? source.ExpectedDuration
-                    : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
+                ExpectedDuration = GetDuration(source),
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,
@@ -94,7 +89,39 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             };
         }
 
-        
+        private static string GetDuration(ApprenticeshipVacancyItem source)
+        {
+            if (!string.IsNullOrEmpty(source.ExpectedDuration))
+            {
+                return source.ExpectedDuration;
+            }
+
+            var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
+            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
+
+            if (durationUnit == Domain.Models.WageUnit.Month.GetDisplayName())
+            {
+                var wholeYears = duration / 12;
+                var remainingMonths = duration % 12;
+
+                switch (wholeYears)
+                {
+                    case 0:
+                        return remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
+                    case 1 when remainingMonths == 0:
+                        return "1 Year";
+                    case 1:
+                    {
+                        var months = remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
+                        return $"1 Year {months}";
+                    }
+                    default:
+                        return remainingMonths == 0 ? $"{wholeYears} Years" : $"{wholeYears} Years {remainingMonths} Months";
+                }
+            }
+
+            return $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}";
+        }
     }
     
     public class Qualification
@@ -112,7 +139,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 Subject = source.Subject,
                 Weighting = source.Weighting,
                 QualificationType = source.QualificationType
-
             };
         }
     }
