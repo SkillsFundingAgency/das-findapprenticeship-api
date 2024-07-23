@@ -84,6 +84,9 @@
         },
         "subnetDelegations": {
             "type": "array"
+        },
+        "healthCheckPath": {
+            "type": "string"
         }
     },
     "variables": {
@@ -318,6 +321,9 @@
                     },
                     "assignmentType": {
                         "value": "AiSearchIndexReader"
+                    },
+                    "healthCheckPath": {
+                        "value": "[parameters('healthCheckPath')]"
                     },
                     "resourceName": {
                         "value": "[parameters('sharedAiSearchName')]"
