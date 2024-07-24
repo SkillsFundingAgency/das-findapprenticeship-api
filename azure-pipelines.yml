@@ -21,7 +21,7 @@ resources:
     type: github
 
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/heads/DAS_HealthCheckPath
+    ref: refs/tags/2.1.0
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
