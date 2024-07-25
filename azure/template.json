@@ -84,6 +84,9 @@
         },
         "subnetDelegations": {
             "type": "array"
+        },
+        "healthCheckPath": {
+            "type": "string"
         }
     },
     "variables": {
@@ -294,6 +297,9 @@
                     },
                     "ipSecurityRestrictions": {
                         "value": "[parameters('backEndAccessRestrictions')]"
+                    },
+                    "healthCheckPath": {
+                        "value": "[parameters('healthCheckPath')]"
                     }
                 }
             },
