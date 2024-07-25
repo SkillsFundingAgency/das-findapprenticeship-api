@@ -84,9 +84,6 @@
         },
         "subnetDelegations": {
             "type": "array"
-        },
-        "healthCheckPath": {
-            "type": "string"
         }
     },
     "variables": {
@@ -294,9 +291,6 @@
                     },
                     "certificateThumbprint": {
                         "value": "[reference(concat(variables('apiAppServiceName'), '-app-service-certificate-', parameters('utcValue'))).outputs.certificateThumbprint.value]"
-                    },
-                    "healthCheckPath": {
-                        "value": "[parameters('healthCheckPath')]"
                     },
                     "ipSecurityRestrictions": {
                         "value": "[parameters('backEndAccessRestrictions')]"
