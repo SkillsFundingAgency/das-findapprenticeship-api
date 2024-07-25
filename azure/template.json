@@ -86,7 +86,8 @@
             "type": "array"
         },
         "healthCheckPath": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
