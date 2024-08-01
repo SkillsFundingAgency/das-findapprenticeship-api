@@ -16,6 +16,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string ThingsToConsider { get; set; }
         public string AdditionalQuestion1 { get; set; }
         public string AdditionalQuestion2 { get; set; }
+        public string WageAdditionalInformation { get; set; }
 
         public static implicit operator GetApprenticeshipVacancyDetailResponse(ApprenticeshipVacancyItem source)
         {
@@ -84,8 +85,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ApplicationUrl = source.ApplicationUrl,
                 AdditionalQuestion1 = source.AdditionalQuestion1,
                 AdditionalQuestion2 = source.AdditionalQuestion2,
-                AdditionalTrainingDescription = source.AdditionalTrainingDescription,
-                CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation
+                WageAdditionalInformation = source.Wage != null ? source.Wage.WageAdditionalInformation : string.Empty
             };
         }
 
