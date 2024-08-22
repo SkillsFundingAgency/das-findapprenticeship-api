@@ -108,7 +108,7 @@ namespace SFA.DAS.FAA.Api
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FindApprenticeshipsApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FindApprenticeshipsApi", Version = "v2" });
                 c.OperationFilter<SwaggerVersionHeaderFilter>();
             });
 
@@ -125,7 +125,7 @@ namespace SFA.DAS.FAA.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FindApprenticeshipsApi v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FindApprenticeshipsApi v2");
                 c.RoutePrefix = string.Empty;
             });
 
