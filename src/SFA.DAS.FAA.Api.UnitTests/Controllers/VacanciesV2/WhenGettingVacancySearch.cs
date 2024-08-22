@@ -11,7 +11,6 @@ using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
-using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -23,7 +22,7 @@ public class WhenGettingVacancySearch
     SearchVacancyRequest request,
     SearchApprenticeshipVacanciesResult mediatorResult,
     [Frozen] Mock<IMediator> mockMediator,
-    [Greedy] VacanciesV2Controller controller)
+    [Greedy] VacanciesController controller)
     {
         request.Sort = VacancySort.DistanceDesc;
         mockMediator
@@ -43,7 +42,6 @@ public class WhenGettingVacancySearch
                     query.Levels == request.Levels &&
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                     query.VacancySort.Equals(request.Sort) &&
-                    query.Source == SearchSource.AzureSearch &&
 					query.SearchTerm == request.SearchTerm &&
                     query.AdditionalDataSources == request.AdditionalDataSources
                 ),

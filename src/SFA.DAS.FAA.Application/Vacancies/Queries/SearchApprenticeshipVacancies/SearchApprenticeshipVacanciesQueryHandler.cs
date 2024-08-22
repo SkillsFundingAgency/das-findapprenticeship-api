@@ -1,25 +1,14 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using SFA.DAS.FAA.Domain.Entities;
-using SFA.DAS.FAA.Domain.Enums;
+﻿using MediatR;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies
 {
-    public class SearchApprenticeshipVacanciesQueryHandler : IRequestHandler<SearchApprenticeshipVacanciesQuery, SearchApprenticeshipVacanciesResult>
+    public class SearchApprenticeshipVacanciesQueryHandler(IAcsVacancySearchRepository acsVacancySearchRepository)
+        : IRequestHandler<SearchApprenticeshipVacanciesQuery, SearchApprenticeshipVacanciesResult>
     {
-        private readonly IVacancySearchRepository _vacancySearchRepository;
-        private readonly IAcsVacancySearchRepository _acsVacancySearchRepository;
-
-        public SearchApprenticeshipVacanciesQueryHandler(IVacancySearchRepository vacancySearchRepository,
-            IAcsVacancySearchRepository acsVacancySearchRepository)
-        {
-            _vacancySearchRepository = vacancySearchRepository;
-            _acsVacancySearchRepository = acsVacancySearchRepository;
-        }
-        
         public async Task<SearchApprenticeshipVacanciesResult> Handle(SearchApprenticeshipVacanciesQuery request, CancellationToken cancellationToken)
         {
             var model = new FindVacanciesModel
@@ -43,15 +32,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
                 AdditionalDataSources = request.AdditionalDataSources
             };
 
-            ApprenticeshipSearchResponse searchResult;
-            if (request.Source == SearchSource.Elastic)
-            {
-                searchResult = await _vacancySearchRepository.Find(model);
-            }
-            else
-            {
-                searchResult = await _acsVacancySearchRepository.Find(model);
-            }
+            var searchResult = await acsVacancySearchRepository.Find(model);
 
             return new SearchApprenticeshipVacanciesResult
             {

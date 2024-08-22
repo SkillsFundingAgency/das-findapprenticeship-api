@@ -1,27 +1,16 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using SFA.DAS.FAA.Domain.Enums;
+﻿using MediatR;
 using SFA.DAS.FAA.Domain.Interfaces;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy
 {
-    public class GetApprenticeshipVacancyQueryHandler : IRequestHandler<GetApprenticeshipVacancyQuery, GetApprenticeshipVacancyResult>
+    public class GetApprenticeshipVacancyQueryHandler(IAcsVacancySearchRepository acsVacancySearchRepository)
+        : IRequestHandler<GetApprenticeshipVacancyQuery, GetApprenticeshipVacancyResult>
     {
-        private readonly IVacancySearchRepository _vacancySearchRepository;
-        private readonly IAcsVacancySearchRepository _acsVacancySearchRepository;
-
-        public GetApprenticeshipVacancyQueryHandler(IVacancySearchRepository vacancySearchRepository,IAcsVacancySearchRepository acsVacancySearchRepository)
-        {
-            _vacancySearchRepository = vacancySearchRepository;
-            _acsVacancySearchRepository = acsVacancySearchRepository;
-        }
-        
         public async Task<GetApprenticeshipVacancyResult> Handle(GetApprenticeshipVacancyQuery request, CancellationToken cancellationToken)
         {
-            var vacancy = request.Source == SearchSource.Elastic
-                ? await _vacancySearchRepository.Get(request.VacancyReference) 
-                : await _acsVacancySearchRepository.Get(request.VacancyReference);
+            var vacancy = await acsVacancySearchRepository.Get(request.VacancyReference);
 
             return new GetApprenticeshipVacancyResult
             {

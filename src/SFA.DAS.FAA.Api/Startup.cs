@@ -64,18 +64,6 @@ namespace SFA.DAS.FAA.Api
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
 
-#if DEBUG
-            services.AddSingleton(new ElasticEnvironment("TEST"));
-#else
-            services.AddSingleton(new ElasticEnvironment(_configuration["ResourceEnvironmentName"]));
-#endif
-
-            var apiConfig = _configuration
-                .GetSection("FindApprenticeshipsApi")
-                .Get<FindApprenticeshipsApiConfiguration>();
-
-            services.AddElasticSearch(apiConfig);
-
             if (!ConfigurationIsLocalOrDev())
             {
                 var azureAdConfiguration = _configuration
@@ -121,7 +109,6 @@ namespace SFA.DAS.FAA.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FindApprenticeshipsApi", Version = "v1" });
-                c.SwaggerDoc("v2", new OpenApiInfo { Title = "FindApprenticeshipsApi", Version = "v2" });
                 c.OperationFilter<SwaggerVersionHeaderFilter>();
             });
 
@@ -139,7 +126,6 @@ namespace SFA.DAS.FAA.Api
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "FindApprenticeshipsApi v1");
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "FindApprenticeshipsApi v2");
                 c.RoutePrefix = string.Empty;
             });
 

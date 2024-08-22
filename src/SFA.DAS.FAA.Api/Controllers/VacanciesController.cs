@@ -2,20 +2,22 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
+using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
-using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
-    public abstract class VacanciesControllerBase(IMediator mediator, SearchSource searchSource) : ControllerBase
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    [ApiController]
+    [Route("/api/Vacancies/")]
+    public class VacanciesController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
         [Route("{vacancyReference}")]
@@ -23,8 +25,7 @@ namespace SFA.DAS.FAA.Api.Controllers
         {
             var result = await mediator.Send(new GetApprenticeshipVacancyQuery
             {
-                VacancyReference = vacancyReference,
-                Source = searchSource
+                VacancyReference = vacancyReference
             });
 
             if (result.ApprenticeshipVacancy == null)
@@ -41,17 +42,12 @@ namespace SFA.DAS.FAA.Api.Controllers
         [Route("")]
         public async Task<IActionResult> GetByVacancyReferences([FromBody] GetVacanciesByReferenceRequest request)
         {
-            if (searchSource != SearchSource.AzureSearch)
-            {
-                throw new InvalidOperationException("Multi-reference query is only supported in x-version 2.0");
-            }
-
             var result = await mediator.Send(new GetApprenticeshipVacanciesByReferenceQuery
             {
                 VacancyReferences = request.VacancyReferences
             });
 
-            var apiResponse = (GetApprenticeshipVacanciesByReferenceApiResponse) result;
+            var apiResponse = (GetApprenticeshipVacanciesByReferenceApiResponse)result;
             return Ok(apiResponse);
         }
 
@@ -78,7 +74,6 @@ namespace SFA.DAS.FAA.Api.Controllers
                     StandardLarsCode = request.StandardLarsCode,
                     PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                     VacancySort = request.Sort ?? VacancySort.AgeDesc,
-                    Source = searchSource,
                     DisabilityConfident = request.DisabilityConfident,
                     AdditionalDataSources = request.AdditionalDataSources
                 });
@@ -93,7 +88,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                 return BadRequest(ex);
             }
         }
-        
+
         [HttpGet]
         [Route("count")]
         public async Task<IActionResult> GetVacancyCount([FromQuery] SearchVacancyTotalRequest request)
@@ -102,10 +97,9 @@ namespace SFA.DAS.FAA.Api.Controllers
             {
                 var result = await mediator.Send(new GetApprenticeshipVacancyCountQuery
                 {
-                    Source = searchSource,
                     AdditionalDataSources = request.AdditionalDataSources
                 });
-                return Ok(new GetCountApprenticeshipVacanciesResponse{TotalVacancies = result});
+                return Ok(new GetCountApprenticeshipVacanciesResponse { TotalVacancies = result });
             }
             catch (Exception ex)
             {
@@ -113,14 +107,4 @@ namespace SFA.DAS.FAA.Api.Controllers
             }
         }
     }
-
-    [ApiVersion("1.0")]
-    [ApiController]
-    [Route("/api/Vacancies/")]
-    public class VacanciesController(IMediator mediator) : VacanciesControllerBase(mediator, SearchSource.Elastic);
-    
-    [ApiVersion("2.0")]
-    [ApiController]
-    [Route("/api/Vacancies/")]
-    public class VacanciesV2Controller(IMediator mediator) : VacanciesControllerBase(mediator, SearchSource.AzureSearch);
 }
