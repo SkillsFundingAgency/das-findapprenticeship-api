@@ -58,10 +58,12 @@ namespace SFA.DAS.FAA.Data.AzureSearch
             var query = _queryBuilder.BuildGetVacancyQuery(vacancyReference);
             var jsonResponse = await _client.SearchAsync<StringResponse>(ApprenticeshipVacanciesIndex, PostData.String(query));
             var responseBody = JsonConvert.DeserializeObject<ElasticResponse<ApprenticeshipVacancyItem>>(jsonResponse.Body);
-            
-            _logger.LogInformation($"Found [{responseBody.hits.total.value}] hits for vacancy [{vacancyReference}]");
 
-            var apprenticeshipVacancyItem = responseBody.Items.SingleOrDefault()?._source;
+			if (responseBody.hits is { total: not null })
+				_logger.LogInformation(
+					$"Found [{responseBody.hits.total.value}] hits for vacancy [{vacancyReference}]");
+
+			var apprenticeshipVacancyItem = responseBody.Items.SingleOrDefault()?._source;
             return apprenticeshipVacancyItem;
         }
 
