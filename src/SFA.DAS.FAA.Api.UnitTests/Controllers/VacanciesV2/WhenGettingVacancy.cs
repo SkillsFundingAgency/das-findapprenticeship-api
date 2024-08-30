@@ -10,7 +10,6 @@ using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
-using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2;
@@ -21,12 +20,12 @@ public class WhenGettingVacancy
         string vacancyReference,
         GetApprenticeshipVacancyResult mediatorResult,
         [Frozen] Mock<IMediator> mockMediator,
-        [Greedy] VacanciesV2Controller controller)
+        [Greedy] VacanciesController controller)
     {
         mockMediator
             .Setup(mediator => mediator.Send(
                 It.Is<GetApprenticeshipVacancyQuery>(query =>
-                    query.VacancyReference == vacancyReference && query.Source == SearchSource.AzureSearch), 
+                    query.VacancyReference == vacancyReference), 
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(mediatorResult);
 
@@ -43,12 +42,12 @@ public class WhenGettingVacancy
     public async Task And_Null_From_Mediator_Then_Returns_NotFound(
         string vacancyReference,
         [Frozen] Mock<IMediator> mockMediator,
-        [Greedy] VacanciesV2Controller controller)
+        [Greedy] VacanciesController controller)
     {
         mockMediator
             .Setup(mediator => mediator.Send(
                 It.Is<GetApprenticeshipVacancyQuery>(query =>
-                    query.VacancyReference == vacancyReference && query.Source == SearchSource.AzureSearch), 
+                    query.VacancyReference == vacancyReference), 
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApprenticeshipVacancyResult());
 

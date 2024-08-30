@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using MediatR;
-using SFA.DAS.FAA.Domain.Enums;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies
@@ -22,7 +21,6 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
         public double? Lat { get ; init ; }
         public double? Lon { get ; init ; }
         public VacancySort VacancySort { get ; init ; }
-        public SearchSource Source { get; set; }
         public bool DisabilityConfident { get; set; }
         public List<AdditionalDataSource> AdditionalDataSources { get; set; }
     }

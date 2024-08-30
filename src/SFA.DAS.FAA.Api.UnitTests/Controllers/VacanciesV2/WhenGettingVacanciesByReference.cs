@@ -23,7 +23,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2
             GetVacanciesByReferenceRequest request,
             GetApprenticeshipVacanciesByReferenceQueryResult mediatorResult,
             [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] VacanciesV2Controller controller)
+            [Greedy] VacanciesController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
