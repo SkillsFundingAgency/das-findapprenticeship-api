@@ -1,3 +1,6 @@
+using System;
+using System.Net;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiRequests;
@@ -7,9 +10,6 @@ using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Models;
-using System;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {

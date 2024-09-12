@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using NLog.Web;
 
 namespace SFA.DAS.FAA.Api
@@ -20,8 +14,12 @@ namespace SFA.DAS.FAA.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                    .ConfigureKestrel(c => c.AddServerHeader = false)
                     .UseStartup<Startup>()
-                    .UseNLog(); });
+                    .UseNLog();
+                });
     }
 }
