@@ -19,7 +19,7 @@ The das-findapprenticeship-api(https://github.com/SkillsFundingAgency/das-findap
 ### Pre-Requisites
 * A clone of this repository(https://github.com/SkillsFundingAgency/das-findapprenticeship-api)
 * A storage emulator like Azurite
-* 
+
 ### Config
 You can find the latest config file in [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-findapprenticeship-api/SFA.DAS.FindApprenticeships.Api.json)
 
