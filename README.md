@@ -18,17 +18,21 @@ The das-findapprenticeship-api(https://github.com/SkillsFundingAgency/das-findap
 
 ### Pre-Requisites
 * A clone of this repository(https://github.com/SkillsFundingAgency/das-findapprenticeship-api)
+* A code editor that supports .NetCore 8 and above
 * A storage emulator like Azurite
+* An Azure Active Directory account with the appropriate roles as per the [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-findapprenticeship-api/SFA.DAS.FindApprenticeships.Api.json)
+* Azure Search available either running locally or accessible in a Azure tenancy
 
 ### Config
 You can find the latest config file in [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-findapprenticeship-api/SFA.DAS.FindApprenticeships.Api.json)
 
 * If you are using Azure Storage Emulator for local development purpose, then In your Azure Storage Account, create a table called Configuration and Add the following
 
-```
 ParitionKey: LOCAL
 RowKey: SFA.DAS.FindApprenticeships.Api_1.0
-Data: {
+Data:
+```json
+{
   "FindApprenticeshipsApi": {
     "AzureSearchBaseUrl": "{{Azure Search url}}"
   },
