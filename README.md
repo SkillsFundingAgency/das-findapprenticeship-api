@@ -89,6 +89,9 @@ Application logs are logged to [Application Insights](https://learn.microsoft.co
 
 ## Useful URLs
 
+### Health check
+https://localhost:5051/health - Endpoint to check the service health
+
 ### Vacancies
 
 https://localhost:5051/api/vacancies - Endpoint to get all vacancies
