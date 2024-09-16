@@ -25,7 +25,7 @@ You can find the latest config file in [das-employer-config repository](https://
 
 * If you are using Azure Storage Emulator for local development purpose, then In your Azure Storage Account, create a table called Configuration and Add the following
 
-```json
+```
 ParitionKey: LOCAL
 RowKey: SFA.DAS.FindApprenticeships.Api_1.0
 Data: {
