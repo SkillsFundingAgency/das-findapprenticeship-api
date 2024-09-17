@@ -34,11 +34,11 @@ Data:
 ```json
 {
   "FindApprenticeshipsApi": {
-    "AzureSearchBaseUrl": "{{Azure Search url}}"
+    "AzureSearchBaseUrl": "https://{{AZURE-SEARCH-URL}}"
   },
   "AzureAd": {
-    "tenant": "{{tenant}}",
-    "identifier": "{{identifier}}"
+    "tenant": "https://{TENANT-NAME}/{IDENTIFIER}",
+    "identifier": "{TENANT-NAME}"
   }
 }
 ```
