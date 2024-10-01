@@ -58,6 +58,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string StandardTitle { get; set; }
         public string ApplicationMethod { get; set; }
         public string ApplicationUrl { get; set; }
+        public string? ApplicationInstructions { get; set; }
         public string? CompanyBenefitsInformation { get; set; }
         public string? AdditionalTrainingDescription { get; set; }
 
@@ -125,6 +126,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 Address = source.Address,
                 ApplicationMethod = source.ApplicationMethod,
                 ApplicationUrl = source.ApplicationUrl,
+                ApplicationInstructions = source.ApplicationInstructions,
                 VacancySource = source.VacancySource,
                 CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation,
                 AdditionalTrainingDescription = source.AdditionalTrainingDescription
