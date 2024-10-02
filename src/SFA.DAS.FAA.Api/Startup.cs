@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -16,10 +21,6 @@ using SFA.DAS.FAA.Api.AppStart;
 using SFA.DAS.FAA.Api.HealthCheck;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Configuration;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json.Serialization;
 
 namespace SFA.DAS.FAA.Api
 {
@@ -83,8 +84,8 @@ namespace SFA.DAS.FAA.Api
                 services
                     .AddHealthChecks()
                     .AddCheck<AzureSearchHealthCheck>("Azure search re-indexing health",
-                        failureStatus: HealthStatus.Degraded, tags: new[] {"ready"});
-                
+                        failureStatus: HealthStatus.Degraded, tags: new[] { "ready" });
+
             }
 
             services.AddMediatR(_ => _.RegisterServicesFromAssembly(typeof(SearchApprenticeshipVacanciesQuery).Assembly));
@@ -135,6 +136,19 @@ namespace SFA.DAS.FAA.Api
             }
 
             app.ConfigureExceptionHandler(logger);
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.OnStarting(() =>
+                {
+                    if (context.Response.Headers.ContainsKey("X-Powered-By"))
+                    {
+                        context.Response.Headers.Remove("X-Powered-By");
+                    }
+                    return Task.CompletedTask;
+                });
+                await next();
+            });
 
             app.UseAuthentication();
 
