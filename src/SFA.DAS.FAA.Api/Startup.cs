@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
+using SFA.DAS.FAA.Data;
 
 namespace SFA.DAS.FAA.Api
 {
@@ -64,6 +65,11 @@ namespace SFA.DAS.FAA.Api
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
 
+            var candidateAccountConfiguration = _configuration
+                .GetSection(nameof(FindApprenticeshipsApiConfiguration))
+                .Get<FindApprenticeshipsApiConfiguration>();
+            services.AddDatabaseRegistration(candidateAccountConfiguration!, _configuration["EnvironmentName"]);
+
             if (!ConfigurationIsLocalOrDev())
             {
                 var azureAdConfiguration = _configuration
@@ -82,6 +88,7 @@ namespace SFA.DAS.FAA.Api
             {
                 services
                     .AddHealthChecks()
+                    .AddDbContextCheck<FindApprenticeshipsDataContext>()
                     .AddCheck<AzureSearchHealthCheck>("Azure search re-indexing health",
                         failureStatus: HealthStatus.Degraded, tags: new[] {"ready"});
                 
