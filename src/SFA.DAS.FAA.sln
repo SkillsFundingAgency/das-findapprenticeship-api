@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.FAA.Data.UnitTests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.FAA.Api.UnitTests", "SFA.DAS.FAA.Api.UnitTests\SFA.DAS.FAA.Api.UnitTests.csproj", "{2116510C-09BD-40E8-B177-8F08868D2924}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.FAA.Database", "SFA.DAS.FAA.Database\SFA.DAS.FAA.Database.csproj", "{BBF9A601-BB2B-466C-864F-F9A942916476}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.FAA.Database", "SFA.DAS.FAA.Database\SFA.DAS.FAA.Database.csproj", "{5825B4E5-0DCF-4D68-ACAF-570AB3072671}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,10 +55,10 @@ Global
 		{2116510C-09BD-40E8-B177-8F08868D2924}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2116510C-09BD-40E8-B177-8F08868D2924}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2116510C-09BD-40E8-B177-8F08868D2924}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BBF9A601-BB2B-466C-864F-F9A942916476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBF9A601-BB2B-466C-864F-F9A942916476}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBF9A601-BB2B-466C-864F-F9A942916476}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBF9A601-BB2B-466C-864F-F9A942916476}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5825B4E5-0DCF-4D68-ACAF-570AB3072671}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5825B4E5-0DCF-4D68-ACAF-570AB3072671}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5825B4E5-0DCF-4D68-ACAF-570AB3072671}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5825B4E5-0DCF-4D68-ACAF-570AB3072671}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

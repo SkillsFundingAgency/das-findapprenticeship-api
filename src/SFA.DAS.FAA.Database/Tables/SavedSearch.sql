@@ -1,10 +1,16 @@
-﻿CREATE TABLE dbo.[SavedSearch] (
-    [Id]					        uniqueidentifier	NOT NULL,
-    [UserRef]  		    	        uniqueidentifier    NOT NULL,
-    [DateCreated]                   datetime            NOT NULL,
-    [LastRunDate]                   datetime            NULL,
-    [SearchParameters]  		    nvarchar(max)       NOT NULL,
-    [VacancyRefs]  		            nvarchar(max)       NULL    
-    CONSTRAINT [PK_SavedSearch] PRIMARY KEY (Id),    
-    INDEX [IX_SavedSearch_UserRef] NONCLUSTERED(UserRef)
-	)
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<xs:schema id="SavedSearch" 
+                  targetNamespace="http://tempuri.org/SavedSearch.xsd"
+                  elementFormDefault="qualified"
+                  attributeFormDefault="qualified"
+                  xmlns="http://tempuri.org/SavedSearch.xsd"
+                  xmlns:mstns="http://tempuri.org/SavedSearch.xsd"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                  xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+    <xs:element name="SavedSearch" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded"></xs:choice>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
