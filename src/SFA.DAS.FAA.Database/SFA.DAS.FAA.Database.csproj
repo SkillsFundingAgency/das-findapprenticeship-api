@@ -1,16 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<DSP>Microsoft.Data.Tools.Schema.Sql.SqlAureV12DatabaseSchemaProvider</DSP>
-		<SqlServerVersion>SqlAzure</SqlServerVersion>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<None Update="Database.publish.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
+﻿<Project Sdk="MsBuild.Sdk.SqlProj/2.6.1">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAureV12DatabaseSchemaProvider</DSP>
+        <SqlServerVersion>SqlAzure</SqlServerVersion>
+    </PropertyGroup>
+    <ItemGroup>
+      <None Remove="Tables\SavedVacancy.sql" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="Database.publish.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PostDeploy Include="Post-Deployment\Script.PostDeployment.sql" />
+    </ItemGroup>
 </Project>
