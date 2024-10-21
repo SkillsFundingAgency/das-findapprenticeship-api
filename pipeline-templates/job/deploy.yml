@@ -1,7 +1,8 @@
-parameters:  
-  Environment:
+parameters:
   ServiceConnection:
-  RunBlockOnPossibleDataLoss: false
+  SolutionBaseName:
+  Environment:
+  OverrideBlockOnPossibleDataLoss:
 
 jobs:
 - deployment: DeployWebApp
@@ -26,15 +27,15 @@ jobs:
             BackEndAccessRestrictionsExcludedSubnets: $(BackEndAccessRestrictionsExcludedSubnets)
             ResourceEnvironmentName: $(ResourceEnvironmentName)
             UnrestrictedEnvironments: $(UnrestrictedEnvironments)
-            UptimeMonitoringAccessRestrictions: $(UptimeMonitoringAccessRestrictions)
+            UptimeMonitoringAccessRestrictions: $(UptimeMonitoringAccessRestrictions)    
         - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
             SubscriptionId: $(SubscriptionId)
             Location: $(ResourceGroupLocation)
             Environment: ${{ parameters.Environment }}
-            TemplatePath: $(Pipeline.Workspace)/FindApprenticeshipApi/azure/template.json
-            ParametersPath: $(Pipeline.Workspace)/FindApprenticeshipApi/azure/template.parameters.json
+            TemplatePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/azure/template.json
+            ParametersPath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/azure/template.parameters.json
             IsMultiRepoCheckout: true
             TemplateSecrets:
               LoggingRedisConnectionString: $(LoggingRedisConnectionString)
@@ -65,4 +66,3 @@ jobs:
             ServiceConnection: ${{ parameters.ServiceConnection }}
             AppServiceName: $(ApiAppServiceName)
             DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.Api.zip
-
