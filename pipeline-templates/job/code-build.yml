@@ -1,5 +1,7 @@
 parameters:
   SolutionBaseName:
+  BuildConfiguration:
+
 
 jobs:
 - job: CodeBuild
@@ -22,8 +24,10 @@ jobs:
     inputs:
       command: publish
       publishWebProjects: false #set to false as this setting (which defaults to true) will parse the entire repo for web projects
-      projects: src/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.csproj
+      projects: src/${{ parameters.SolutionBaseName }}.Api/${{ parameters.SolutionBaseName }}.Api.csproj
       arguments: -o $(build.artifactstagingdirectory)/publish -c release --no-build
+      modifyOutputPath: true
+      zipAfterPublish: true
 
   - task: CopyFiles@2
     displayName: Copy Files to $(build.artifactstagingdirectory)/publish
@@ -37,4 +41,4 @@ jobs:
     displayName: Publish Artifact - FindApprenticeshipApi
     inputs:
       targetPath: $(build.artifactstagingdirectory)/publish
-      artifactName: FindApprenticeshipApi
+      artifactName: ${{ parameters.SolutionBaseName }}
