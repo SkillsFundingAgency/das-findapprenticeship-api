@@ -12,7 +12,7 @@
 
 ## About
 
-The das-findapprenticeship-api(https://github.com/SkillsFundingAgency/das-findapprenticeship-api) is the inner api for retrieving and filtering apprenticeship vacancies relying on the Azure Search created from das-findapprenticeship.
+The das-findapprenticeship-api(https://github.com/SkillsFundingAgency/das-findapprenticeship-api) is the inner api for retrieving and filtering apprenticeship vacancies relying on the Azure Search created from das-findapprenticeship. Candidates 
 
 ## 🚀 Installation
 
@@ -22,6 +22,7 @@ The das-findapprenticeship-api(https://github.com/SkillsFundingAgency/das-findap
 * A storage emulator like Azurite
 * An Azure Active Directory account with the appropriate roles as per the [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-findapprenticeship-api/SFA.DAS.FindApprenticeships.Api.json)
 * Azure Search available either running locally or accessible in a Azure tenancy
+* MS-SQL Database available either running locally or accessible in a Azure tenancy - Publish the `SFA.DAS.FAA.Database` project to create the SQL database
 
 ### Config
 You can find the latest config file in [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-findapprenticeship-api/SFA.DAS.FindApprenticeships.Api.json)
@@ -34,7 +35,8 @@ Data:
 ```json
 {
   "FindApprenticeshipsApi": {
-    "AzureSearchBaseUrl": "https://{{AZURE-SEARCH-URL}}"
+    "AzureSearchBaseUrl": "https://{{AZURE-SEARCH-URL}}",
+    "DatabaseConnectionString": "Data Source=.;Initial Catalog=SFA.DAS.FAA;User Id=sa;Password={YOUR_PASSWORD};Pooling=False;Connect Timeout=30;Encrypt=False;"
   },
   "AzureAd": {
     "tenant": "https://{TENANT-NAME}/{IDENTIFIER}",
@@ -65,6 +67,7 @@ In the web project, if it does not exist already, add `AppSettings.Development.j
 * .NetCore 8.0
 * Azure Storage Account
 * Azure Search
+* MS-SQL Server
 * NUnit
 * Moq
 * FluentAssertions
@@ -103,3 +106,7 @@ https://localhost:5051/api/vacancies - Endpoint to get all vacancies
 https://localhost:5051/api/vacancies/{vacancyReference} - Endpoint to get a particular vacancy
 
 https://localhost:5051/api/vacancies/count - Endpoint to get vacancies count
+
+## License
+
+Licensed under the [MIT license](LICENSE)
