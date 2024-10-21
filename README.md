@@ -12,7 +12,7 @@
 
 ## About
 
-The das-findapprenticeship-api(https://github.com/SkillsFundingAgency/das-findapprenticeship-api) is the inner api for retrieving and filtering apprenticeship vacancies relying on the Azure Search created from das-findapprenticeship. Candidates 
+The das-findapprenticeship-api(https://github.com/SkillsFundingAgency/das-findapprenticeship-api) is the inner api for retrieving and filtering apprenticeship vacancies relying on the Azure Search created from das-findapprenticeship. 
 
 ## 🚀 Installation
 

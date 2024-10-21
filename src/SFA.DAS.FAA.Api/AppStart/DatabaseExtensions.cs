@@ -1,9 +1,9 @@
 ﻿using Azure.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.FAA.Data;
 using SFA.DAS.FAA.Domain.Configuration;
 using System;
-using Microsoft.EntityFrameworkCore;
-using SFA.DAS.FAA.Data;
 
 namespace SFA.DAS.FAA.Api.AppStart
 {
@@ -12,7 +12,7 @@ namespace SFA.DAS.FAA.Api.AppStart
         public static void AddDatabaseRegistration(this IServiceCollection services, FindApprenticeshipsApiConfiguration config, string? environmentName)
         {
             services.AddHttpContextAccessor();
-            if (environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            if (environmentName!.Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
                 services.AddDbContext<FindApprenticeshipsDataContext>(options => options.UseInMemoryDatabase("SFA.DAS.FAA"), ServiceLifetime.Transient);
             }

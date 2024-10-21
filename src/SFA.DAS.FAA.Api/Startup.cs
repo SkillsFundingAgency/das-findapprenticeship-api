@@ -65,10 +65,10 @@ namespace SFA.DAS.FAA.Api
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
 
-            var candidateAccountConfiguration = _configuration
+            var findApprenticeshipsApiConfiguration = _configuration
                 .GetSection(nameof(FindApprenticeshipsApiConfiguration))
                 .Get<FindApprenticeshipsApiConfiguration>();
-            services.AddDatabaseRegistration(candidateAccountConfiguration!, _configuration["EnvironmentName"]);
+            services.AddDatabaseRegistration(findApprenticeshipsApiConfiguration!, _configuration["EnvironmentName"]);
 
             if (!ConfigurationIsLocalOrDev())
             {
