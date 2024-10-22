@@ -1,6 +1,4 @@
 ﻿using System;
-using Azure.Core;
-using Azure.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -17,23 +15,18 @@ namespace SFA.DAS.FAA.Data
 
     public class FindApprenticeshipsDataContext : DbContext, IFindApprenticeshipsDataContext
     {
-        private const string AzureResource = "https://database.windows.net/";
-        private readonly ChainedTokenCredential _azureServiceTokenProvider;
         private readonly EnvironmentConfiguration _environmentConfiguration;
         public DbSet<SavedSearchEntity> SavedSearchEntities { get; set; }
 
         private readonly FindApprenticeshipsApiConfiguration? _configuration;
-        public FindApprenticeshipsDataContext()
-        {
-        }
+        public FindApprenticeshipsDataContext() { }
 
-        public FindApprenticeshipsDataContext(DbContextOptions options) : base(options)
-        {
+        public FindApprenticeshipsDataContext(DbContextOptions options) : base(options) { }
 
-        }
-        public FindApprenticeshipsDataContext(IOptions<FindApprenticeshipsApiConfiguration> config, DbContextOptions options, ChainedTokenCredential azureServiceTokenProvider, EnvironmentConfiguration environmentConfiguration) : base(options)
+        public FindApprenticeshipsDataContext(IOptions<FindApprenticeshipsApiConfiguration> config,
+            DbContextOptions options,
+            EnvironmentConfiguration environmentConfiguration) : base(options)
         {
-            _azureServiceTokenProvider = azureServiceTokenProvider;
             _environmentConfiguration = environmentConfiguration;
             _configuration = config.Value;
         }
@@ -48,14 +41,11 @@ namespace SFA.DAS.FAA.Data
                 return;
             }
 
-            var connection = new SqlConnection
+            optionsBuilder.UseSqlServer(new SqlConnection
             {
                 ConnectionString = _configuration.DatabaseConnectionString,
-                AccessToken = _azureServiceTokenProvider.GetTokenAsync(new TokenRequestContext(scopes: new string[] { AzureResource })).Result.Token,
-            };
-
-            optionsBuilder.UseSqlServer(connection, options =>
-                options.EnableRetryOnFailure(
+            }, options => options
+                .EnableRetryOnFailure(
                     5,
                     TimeSpan.FromSeconds(20),
                     null
