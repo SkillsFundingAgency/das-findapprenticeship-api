@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetSavedSearches;
 
 namespace SFA.DAS.FAA.Api.Controllers
@@ -12,7 +13,7 @@ namespace SFA.DAS.FAA.Api.Controllers
     [ApiVersion("2.0")]
     [ApiController]
     [Route("/api/savedSearch/")]
-    public class SavedSearchController(IMediator mediator) : ControllerBase
+    public class SavedSearchController(IMediator mediator, ILogger<SavedSearchController> logger) : ControllerBase
     {
         [HttpGet]
         [Route("")]
@@ -25,6 +26,7 @@ namespace SFA.DAS.FAA.Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "Get Saved Search : An error occurred");
                 return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
             }
         }
