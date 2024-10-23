@@ -17,11 +17,11 @@ namespace SFA.DAS.FAA.Api.Controllers
     {
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> Get([FromQuery] DateTime lastRunDateFilter)
+        public async Task<IActionResult> Get([FromQuery] DateTime lastRunDateFilter, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
         {
             try
             {
-                var result = await mediator.Send(new GetSavedSearchesQuery(lastRunDateFilter));
+                var result = await mediator.Send(new GetSavedSearchesQuery(lastRunDateFilter, pageNumber, pageSize));
                 return Ok(result);
             }
             catch (Exception ex)

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.UnitTests.SavedSearch
 {
@@ -17,29 +18,29 @@ namespace SFA.DAS.FAA.Application.UnitTests.SavedSearch
     public class WhenHandlingGetSavedSearchQuery
     {
         [Test, MoqAutoData]
-        public async Task Then_Gets_Vacancies_From_Azure_Repository_When_Source_Is_Azure(
+        public async Task Then_Gets_SavedSearches_From_Repository(
             List<string> vacancyReferences,
             GetSavedSearchesQueryResult.SearchParameters searchParameters,
             GetSavedSearchesQuery query,
-            List<SavedSearchEntity> savedSearchEntities,
+            PaginatedList<SavedSearchEntity> savedSearchEntities,
             [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
             GetSavedSearchesQueryHandler handler)
         {
             //arrange
-            foreach (var savedSearchEntity in savedSearchEntities)
+            foreach (var savedSearchEntity in savedSearchEntities.Items)
             {
                 savedSearchEntity.SearchParameters = JsonConvert.SerializeObject(searchParameters);
                 savedSearchEntity.VacancyRefs = JsonConvert.SerializeObject(vacancyReferences);
-
             }
+
             savedSearchRepository
-                .Setup(repository => repository.GetAll(query.LastRunDateFilter, CancellationToken.None))
+                .Setup(repository => repository.GetAll(query.LastRunDateFilter, query.PageNumber, query.PageSize, CancellationToken.None))
                 .ReturnsAsync(savedSearchEntities);
 
             var result = await handler.Handle(query, CancellationToken.None);
 
             result.SavedSearches
-                .Should().BeEquivalentTo(savedSearchEntities, options => options
+                .Should().BeEquivalentTo(savedSearchEntities.Items, options => options
                     .Excluding(ex => ex.SearchParameters)
                     .Excluding(ex => ex.VacancyRefs)
                     .Excluding(ex => ex.UserRef)

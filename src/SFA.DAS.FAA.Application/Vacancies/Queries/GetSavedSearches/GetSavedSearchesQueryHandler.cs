@@ -9,6 +9,6 @@ public record GetSavedSearchesQueryHandler(ISavedSearchRepository SavedSearchRep
 {
     public async Task<GetSavedSearchesQueryResult> Handle(GetSavedSearchesQuery request, CancellationToken cancellationToken)
     {
-        return await SavedSearchRepository.GetAll(request.LastRunDateFilter, cancellationToken);
+        return await SavedSearchRepository.GetAll(request.LastRunDateFilter, request.PageNumber, request.PageSize, cancellationToken);
     }
 }

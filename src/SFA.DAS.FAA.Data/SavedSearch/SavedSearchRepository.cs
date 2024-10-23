@@ -1,28 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Data.SavedSearch
 {
     public interface ISavedSearchRepository
     {
-        Task<List<SavedSearchEntity>> GetAll(DateTime dateFilter, CancellationToken token);
+        Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token);
     }
 
     public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) : ISavedSearchRepository
     {
-        public async Task<List<SavedSearchEntity>> GetAll(DateTime dateFilter, CancellationToken token = default)
+        public async Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token = default)
         {
-            var savedSearches = await dataContext
+            // Query
+            var query = dataContext
                 .SavedSearchEntities
-                .Where(fil => fil.LastRunDate == null || fil.LastRunDate > dateFilter)
-                .ToListAsync(token);
+                .Where(fil => fil.LastRunDate == null || fil.LastRunDate > dateFilter);
 
-            return savedSearches;
+            // Count
+            var count = await query.CountAsync(token);
+
+            // Pagination
+            query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            
+            return await PaginatedList<SavedSearchEntity?>.CreateAsync(query, count, pageNumber, pageSize);
         }
     }
 }

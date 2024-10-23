@@ -3,18 +3,27 @@ using SFA.DAS.FAA.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetSavedSearches
 {
     public record GetSavedSearchesQueryResult
     {
         public List<SavedSearch> SavedSearches { get; set; } = [];
+        public int TotalCount { get; set; }
+        public int PageIndex { get; set; }
+        public int PageSize { get; set; }
+        public int TotalPages { get; set; }
 
-        public static implicit operator GetSavedSearchesQueryResult(List<SavedSearchEntity> source)
+        public static implicit operator GetSavedSearchesQueryResult(PaginatedList<SavedSearchEntity> source)
         {
             return new GetSavedSearchesQueryResult
             {
-                SavedSearches = source.Select(s => (SavedSearch)s).ToList()
+                TotalCount = source.TotalCount,
+                PageIndex = source.PageIndex,
+                PageSize = source.PageSize,
+                TotalPages = source.TotalPages,
+                SavedSearches = source.Items.Select(s => (SavedSearch)s).ToList()
             };
         }
 
