@@ -10,6 +10,7 @@ using SFA.DAS.FAA.Domain.Models;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Asp.Versioning;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {

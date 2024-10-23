@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -20,6 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
+using Asp.Versioning;
+using SFA.DAS.FAA.Data;
 
 namespace SFA.DAS.FAA.Api
 {
@@ -64,6 +65,11 @@ namespace SFA.DAS.FAA.Api
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
 
+            var findApprenticeshipsApiConfiguration = _configuration
+                .GetSection("FindApprenticeshipsApi")
+                .Get<FindApprenticeshipsApiConfiguration>();
+            services.AddDatabaseRegistration(findApprenticeshipsApiConfiguration!, _configuration["Environment"]);
+
             if (!ConfigurationIsLocalOrDev())
             {
                 var azureAdConfiguration = _configuration
@@ -82,6 +88,7 @@ namespace SFA.DAS.FAA.Api
             {
                 services
                     .AddHealthChecks()
+                    .AddDbContextCheck<FindApprenticeshipsDataContext>()
                     .AddCheck<AzureSearchHealthCheck>("Azure search re-indexing health",
                         failureStatus: HealthStatus.Degraded, tags: new[] {"ready"});
                 
