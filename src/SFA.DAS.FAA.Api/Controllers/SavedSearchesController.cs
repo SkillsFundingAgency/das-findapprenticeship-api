@@ -35,11 +35,11 @@ namespace SFA.DAS.FAA.Api.Controllers
 
         [HttpPost]
         [Route("update")]
-        public async Task<IActionResult> Update([FromBody] UpdateSavedSearchRequest request)
+        public async Task<IActionResult> PostUpdate([FromBody] PostUpdateSavedSearchesRequest request)
         {
             try
             {
-                await mediator.Send(new PostUpdateSavedSearchesCommand(request.SavedSearchesGuids));
+                await mediator.Send(new PostUpdateSavedSearchesCommand(request.SavedSearchGuids));
                 return NoContent();
             }
             catch (Exception ex)

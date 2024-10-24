@@ -24,7 +24,7 @@ public record PostUpdateSavedSearchesCommandHandler(ISavedSearchRepository Saved
             savedSearches.Add(savedSearch);
         }
 
-        await SavedSearchRepository.BulkSave(savedSearches, cancellationToken).ConfigureAwait(false);
+        if(savedSearches.Count > 0) await SavedSearchRepository.BulkSave(savedSearches, cancellationToken).ConfigureAwait(false);
         
         return Unit.Value;
     }
