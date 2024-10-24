@@ -5,6 +5,8 @@ using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.FAA.Api.ApiRequests;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.PostUpdateSavedSearches;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 
 namespace SFA.DAS.FAA.Api.Controllers
@@ -27,6 +29,22 @@ namespace SFA.DAS.FAA.Api.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, "Get Saved Searches : An error occurred");
+                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        [Route("update")]
+        public async Task<IActionResult> Update([FromBody] UpdateSavedSearchRequest request)
+        {
+            try
+            {
+                await mediator.Send(new PostUpdateSavedSearchesCommand(request.SavedSearchesGuids));
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Post Update Saved Searches : An error occurred");
                 return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
             }
         }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
@@ -13,6 +15,7 @@ namespace SFA.DAS.FAA.Data.SavedSearch
         Task<SavedSearchEntity> Get(Guid id, CancellationToken token);
         Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token);
         Task Save(SavedSearchEntity savedSearch, CancellationToken token);
+        Task BulkSave(IEnumerable<SavedSearchEntity> savedSearchEntities, CancellationToken token);
     }
 
     public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) : ISavedSearchRepository
@@ -27,6 +30,7 @@ namespace SFA.DAS.FAA.Data.SavedSearch
             // Query
             var query = dataContext
                 .SavedSearchEntities
+                .AsNoTracking()
                 .Where(fil => fil.LastRunDate == null || fil.LastRunDate > dateFilter);
 
             // Count
@@ -42,6 +46,14 @@ namespace SFA.DAS.FAA.Data.SavedSearch
         {
             dataContext.SavedSearchEntities.Update(savedSearch);
             await dataContext.SaveChangesAsync(token);
+        }
+
+        public async Task BulkSave(IEnumerable<SavedSearchEntity> savedSearchEntities, CancellationToken token)
+        {
+            var context = dataContext.GetContext();
+            await using var transaction = await context.Database.BeginTransactionAsync(token);
+            await context.BulkUpdateAsync(savedSearchEntities, cancellationToken: token);
+            await transaction.CommitAsync(token);
         }
     }
 }

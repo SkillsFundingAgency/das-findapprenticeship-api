@@ -13,6 +13,7 @@ namespace SFA.DAS.FAA.Data
 {
     public interface IFindApprenticeshipsDataContext
     {
+        DbContext GetContext();
         DbSet<SavedSearchEntity> SavedSearchEntities { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken)); 
     }
@@ -21,6 +22,11 @@ namespace SFA.DAS.FAA.Data
     {
         private readonly EnvironmentConfiguration _environmentConfiguration;
         public DbSet<SavedSearchEntity> SavedSearchEntities { get; set; }
+
+        public DbContext GetContext()
+        {
+            return this;
+        }
 
         private readonly FindApprenticeshipsApiConfiguration? _configuration;
         public FindApprenticeshipsDataContext() { }
