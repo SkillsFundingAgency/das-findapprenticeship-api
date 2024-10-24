@@ -23,10 +23,7 @@ namespace SFA.DAS.FAA.Data
         private readonly EnvironmentConfiguration _environmentConfiguration;
         public DbSet<SavedSearchEntity> SavedSearchEntities { get; set; }
 
-        public DbContext GetContext()
-        {
-            return this;
-        }
+        public DbContext GetContext() => this;
 
         private readonly FindApprenticeshipsApiConfiguration? _configuration;
         public FindApprenticeshipsDataContext() { }
