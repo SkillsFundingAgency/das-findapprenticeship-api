@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.FAA.Api.Controllers;
-using SFA.DAS.FAA.Application.Vacancies.Queries.GetSavedSearches;
 using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.FAA.Application.SavedSearches.GetSavedSearches;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearch
 {
@@ -22,7 +22,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearch
             DateTime lastRunDateFilter,
             GetSavedSearchesQueryResult mediatorResult,
             [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] SavedSearchController controller)
+            [Greedy] SavedSearchesController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
@@ -44,7 +44,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearch
         public async Task Then_Gets_Error_Returns_Status_Code_Result_InternalServerError(
             DateTime lastRunDateFilter,
             [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] SavedSearchController controller)
+            [Greedy] SavedSearchesController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(

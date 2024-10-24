@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.FAA.Application.Vacancies.Queries.GetSavedSearches;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using SFA.DAS.FAA.Application.SavedSearches.GetSavedSearches;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.UnitTests.SavedSearch
