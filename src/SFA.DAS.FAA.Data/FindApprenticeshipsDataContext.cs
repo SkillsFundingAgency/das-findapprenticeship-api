@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -11,6 +14,7 @@ namespace SFA.DAS.FAA.Data
     public interface IFindApprenticeshipsDataContext
     {
         DbSet<SavedSearchEntity> SavedSearchEntities { get; set; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken)); 
     }
 
     public class FindApprenticeshipsDataContext : DbContext, IFindApprenticeshipsDataContext

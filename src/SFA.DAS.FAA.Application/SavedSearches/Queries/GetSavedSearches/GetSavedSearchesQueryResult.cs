@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
 
-namespace SFA.DAS.FAA.Application.SavedSearches.GetSavedSearches
+namespace SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches
 {
     public record GetSavedSearchesQueryResult
     {

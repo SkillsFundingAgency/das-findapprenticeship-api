@@ -10,11 +10,18 @@ namespace SFA.DAS.FAA.Data.SavedSearch
 {
     public interface ISavedSearchRepository
     {
+        Task<SavedSearchEntity> Get(Guid id, CancellationToken token);
         Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token);
+        Task Save(SavedSearchEntity savedSearch, CancellationToken token);
     }
 
     public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) : ISavedSearchRepository
     {
+        public async Task<SavedSearchEntity> Get(Guid id, CancellationToken token)
+        {
+            return await dataContext.SavedSearchEntities.FirstOrDefaultAsync(fil => fil.Id == id, token);
+        }
+
         public async Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token = default)
         {
             // Query
@@ -29,6 +36,12 @@ namespace SFA.DAS.FAA.Data.SavedSearch
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
             
             return await PaginatedList<SavedSearchEntity?>.CreateAsync(query, count, pageNumber, pageSize);
+        }
+        
+        public async Task Save(SavedSearchEntity savedSearch, CancellationToken token = default)
+        {
+            dataContext.SavedSearchEntities.Update(savedSearch);
+            await dataContext.SaveChangesAsync(token);
         }
     }
 }

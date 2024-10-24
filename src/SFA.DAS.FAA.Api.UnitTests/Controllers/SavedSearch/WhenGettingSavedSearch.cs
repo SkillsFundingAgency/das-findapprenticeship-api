@@ -10,7 +10,7 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.FAA.Application.SavedSearches.GetSavedSearches;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearch
 {

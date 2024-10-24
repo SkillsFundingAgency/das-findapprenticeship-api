@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using SFA.DAS.FAA.Application.SavedSearches.GetSavedSearches;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.UnitTests.SavedSearch

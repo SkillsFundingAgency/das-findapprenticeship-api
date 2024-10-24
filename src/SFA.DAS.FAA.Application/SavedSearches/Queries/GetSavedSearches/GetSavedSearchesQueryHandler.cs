@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.FAA.Data.SavedSearch;
 
-namespace SFA.DAS.FAA.Application.SavedSearches.GetSavedSearches;
+namespace SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 
 public record GetSavedSearchesQueryHandler(ISavedSearchRepository SavedSearchRepository) : IRequestHandler<GetSavedSearchesQuery, GetSavedSearchesQueryResult>
 {

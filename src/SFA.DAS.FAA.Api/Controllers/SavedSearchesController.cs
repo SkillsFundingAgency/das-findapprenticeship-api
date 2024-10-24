@@ -5,7 +5,7 @@ using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.FAA.Application.SavedSearches.GetSavedSearches;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {

@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="SavedSearches\" />
+      <Folder Include="SavedSearches\Queries\" />
     </ItemGroup>
 
 </Project>
