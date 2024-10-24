@@ -12,10 +12,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 
-namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearch
+namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearches
 {
     [TestFixture]
-    public class WhenGettingSavedSearch
+    public class WhenGettingSavedSearches
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_Result_From_Mediator(
