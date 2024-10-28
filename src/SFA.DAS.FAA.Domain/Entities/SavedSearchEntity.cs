@@ -16,11 +16,11 @@ namespace SFA.DAS.FAA.Domain.Entities
             return new SavedSearchEntity
             {
                 Id = source.Id,
-                UserRef = source.UserRef,
+                UserRef = source.UserReference,
                 DateCreated = source.DateCreated,
                 LastRunDate = source.LastRunDate,
                 SearchParameters = source.SearchParameters,
-                VacancyRefs = source.VacancyRefs
+                VacancyRefs = source.VacancyReferences
             };
         }
     }
