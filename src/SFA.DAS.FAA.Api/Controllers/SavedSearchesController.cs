@@ -3,11 +3,12 @@ using System.Net;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.FAA.Api.ApiRequests;
-using SFA.DAS.FAA.Application.SavedSearches.Commands.PostUpdateSavedSearches;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
+using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
@@ -33,18 +34,24 @@ namespace SFA.DAS.FAA.Api.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("update")]
-        public async Task<IActionResult> PostUpdate([FromBody] PostUpdateSavedSearchesRequest request)
+        [HttpPatch]
+        [Route("{id}")]
+        public async Task<IActionResult> PatchSavedSearch([FromRoute] Guid id, [FromBody] JsonPatchDocument<PatchSavedSearch> savedSearchRequest)
         {
             try
             {
-                await mediator.Send(new PostUpdateSavedSearchesCommand(request.SavedSearchGuids));
+                var result = await mediator.Send(new PatchSavedSearchCommand(id, savedSearchRequest));
+
+                if (result.SavedSearch is null)
+                {
+                    return NotFound();
+                }
+
                 return NoContent();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Post Update Saved Searches : An error occurred");
+                logger.LogError(ex, "Patch Saved Search : An error occurred");
                 return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
             }
         }

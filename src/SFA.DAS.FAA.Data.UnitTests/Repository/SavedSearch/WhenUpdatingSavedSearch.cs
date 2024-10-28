@@ -24,7 +24,7 @@ public class WhenUpdatingSavedSearch
         context.Setup(x => x.SavedSearchEntities).ReturnsDbSet([savedSearchEntity]);
 
         //Act
-        await repository.Save(savedSearchEntity, CancellationToken.None);
+        await repository.Update(savedSearchEntity, CancellationToken.None);
 
         //Assert
         context.Verify(x => x.SaveChangesAsync(CancellationToken.None), Times.Once);

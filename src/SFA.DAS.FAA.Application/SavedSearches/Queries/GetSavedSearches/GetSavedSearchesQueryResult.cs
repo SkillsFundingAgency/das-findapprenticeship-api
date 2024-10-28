@@ -9,7 +9,7 @@ namespace SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches
 {
     public record GetSavedSearchesQueryResult
     {
-        public List<SavedSearch> SavedSearches { get; set; } = [];
+        public List<SavedSearch> SavedSearches { get; private init; } = [];
         public int TotalCount { get; set; }
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
@@ -33,7 +33,7 @@ namespace SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches
             public Guid UserReference { get; set; }
             public DateTime DateCreated { get; set; }
             public DateTime? LastRunDate { get; set; }
-            public List<string> VacancyReferences { get; set; }
+            public DateTime? EmailLastSendDate { get; set; }
             public SearchParameters SearchCriteriaParameters { get; set; }
 
             public static implicit operator SavedSearch(SavedSearchEntity source)
@@ -44,7 +44,7 @@ namespace SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches
                     UserReference = source.UserRef,
                     DateCreated = source.DateCreated,
                     LastRunDate = source.LastRunDate,
-                    VacancyReferences = JsonConvert.DeserializeObject<List<string>>(source.VacancyRefs),
+                    EmailLastSendDate = source.EmailLastSendDate,
                     SearchCriteriaParameters = JsonConvert.DeserializeObject<SearchParameters>(source.SearchParameters)
                 };
             }
@@ -54,7 +54,8 @@ namespace SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches
         {
             public List<string>? Categories { get; set; }
             public List<string>? Levels { get; set; }
-            public string? Location { get; set; }
+            public string? Latitude { get; set; }
+            public string? Longitude { get; set; }
             public int? Distance { get; set; }
             public string? SearchTerm { get; set; }
             public bool DisabilityConfident { get; set; }

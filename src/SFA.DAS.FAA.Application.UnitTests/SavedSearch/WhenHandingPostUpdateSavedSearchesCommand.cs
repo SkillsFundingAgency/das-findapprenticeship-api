@@ -1,15 +1,14 @@
 using AutoFixture.NUnit3;
 using FluentAssertions;
-using MediatR;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.FAA.Application.SavedSearches.Commands.PostUpdateSavedSearches;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace SFA.DAS.FAA.Application.UnitTests.SavedSearch;
 
@@ -19,30 +18,48 @@ public class WhenHandingPostUpdateSavedSearchesCommand
     [TestFixture]
     public class WhenHandlingGetSavedSearchQuery
     {
-        [Test, MoqAutoData]
+        [Test, RecursiveMoqAutoData]
         public async Task Then_SavedSearches_Updates_In_Repository(
-            PostUpdateSavedSearchesCommand command,
+            SavedSearchEntity savedSearchEntity,
+            PatchSavedSearch patch,
             [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
-            PostUpdateSavedSearchesCommandHandler handler)
+            PatchSavedSearchCommandHandler handler)
         {
             //arrange
+            var update = savedSearchEntity;
+            var patchCommand = new JsonPatchDocument<PatchSavedSearch>();
+            patchCommand.Replace(path => path.LastRunDate, patch.LastRunDate);
+            patchCommand.Replace(path => path.EmailLastSendDate, patch.EmailLastSendDate);
+
+            var command = new PatchSavedSearchCommand(savedSearchEntity.Id, patchCommand);
+
+            savedSearchRepository
+                .Setup(x => x.GetById(savedSearchEntity.Id, CancellationToken.None))
+                .ReturnsAsync(savedSearchEntity);
+
             var result = await handler.Handle(command, CancellationToken.None);
 
-            result.Should().Be(Unit.Value);
-            savedSearchRepository.Verify(x => x.BulkSave(It.IsAny<List<SavedSearchEntity>>(), CancellationToken.None), Times.Once);
+            result.Should().NotBeNull();
+            result.SavedSearch.Should().BeEquivalentTo(savedSearchEntity);
+            savedSearchRepository.Verify(x => x.Update(It.IsAny<SavedSearchEntity>(), CancellationToken.None), Times.Once);
         }
 
         [Test, MoqAutoData]
         public async Task Then_SavedSearches_NotFound_Repository_Not_Called(
+            PatchSavedSearchCommand command,
             [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
-            PostUpdateSavedSearchesCommandHandler handler)
+            PatchSavedSearchCommandHandler handler)
         {
             //arrange
-            var command = new PostUpdateSavedSearchesCommand(SavedSearchGuids: []);
+            savedSearchRepository
+                .Setup(x => x.GetById(command.Id, CancellationToken.None))
+                .ReturnsAsync((SavedSearchEntity)null!);
+
             var result = await handler.Handle(command, CancellationToken.None);
 
-            result.Should().Be(Unit.Value);
-            savedSearchRepository.Verify(x => x.BulkSave(It.IsAny<List<SavedSearchEntity>>(), CancellationToken.None), Times.Never);
+            result.SavedSearch.Should().BeNull();
+
+            savedSearchRepository.Verify(x => x.Update(It.IsAny<SavedSearchEntity>(), CancellationToken.None), Times.Never);
         }
     }
 }

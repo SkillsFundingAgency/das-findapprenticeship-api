@@ -27,8 +27,6 @@
       <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.6.3" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.3" />
       <PackageReference Include="System.Text.Json" Version="8.0.5" />
-      <PackageReference Include="EFCore.BulkExtensions.Core" Version="8.1.0" />
-      <PackageReference Include="EFCore.BulkExtensions.SqlServer" Version="8.1.0" />
     </ItemGroup>
 
 </Project>

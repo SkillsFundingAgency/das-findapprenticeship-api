@@ -19,18 +19,16 @@ namespace SFA.DAS.FAA.Application.UnitTests.SavedSearch
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_SavedSearches_From_Repository(
-            List<string> vacancyReferences,
             GetSavedSearchesQueryResult.SearchParameters searchParameters,
             GetSavedSearchesQuery query,
             PaginatedList<SavedSearchEntity> savedSearchEntities,
             [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
-            GetSavedSearchesQueryHandler handler)
+            [Greedy] GetSavedSearchesQueryHandler handler)
         {
             //arrange
             foreach (var savedSearchEntity in savedSearchEntities.Items)
             {
                 savedSearchEntity.SearchParameters = JsonConvert.SerializeObject(searchParameters);
-                savedSearchEntity.VacancyRefs = JsonConvert.SerializeObject(vacancyReferences);
             }
 
             savedSearchRepository
@@ -42,7 +40,6 @@ namespace SFA.DAS.FAA.Application.UnitTests.SavedSearch
             result.SavedSearches
                 .Should().BeEquivalentTo(savedSearchEntities.Items, options => options
                     .Excluding(ex => ex.SearchParameters)
-                    .Excluding(ex => ex.VacancyRefs)
                     .Excluding(ex => ex.UserRef)
                 );
         }
