@@ -8,8 +8,8 @@ namespace SFA.DAS.FAA.Domain.Entities
         public Guid UserReference { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? LastRunDate { get; set; }
+        public DateTime? EmailLastSendDate { get; set; }
         public string SearchParameters { get; set; }
-        public string? VacancyReferences { get; set; }
 
         public static implicit operator SavedSearch(SavedSearchEntity source)
         {
@@ -19,8 +19,8 @@ namespace SFA.DAS.FAA.Domain.Entities
                 UserReference = source.UserRef,
                 DateCreated = source.DateCreated,
                 LastRunDate = source.LastRunDate,
+                EmailLastSendDate = source.EmailLastSendDate,
                 SearchParameters = source.SearchParameters,
-                VacancyReferences = source.VacancyRefs
             };
         }
     }

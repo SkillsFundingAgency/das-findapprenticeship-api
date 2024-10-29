@@ -25,8 +25,8 @@ public class SavedSearchesRepository(IFindApprenticeshipsDataContext dataContext
         
         savedSearch.DateCreated = savedSearchEntity.DateCreated;
         savedSearch.LastRunDate = savedSearchEntity.LastRunDate;
+        savedSearch.EmailLastSendDate = savedSearchEntity.EmailLastSendDate;
         savedSearch.SearchParameters = savedSearchEntity.SearchParameters;
-        savedSearch.VacancyRefs = savedSearchEntity.VacancyRefs;
         
         await dataContext.SaveChangesAsync();
         return savedSearch;

@@ -42,9 +42,9 @@ public class WhenUpsertingSavedSearch
             Id = savedSearchEntity.Id,
             DateCreated = savedSearchEntity.DateCreated,
             LastRunDate = DateTime.UtcNow,
+            EmailLastSendDate = DateTime.UtcNow,
             SearchParameters = "new search parameters",
             UserRef = savedSearchEntity.UserRef,
-            VacancyRefs = "123,234"
         };
         
         // act
