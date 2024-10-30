@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.SaveSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchCount;
 
 namespace SFA.DAS.FAA.Api.Controllers;
 
@@ -18,6 +20,7 @@ public class SavedSearchesController(IMediator mediator) : ControllerBase
     [HttpPost]
     [Route("")]
     [ProducesResponseType<PostSaveSearchResponse>((int)HttpStatusCode.OK)]
+    [ProducesResponseType<GetSavedSearchCountResponse>((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> SaveSearch([FromBody] SaveSearchRequest request)
     {
         var result = await mediator.Send(new SaveSearchCommand(
@@ -26,5 +29,19 @@ public class SavedSearchesController(IMediator mediator) : ControllerBase
         ));
 
         return Ok(PostSaveSearchResponse.From(result));
+    }
+
+    [HttpGet]
+    [Route("count")]
+    [ProducesResponseType<GetSavedSearchCountResponse>((int)HttpStatusCode.OK)]
+    [ProducesResponseType<GetSavedSearchCountResponse>((int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> GetSavedSearchCount([FromQuery] Guid candidateId)
+    {
+        var result = await mediator.Send(new GetSavedSearchCountQuery
+        {
+            UserReference = candidateId
+        });
+
+        return Ok(new GetSavedSearchCountResponse(candidateId, result));
     }
 }
