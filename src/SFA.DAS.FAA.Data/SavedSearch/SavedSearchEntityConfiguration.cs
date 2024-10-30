@@ -15,8 +15,8 @@ namespace SFA.DAS.FAA.Data.SavedSearch
             builder.Property(x => x.UserRef).HasColumnName("UserRef").HasColumnType("uniqueidentifier").IsRequired();
             builder.Property(x => x.DateCreated).HasColumnName("DateCreated").HasColumnType("datetime").IsRequired();
             builder.Property(x => x.LastRunDate).HasColumnName("LastRunDate").HasColumnType("datetime").IsRequired(false);
+            builder.Property(x => x.EmailLastSendDate).HasColumnName("EmailLastSendDate").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.SearchParameters).HasColumnName("SearchParameters").HasColumnType("varchar(max)").IsRequired();
-            builder.Property(x => x.VacancyRefs).HasColumnName("VacancyRefs").HasColumnType("varchar(max)").IsRequired(false);
         }
     }
 }
