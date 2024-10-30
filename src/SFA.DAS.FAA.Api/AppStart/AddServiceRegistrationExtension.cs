@@ -11,7 +11,7 @@ namespace SFA.DAS.FAA.Api.AppStart
         {
             services.AddTransient<IAcsVacancySearchRepository, AcsVacancySearchRepository>();
             services.AddTransient<IAzureSearchHelper, AzureSearchHelper>();
-            services.AddScoped<ISavedSearchesRepository, SavedSearchesRepository>();
+            services.AddTransient<ISavedSearchRepository, SavedSearchRepository>();
         }
     }
 }

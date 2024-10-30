@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -6,11 +6,16 @@
 
     <ItemGroup>
       <PackageReference Include="MediatR" Version="12.1.1" />
+      <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.10" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\SFA.DAS.FAA.Data\SFA.DAS.FAA.Data.csproj" />
       <ProjectReference Include="..\SFA.DAS.FAA.Domain\SFA.DAS.FAA.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="SavedSearches\Queries\" />
     </ItemGroup>
 
 </Project>

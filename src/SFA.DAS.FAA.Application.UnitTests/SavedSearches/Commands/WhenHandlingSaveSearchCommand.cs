@@ -12,7 +12,7 @@ public class WhenHandlingSaveSearchCommand
     public async Task Then_The_Search_Is_Saved(
         SaveSearchCommand request,
         SavedSearchEntity savedSearchEntity,
-        [Frozen] Mock<ISavedSearchesRepository> savedSearchesRepository,
+        [Frozen] Mock<ISavedSearchRepository> savedSearchesRepository,
         SaveSearchCommandHandler sut)
     {
         // arrange

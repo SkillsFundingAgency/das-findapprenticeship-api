@@ -7,7 +7,7 @@ using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Application.SavedSearches.Commands.SaveSearch;
 
-public class SaveSearchCommandHandler(ISavedSearchesRepository savedSearchesRepository): IRequestHandler<SaveSearchCommand, SaveSearchCommandResult>
+public class SaveSearchCommandHandler(ISavedSearchRepository savedSearchesRepository): IRequestHandler<SaveSearchCommand, SaveSearchCommandResult>
 {
     public async Task<SaveSearchCommandResult> Handle(SaveSearchCommand request, CancellationToken cancellationToken)
     {

@@ -14,7 +14,7 @@ public class WhenUpsertingSavedSearch
     public async Task Then_The_SavedSearch_Is_Inserted_If_Not_Exists(
         SavedSearchEntity savedSearchEntity,
         [Frozen] Mock<IFindApprenticeshipsDataContext> context,
-        SavedSearchesRepository sut)
+        SavedSearchRepository sut)
     {
         // arrange
         savedSearchEntity.Id = Guid.Empty;
@@ -33,7 +33,7 @@ public class WhenUpsertingSavedSearch
     public async Task Then_The_SavedSearch_Is_Updated_If_Exists(
         SavedSearchEntity savedSearchEntity,
         [Frozen] Mock<IFindApprenticeshipsDataContext> context,
-        SavedSearchesRepository sut)
+        SavedSearchRepository sut)
     {
         // arrange
         context.Setup(x => x.SavedSearchEntities).ReturnsDbSet(new List<SavedSearchEntity>{ savedSearchEntity });

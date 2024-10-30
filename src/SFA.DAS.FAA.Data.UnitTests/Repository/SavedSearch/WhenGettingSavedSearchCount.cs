@@ -14,7 +14,7 @@ public class WhenGettingSavedSearchCount
     public async Task Then_If_There_Are_No_Records_For_A_Candidate_Then_Zero_Is_Returned(
         Guid candidateId,
         [Frozen] Mock<IFindApprenticeshipsDataContext> context,
-        SavedSearchesRepository sut)
+        SavedSearchRepository sut)
     {
         // arrange
         context
@@ -33,7 +33,7 @@ public class WhenGettingSavedSearchCount
         [Frozen] Guid candidateId,
         List<SavedSearchEntity> entities,
         [Frozen] Mock<IFindApprenticeshipsDataContext> context,
-        SavedSearchesRepository sut)
+        SavedSearchRepository sut)
     {
         // arrange
         var savedSearchEntity = entities.First();

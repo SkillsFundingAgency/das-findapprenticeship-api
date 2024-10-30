@@ -11,7 +11,7 @@ public class WhenHandlingGetSavedSearchCountQuery
     public async Task Then_The_Count_Is_Returned(
         GetSavedSearchCountQuery query,
         int count,
-        [Frozen] Mock<ISavedSearchesRepository> savedSearchesRepository,
+        [Frozen] Mock<ISavedSearchRepository> savedSearchesRepository,
         GetSavedSearchCountQueryHandler sut)
     {
         // arrange

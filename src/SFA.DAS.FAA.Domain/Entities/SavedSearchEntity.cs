@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace SFA.DAS.FAA.Domain.Entities
 {
@@ -9,7 +9,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public DateTime DateCreated { get; set; }
         public DateTime? LastRunDate { get; set; }
         public DateTime? EmailLastSendDate { get; set; }
-        public string SearchParameters { get; set; }
+        public string SearchParameters { get; set; } = null!;
 
         public static implicit operator SavedSearchEntity(SavedSearch source)
         {
