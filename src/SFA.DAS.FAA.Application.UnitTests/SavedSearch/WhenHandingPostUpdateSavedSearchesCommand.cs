@@ -26,7 +26,6 @@ public class WhenHandingPostUpdateSavedSearchesCommand
             PatchSavedSearchCommandHandler handler)
         {
             //arrange
-            var update = savedSearchEntity;
             var patchCommand = new JsonPatchDocument<PatchSavedSearch>();
             patchCommand.Replace(path => path.LastRunDate, patch.LastRunDate);
             patchCommand.Replace(path => path.EmailLastSendDate, patch.EmailLastSendDate);
@@ -40,7 +39,8 @@ public class WhenHandingPostUpdateSavedSearchesCommand
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.Should().NotBeNull();
-            result.SavedSearch.Should().BeEquivalentTo(savedSearchEntity);
+            result.SavedSearch.Should().BeEquivalentTo(savedSearchEntity, options=>options.Excluding(c=>c.UserRef));
+            result.SavedSearch.UserReference.Should().Be(savedSearchEntity.UserRef);
             savedSearchRepository.Verify(x => x.Update(It.IsAny<SavedSearchEntity>(), CancellationToken.None), Times.Once);
         }
 
