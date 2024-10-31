@@ -63,7 +63,7 @@ public record GetSavedSearchesResponse(
     public static GetSavedSearchesResponse From(GetSavedSearchesQueryResult source)
     {
         return new GetSavedSearchesResponse(
-            source.SavedSearches.Select(SavedSearchResponse.From)?.ToList() ?? new List<SavedSearchResponse>(),
+            source.SavedSearches.Select(SavedSearchResponse.From).ToList(),
             source.TotalCount,
             source.PageIndex,
             source.PageSize,
