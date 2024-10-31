@@ -21,7 +21,7 @@ public class WhenUpsertingSavedSearch
         context.Setup(x => x.SavedSearchEntities).ReturnsDbSet(new List<SavedSearchEntity>());
 
         // act
-        var actual = await sut.Upsert(savedSearchEntity);
+        var actual = await sut.Upsert(savedSearchEntity, default);
 
         // assert
         context.Verify(x => x.SavedSearchEntities.AddAsync(savedSearchEntity, CancellationToken.None), Times.Once);
@@ -48,7 +48,7 @@ public class WhenUpsertingSavedSearch
         };
         
         // act
-        var actual = await sut.Upsert(updatedSearchEntity);
+        var actual = await sut.Upsert(updatedSearchEntity, default);
 
         // assert
         context.Verify(x => x.SavedSearchEntities.AddAsync(It.IsAny<SavedSearchEntity>(), CancellationToken.None), Times.Never);

@@ -12,57 +12,53 @@ namespace SFA.DAS.FAA.Application.UnitTests.SavedSearches.Commands;
 [TestFixture]
 public class WhenHandingPostUpdateSavedSearchesCommand
 {
-    [TestFixture]
-    public class WhenHandlingGetSavedSearchQuery
+    [Test, RecursiveMoqAutoData]
+    public async Task Then_SavedSearches_Updates_In_Repository(
+        SearchParameters searchParameters,
+        SavedSearchEntity savedSearchEntity,
+        PatchSavedSearch patch,
+        [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
+        PatchSavedSearchCommandHandler handler)
     {
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_SavedSearches_Updates_In_Repository(
-            SearchParameters searchParameters,
-            SavedSearchEntity savedSearchEntity,
-            PatchSavedSearch patch,
-            [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
-            PatchSavedSearchCommandHandler handler)
-        {
-            // arrange
-            savedSearchEntity.SearchParameters = searchParameters.ToJson();
-            
-            var patchCommand = new JsonPatchDocument<PatchSavedSearch>();
-            patchCommand.Replace(path => path.LastRunDate, patch.LastRunDate);
-            patchCommand.Replace(path => path.EmailLastSendDate, patch.EmailLastSendDate);
+        // arrange
+        savedSearchEntity.SearchParameters = searchParameters.ToJson();
+        
+        var patchCommand = new JsonPatchDocument<PatchSavedSearch>();
+        patchCommand.Replace(path => path.LastRunDate, patch.LastRunDate);
+        patchCommand.Replace(path => path.EmailLastSendDate, patch.EmailLastSendDate);
 
-            var command = new PatchSavedSearchCommand(savedSearchEntity.Id, patchCommand);
+        var command = new PatchSavedSearchCommand(savedSearchEntity.Id, patchCommand);
 
-            savedSearchRepository
-                .Setup(x => x.GetById(savedSearchEntity.Id, CancellationToken.None))
-                .ReturnsAsync(savedSearchEntity);
+        savedSearchRepository
+            .Setup(x => x.GetById(savedSearchEntity.Id, CancellationToken.None))
+            .ReturnsAsync(savedSearchEntity);
 
-            // act
-            var result = await handler.Handle(command, CancellationToken.None);
+        // act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-            // assert
-            result.Should().NotBeNull();
-            result.SavedSearch.Should().BeEquivalentTo(savedSearchEntity, options=>options.Excluding(c=>c.UserRef).Excluding(x => x.SearchParameters));
-            result.SavedSearch.UserReference.Should().Be(savedSearchEntity.UserRef);
-            result.SavedSearch.SearchParameters.Should().BeEquivalentTo(searchParameters);
-            savedSearchRepository.Verify(x => x.Update(It.IsAny<SavedSearchEntity>(), CancellationToken.None), Times.Once);
-        }
+        // assert
+        result.Should().NotBeNull();
+        result.SavedSearch.Should().BeEquivalentTo(savedSearchEntity, options=>options.Excluding(c=>c.UserRef).Excluding(x => x.SearchParameters));
+        result.SavedSearch.UserReference.Should().Be(savedSearchEntity.UserRef);
+        result.SavedSearch.SearchParameters.Should().BeEquivalentTo(searchParameters);
+        savedSearchRepository.Verify(x => x.Update(It.IsAny<SavedSearchEntity>(), CancellationToken.None), Times.Once);
+    }
 
-        [Test, MoqAutoData]
-        public async Task Then_SavedSearches_NotFound_Repository_Not_Called(
-            PatchSavedSearchCommand command,
-            [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
-            PatchSavedSearchCommandHandler handler)
-        {
-            //arrange
-            savedSearchRepository
-                .Setup(x => x.GetById(command.Id, CancellationToken.None))
-                .ReturnsAsync((SavedSearchEntity)null!);
+    [Test, MoqAutoData]
+    public async Task Then_SavedSearches_NotFound_Repository_Not_Called(
+        PatchSavedSearchCommand command,
+        [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
+        PatchSavedSearchCommandHandler handler)
+    {
+        //arrange
+        savedSearchRepository
+            .Setup(x => x.GetById(command.Id, CancellationToken.None))
+            .ReturnsAsync((SavedSearchEntity)null!);
 
-            var result = await handler.Handle(command, CancellationToken.None);
+        var result = await handler.Handle(command, CancellationToken.None);
 
-            result.SavedSearch.Should().BeNull();
+        result.SavedSearch.Should().BeNull();
 
-            savedSearchRepository.Verify(x => x.Update(It.IsAny<SavedSearchEntity>(), CancellationToken.None), Times.Never);
-        }
+        savedSearchRepository.Verify(x => x.Update(It.IsAny<SavedSearchEntity>(), CancellationToken.None), Times.Never);
     }
 }

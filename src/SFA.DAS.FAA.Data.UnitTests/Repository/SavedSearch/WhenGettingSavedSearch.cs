@@ -34,7 +34,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository.SavedSearch
             context.Setup(x => x.SavedSearchEntities).ReturnsDbSet(savedSearchEntities.Items);
 
             //Act
-            var result = await repository.GetAll(lastRunDateTime, 1, 1000);
+            var result = await repository.GetAll(lastRunDateTime, 1, 1000, default);
 
             //Assert
             result.Items.Should().BeEquivalentTo(savedSearchEntities.Items);
@@ -57,7 +57,7 @@ namespace SFA.DAS.FAA.Data.UnitTests.Repository.SavedSearch
             context.Setup(x => x.SavedSearchEntities).ReturnsDbSet(savedSearchEntities.Items);
 
             //Act
-            var result = await repository.GetAll(lastRunDateTime, 1, 1000);
+            var result = await repository.GetAll(lastRunDateTime, 1, 1000, default);
 
             //Assert
             result.Items.Should().BeEquivalentTo(savedSearchEntities.Items);

@@ -24,7 +24,7 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
         return await dataContext.SavedSearchEntities.FirstOrDefaultAsync(fil => fil.Id == id, token);
     }
 
-    public async Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token = default)
+    public async Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token)
     {
         // Query
         var query = dataContext
@@ -49,7 +49,7 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
         await dataContext.SaveChangesAsync(token);
     }
         
-    public async Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity, CancellationToken token = default)
+    public async Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity, CancellationToken token)
     {
         var savedSearch = await dataContext.SavedSearchEntities.SingleOrDefaultAsync(x => x.Id == savedSearchEntity.Id, token);
 
