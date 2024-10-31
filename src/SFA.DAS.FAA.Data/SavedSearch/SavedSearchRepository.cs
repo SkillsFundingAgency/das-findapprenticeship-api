@@ -13,7 +13,7 @@ public interface ISavedSearchRepository
     Task<SavedSearchEntity> GetById(Guid id, CancellationToken token);
     Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token);
     Task Update(SavedSearchEntity savedSearch, CancellationToken token);
-    Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity);
+    Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity, CancellationToken token);
     Task<int> Count(Guid userReference);
 }
 
@@ -49,14 +49,14 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
         await dataContext.SaveChangesAsync(token);
     }
         
-    public async Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity)
+    public async Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity, CancellationToken token = default)
     {
-        var savedSearch = await dataContext.SavedSearchEntities.SingleOrDefaultAsync(x => x.Id == savedSearchEntity.Id);
+        var savedSearch = await dataContext.SavedSearchEntities.SingleOrDefaultAsync(x => x.Id == savedSearchEntity.Id, token);
 
         if (savedSearch == null)
         {
-            await dataContext.SavedSearchEntities.AddAsync(savedSearchEntity);
-            await dataContext.SaveChangesAsync();
+            await dataContext.SavedSearchEntities.AddAsync(savedSearchEntity, token);
+            await dataContext.SaveChangesAsync(token);
             return savedSearchEntity;
         }
         
@@ -65,7 +65,7 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
         savedSearch.EmailLastSendDate = savedSearchEntity.EmailLastSendDate;
         savedSearch.SearchParameters = savedSearchEntity.SearchParameters;
         
-        await dataContext.SaveChangesAsync();
+        await dataContext.SaveChangesAsync(token);
         return savedSearch;
     }
 

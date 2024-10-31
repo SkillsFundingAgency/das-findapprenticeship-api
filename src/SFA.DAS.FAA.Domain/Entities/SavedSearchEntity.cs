@@ -1,4 +1,5 @@
 using System;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Domain.Entities
 {
@@ -20,7 +21,7 @@ namespace SFA.DAS.FAA.Domain.Entities
                 DateCreated = source.DateCreated,
                 LastRunDate = source.LastRunDate,
                 EmailLastSendDate = source.EmailLastSendDate,
-                SearchParameters = source.SearchParameters,
+                SearchParameters = source.SearchParameters.ToJson(),
             };
         }
     }

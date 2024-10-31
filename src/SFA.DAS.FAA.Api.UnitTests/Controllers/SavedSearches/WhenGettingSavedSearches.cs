@@ -10,6 +10,7 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearches
@@ -35,7 +36,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearches
 
             result.Should().NotBeNull();
             result!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            var apiModel = result.Value as GetSavedSearchesQueryResult;
+            var apiModel = result.Value as GetSavedSearchesResponse;
             apiModel.Should().NotBeNull();
             apiModel.Should().BeEquivalentTo(mediatorResult);
         }

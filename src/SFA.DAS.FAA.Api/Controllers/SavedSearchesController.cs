@@ -24,12 +24,14 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
 {
     [HttpGet]
     [Route("")]
+    [ProducesResponseType<GetSavedSearchesResponse>((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> Get([FromQuery] DateTime lastRunDateFilter, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
     {
         try
         {
             var result = await mediator.Send(new GetSavedSearchesQuery(lastRunDateFilter, pageNumber, pageSize));
-            return Ok(result);
+            return Ok(GetSavedSearchesResponse.From(result));
         }
         catch (Exception ex)
         {
@@ -40,6 +42,9 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
 
     [HttpPatch]
     [Route("{id}")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> PatchSavedSearch([FromRoute] Guid id, [FromBody] JsonPatchDocument<PatchSavedSearch> savedSearchRequest)
     {
         try

@@ -3,6 +3,7 @@ using SFA.DAS.FAA.Data.SavedSearch;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
 
@@ -27,7 +28,7 @@ public class PatchSavedSearchCommandHandler(ISavedSearchRepository SavedSearchRe
 
         return new PatchSavedSearchCommandResponse
         {
-            SavedSearch = savedSearch
+            SavedSearch = SavedSearch.From(savedSearch)
         };
     }
 }

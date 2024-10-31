@@ -1,16 +1,13 @@
-using AutoFixture.NUnit3;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
-using SFA.DAS.FAA.Data.SavedSearch;
-using SFA.DAS.FAA.Domain.Entities;
-using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
+using Newtonsoft.Json;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
+using SFA.DAS.FAA.Data.SavedSearch;
+using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 
-namespace SFA.DAS.FAA.Application.UnitTests.SavedSearch;
+namespace SFA.DAS.FAA.Application.UnitTests.SavedSearches.Commands;
 
 [TestFixture]
 public class WhenHandingPostUpdateSavedSearchesCommand
@@ -20,12 +17,15 @@ public class WhenHandingPostUpdateSavedSearchesCommand
     {
         [Test, RecursiveMoqAutoData]
         public async Task Then_SavedSearches_Updates_In_Repository(
+            SearchParameters searchParameters,
             SavedSearchEntity savedSearchEntity,
             PatchSavedSearch patch,
             [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
             PatchSavedSearchCommandHandler handler)
         {
-            //arrange
+            // arrange
+            savedSearchEntity.SearchParameters = searchParameters.ToJson();
+            
             var patchCommand = new JsonPatchDocument<PatchSavedSearch>();
             patchCommand.Replace(path => path.LastRunDate, patch.LastRunDate);
             patchCommand.Replace(path => path.EmailLastSendDate, patch.EmailLastSendDate);
@@ -36,11 +36,14 @@ public class WhenHandingPostUpdateSavedSearchesCommand
                 .Setup(x => x.GetById(savedSearchEntity.Id, CancellationToken.None))
                 .ReturnsAsync(savedSearchEntity);
 
+            // act
             var result = await handler.Handle(command, CancellationToken.None);
 
+            // assert
             result.Should().NotBeNull();
-            result.SavedSearch.Should().BeEquivalentTo(savedSearchEntity, options=>options.Excluding(c=>c.UserRef));
+            result.SavedSearch.Should().BeEquivalentTo(savedSearchEntity, options=>options.Excluding(c=>c.UserRef).Excluding(x => x.SearchParameters));
             result.SavedSearch.UserReference.Should().Be(savedSearchEntity.UserRef);
+            result.SavedSearch.SearchParameters.Should().BeEquivalentTo(searchParameters);
             savedSearchRepository.Verify(x => x.Update(It.IsAny<SavedSearchEntity>(), CancellationToken.None), Times.Once);
         }
 

@@ -15,8 +15,9 @@ public class SaveSearchCommandHandler(ISavedSearchRepository savedSearchesReposi
         {
             UserRef = request.UserReference,
             DateCreated = DateTime.UtcNow,
-            SearchParameters = request.SearchParameters,
-        });
+            SearchParameters = request.SearchParameters.ToJson(),
+        },
+        cancellationToken);
         
         return new SaveSearchCommandResult(result.Id);
     }
