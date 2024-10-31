@@ -63,7 +63,7 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
     [HttpPost]
     [Route("")]
     [ProducesResponseType<PostSaveSearchResponse>((int)HttpStatusCode.OK)]
-    [ProducesResponseType<GetSavedSearchCountResponse>((int)HttpStatusCode.InternalServerError)]
+    [ProducesResponseType<PostSaveSearchResponse>((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> SaveSearch([FromBody] SaveSearchRequest request)
     {
         var result = await mediator.Send(new SaveSearchCommand(
