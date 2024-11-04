@@ -96,8 +96,8 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
 
     [HttpDelete]
     [Route("{id:guid}")]
-    [ProducesResponseType<GetSavedSearchCountResponse>((int)HttpStatusCode.NoContent)]
-    [ProducesResponseType<GetSavedSearchCountResponse>((int)HttpStatusCode.InternalServerError)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> Delete([FromRoute]Guid id)
     {
         try
