@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.SaveSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchCount;
@@ -91,5 +92,23 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
         });
 
         return Ok(new GetSavedSearchCountResponse(candidateId, result));
+    }
+
+    [HttpDelete]
+    [Route("{id:guid}")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> Delete([FromRoute]Guid id)
+    {
+        try
+        {
+            await mediator.Send(new DeleteSavedSearchCommand { Id = id });
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Delete Saved Search : An error occurred");
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+        }
     }
 }
