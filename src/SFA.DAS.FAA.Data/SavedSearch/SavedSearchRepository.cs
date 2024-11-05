@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,10 +13,11 @@ public interface ISavedSearchRepository
 {
     Task<SavedSearchEntity> GetById(Guid id, CancellationToken token);
     Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token);
+    Task<List<SavedSearchEntity>> GetByUserReference(Guid userReference, CancellationToken token);
     Task Update(SavedSearchEntity savedSearch, CancellationToken token);
     Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity, CancellationToken token);
     Task<int> Count(Guid userReference);
-    Task Delete(Guid id, CancellationToken token);
+    Task Delete(Guid userReference, Guid id, CancellationToken token);
 }
 
 public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) : ISavedSearchRepository
@@ -43,6 +45,14 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
             
         return await PaginatedList<SavedSearchEntity?>.CreateAsync(query, count, pageNumber, pageSize);
     }
+    
+    public async Task<List<SavedSearchEntity>> GetByUserReference(Guid userReference, CancellationToken token)
+    {
+        return await dataContext.SavedSearchEntities
+            .Where(x => x.UserRef == userReference)
+            .OrderByDescending(x => x.DateCreated)
+            .ToListAsync(token);
+    }
         
     public async Task Update(SavedSearchEntity savedSearch, CancellationToken token = default)
     {
@@ -56,12 +66,12 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
 
         if (savedSearch == null)
         {
+            savedSearchEntity.DateCreated = DateTime.UtcNow;
             await dataContext.SavedSearchEntities.AddAsync(savedSearchEntity, token);
             await dataContext.SaveChangesAsync(token);
             return savedSearchEntity;
         }
         
-        savedSearch.DateCreated = savedSearchEntity.DateCreated;
         savedSearch.LastRunDate = savedSearchEntity.LastRunDate;
         savedSearch.EmailLastSendDate = savedSearchEntity.EmailLastSendDate;
         savedSearch.SearchParameters = savedSearchEntity.SearchParameters;
@@ -75,9 +85,9 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
         return await dataContext.SavedSearchEntities.CountAsync(x => x.UserRef == userReference);
     }
 
-    public async Task Delete(Guid id, CancellationToken token)
+    public async Task Delete(Guid userReference, Guid id, CancellationToken token)
     {
-        var savedSearch = await dataContext.SavedSearchEntities.SingleOrDefaultAsync(x => x.Id == id, token);
+        var savedSearch = await dataContext.SavedSearchEntities.SingleOrDefaultAsync(x => x.Id == id && x.UserRef == userReference, token);
 
         if (savedSearch == null)
         {

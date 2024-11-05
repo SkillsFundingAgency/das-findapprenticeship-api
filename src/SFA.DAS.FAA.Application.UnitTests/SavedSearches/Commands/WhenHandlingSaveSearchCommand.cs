@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using SFA.DAS.FAA.Application.SavedSearches.Commands.SaveSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.UpsertSaveSearch;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
@@ -12,10 +12,10 @@ public class WhenHandlingSaveSearchCommand
 {
     [Test, MoqAutoData]
     public async Task Then_The_Search_Is_Saved(
-        SaveSearchCommand request,
+        UpsertSaveSearchCommand request,
         SavedSearchEntity savedSearchEntity,
         [Frozen] Mock<ISavedSearchRepository> savedSearchesRepository,
-        SaveSearchCommandHandler sut)
+        UpsertSaveSearchCommandHandler sut)
     {
         // arrange
         SavedSearchEntity passedEntity = null;

@@ -9,7 +9,7 @@ public class DeleteSavedSearchCommandHandler(ISavedSearchRepository savedSearchR
 {
     public async Task<Unit> Handle(DeleteSavedSearchCommand request, CancellationToken cancellationToken)
     {
-        await savedSearchRepository.Delete(request.Id, cancellationToken);
+        await savedSearchRepository.Delete(request.UserReference, request.Id, cancellationToken);
         return Unit.Value;
     }
 }
