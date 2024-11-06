@@ -34,6 +34,7 @@ public record SavedSearchResponse(
         int? Distance,
         bool DisabilityConfident,
         List<string>? Levels,
+        string? Location,
         string? Latitude,
         string? Longitude
     )
@@ -46,6 +47,7 @@ public record SavedSearchResponse(
                 source.Distance,
                 source.DisabilityConfident,
                 source.Levels,
+                source.Location,
                 source.Latitude,
                 source.Longitude
             );
@@ -58,7 +60,7 @@ public record GetSavedSearchesResponse(
     int PageIndex,
     int PageSize,
     int TotalPages
-)
+) 
 {
     public static GetSavedSearchesResponse From(GetSavedSearchesQueryResult source)
     {

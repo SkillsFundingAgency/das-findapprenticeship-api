@@ -15,6 +15,6 @@ public class WhenHandlingDeleteSavedSearchCommand
     {
         await handler.Handle(command, CancellationToken.None);
         
-        repository.Verify(x=>x.Delete(command.Id,It.IsAny<CancellationToken>()), Times.Once);
+        repository.Verify(x => x.Delete(command.UserReference, command.Id, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

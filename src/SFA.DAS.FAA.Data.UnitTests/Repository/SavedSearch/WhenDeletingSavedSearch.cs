@@ -18,7 +18,7 @@ public class WhenDeletingSavedSearch
     {
         context.Setup(x => x.SavedSearchEntities).ReturnsDbSet(new List<SavedSearchEntity>{savedSearchEntity});
 
-        await sut.Delete(savedSearchEntity.Id, CancellationToken.None);
+        await sut.Delete(savedSearchEntity.UserRef, savedSearchEntity.Id, CancellationToken.None);
         
         context.Verify(x=>x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -31,7 +31,7 @@ public class WhenDeletingSavedSearch
     {
         context.Setup(x => x.SavedSearchEntities).ReturnsDbSet(new List<SavedSearchEntity>{savedSearchEntity});
         
-        await sut.Delete(Guid.NewGuid(), CancellationToken.None);
+        await sut.Delete(Guid.NewGuid(), Guid.NewGuid(), CancellationToken.None);
         
         context.Verify(x=>x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
