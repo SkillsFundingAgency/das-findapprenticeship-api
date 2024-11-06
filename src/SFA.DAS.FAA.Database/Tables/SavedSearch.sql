@@ -4,7 +4,8 @@
     [DateCreated]                   datetime            NOT NULL,
     [LastRunDate]                   datetime            NULL,
     [EmailLastSendDate]             datetime            NULL,
-    [SearchParameters]  		    nvarchar(max)       NOT NULL    
+    [SearchParameters]  		    nvarchar(max)       NOT NULL,
+    [UnSubscribeToken]  		    nvarchar(max)       NOT NULL
     CONSTRAINT [PK_SavedSearch] PRIMARY KEY (Id),    
     INDEX [IX_SavedSearch_UserRef] NONCLUSTERED(UserRef)
 	)

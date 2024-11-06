@@ -11,6 +11,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public DateTime? LastRunDate { get; set; }
         public DateTime? EmailLastSendDate { get; set; }
         public string SearchParameters { get; set; } = null!;
+        public string UnSubscribeToken { get; set; } = null!;
 
         public static implicit operator SavedSearchEntity(SavedSearch source)
         {
@@ -21,6 +22,7 @@ namespace SFA.DAS.FAA.Domain.Entities
                 DateCreated = source.DateCreated,
                 LastRunDate = source.LastRunDate,
                 EmailLastSendDate = source.EmailLastSendDate,
+                
                 SearchParameters = source.SearchParameters.ToJson(),
             };
         }
