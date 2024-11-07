@@ -10,6 +10,7 @@ using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.UpsertSaveSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchCount;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchesByUserReference;
 
@@ -39,6 +40,26 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
         catch (Exception ex)
         {
             logger.LogError(ex, "Get Saved Searches : An error occurred");
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+        }
+    }
+    
+    [HttpGet]
+    [Route("{userReference:guid}/SavedSearches/{id:guid}")]
+    [ProducesResponseType<GetSavedSearchResponse>((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> Get([FromRoute] Guid userReference, Guid id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var result = await mediator.Send(new GetSavedSearchQuery(userReference, id), cancellationToken);
+            return result is null
+                ? NotFound()
+                : Ok(new GetSavedSearchResponse(SavedSearchDto.From(result.SavedSearch)));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Get Saved Search: An error occurred");
             return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
         }
     }

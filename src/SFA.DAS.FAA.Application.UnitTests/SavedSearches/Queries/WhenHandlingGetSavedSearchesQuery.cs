@@ -9,7 +9,7 @@ using SFA.DAS.FAA.Domain.Models;
 namespace SFA.DAS.FAA.Application.UnitTests.SavedSearches.Queries
 {
     [TestFixture]
-    public class WhenHandlingGetSavedSearchQuery
+    public class WhenHandlingGetSavedSearchesQuery
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_SavedSearches_From_Repository(

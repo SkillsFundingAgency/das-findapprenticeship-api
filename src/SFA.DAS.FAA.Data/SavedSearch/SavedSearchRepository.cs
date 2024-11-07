@@ -13,6 +13,7 @@ public interface ISavedSearchRepository
 {
     Task<SavedSearchEntity> GetById(Guid id, CancellationToken token);
     Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token);
+    Task<SavedSearchEntity> Get(Guid userReference, Guid id, CancellationToken token);
     Task<List<SavedSearchEntity>> GetByUserReference(Guid userReference, CancellationToken token);
     Task Update(SavedSearchEntity savedSearch, CancellationToken token);
     Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity, CancellationToken token);
@@ -45,7 +46,14 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
             
         return await PaginatedList<SavedSearchEntity?>.CreateAsync(query, count, pageNumber, pageSize);
     }
-    
+
+    public async Task<SavedSearchEntity> Get(Guid userReference, Guid id, CancellationToken token)
+    {
+        return await dataContext.SavedSearchEntities
+            .Where(x => x.UserRef == userReference && x.Id == id)
+            .FirstOrDefaultAsync(token);
+    }
+
     public async Task<List<SavedSearchEntity>> GetByUserReference(Guid userReference, CancellationToken token)
     {
         return await dataContext.SavedSearchEntities
