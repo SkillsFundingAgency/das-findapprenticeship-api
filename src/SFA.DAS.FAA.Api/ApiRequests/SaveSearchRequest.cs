@@ -1,9 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using SFA.DAS.FAA.Domain.Models;
+﻿using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiRequests;
 
-public record SaveSearchRequest(
-    SearchParameters SearchParameters
-);
+public record SaveSearchRequest(SearchParameters SearchParameters);
