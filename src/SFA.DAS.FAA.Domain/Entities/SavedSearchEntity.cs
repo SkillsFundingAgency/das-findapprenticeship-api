@@ -22,7 +22,7 @@ namespace SFA.DAS.FAA.Domain.Entities
                 DateCreated = source.DateCreated,
                 LastRunDate = source.LastRunDate,
                 EmailLastSendDate = source.EmailLastSendDate,
-                
+                UnSubscribeToken = source.UnSubscribeToken,
                 SearchParameters = source.SearchParameters.ToJson(),
             };
         }

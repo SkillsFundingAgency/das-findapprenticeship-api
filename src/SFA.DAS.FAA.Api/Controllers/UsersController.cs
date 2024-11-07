@@ -45,7 +45,7 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
     
     [HttpPut]
     [Route("{userReference:guid}/SavedSearches/{id:guid}")]
-    [ProducesResponseType<PostSaveSearchResponse>((int)HttpStatusCode.OK)]
+    [ProducesResponseType<PutSaveSearchResponse>((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> SaveSearch([FromRoute] Guid userReference, [FromRoute] Guid id, [FromBody] SaveSearchRequest saveSearchRequest, CancellationToken cancellationToken = default)
     {
@@ -54,10 +54,11 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
             var result = await mediator.Send(new UpsertSaveSearchCommand(
                 id,
                 userReference,
+                saveSearchRequest.UnSubscribeToken,
                 saveSearchRequest.SearchParameters
             ), cancellationToken);
 
-            return Ok(PostSaveSearchResponse.From(result));
+            return Ok(PutSaveSearchResponse.From(result));
         }
         catch (Exception ex)
         {
@@ -70,7 +71,7 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
     [Route("{userReference:guid}/SavedSearches/{id:guid}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> Delete([FromRoute] Guid userReference, [FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteSavedSearch([FromRoute] Guid userReference, [FromRoute] Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -85,7 +86,7 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
     }
     
     [HttpGet]
-    [Route("{userReference:guid}/SavesSearches/count")]
+    [Route("{userReference:guid}/SavedSearches/count")]
     [ProducesResponseType<GetSavedSearchCountResponse>((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> GetSavedSearchCount([FromRoute] Guid userReference)

@@ -6,13 +6,13 @@ namespace SFA.DAS.FAA.Api.ApiResponses;
 
 public class GetSavedSearchesByUserReferenceResponse
 {
-    public List<SavedSearchResponse> SavedSearches { get; set; }
+    public List<SavedSearchDto> SavedSearches { get; set; }
 
     public static GetSavedSearchesByUserReferenceResponse From(GetSavedSearchesByUserReferenceQueryResult source)
     {
         return new GetSavedSearchesByUserReferenceResponse
         {
-            SavedSearches = source.SavedSearches.Select(SavedSearchResponse.From).ToList()
+            SavedSearches = source.SavedSearches.Select(SavedSearchDto.From).ToList()
         };
     }
 }

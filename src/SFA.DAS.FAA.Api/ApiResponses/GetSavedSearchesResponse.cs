@@ -6,49 +6,49 @@ using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiResponses;
 
-public record SavedSearchResponse(
+public record SavedSearchDto(
         Guid Id,
         Guid UserReference,
         DateTime DateCreated,
         DateTime? LastRunDate,
         DateTime? EmailLastSendDate,
         string UnSubscribeToken,
-        SearchParametersResponse SearchParameters
+        SearchParametersDto SearchParameters
     )
     {
-        public static SavedSearchResponse From(SavedSearch source)
+        public static SavedSearchDto From(SavedSearch source)
         {
-            return new SavedSearchResponse(
+            return new SavedSearchDto(
                 source.Id,
                 source.UserReference,
                 source.DateCreated,
                 source.LastRunDate,
                 source.EmailLastSendDate,
                 source.UnSubscribeToken,
-                SearchParametersResponse.From(source.SearchParameters)
+                SearchParametersDto.From(source.SearchParameters)
             );
         }
     };
 
-    public record SearchParametersResponse(
+    public record SearchParametersDto(
         string? SearchTerm,
-        List<string>? Categories,
-        int? Distance,
+        List<int>? SelectedRouteIds,
+        decimal? Distance,
         bool DisabilityConfident,
-        List<string>? Levels,
+        List<int>? SelectedLevelIds,
         string? Location,
         string? Latitude,
         string? Longitude
     )
     {
-        public static SearchParametersResponse From(SearchParameters source)
+        public static SearchParametersDto From(SearchParameters source)
         {
-            return new SearchParametersResponse(
+            return new SearchParametersDto(
                 source.SearchTerm,
-                source.Categories,
+                source.SelectedRouteIds,
                 source.Distance,
                 source.DisabilityConfident,
-                source.Levels,
+                source.SelectedLevelIds,
                 source.Location,
                 source.Latitude,
                 source.Longitude
@@ -57,7 +57,7 @@ public record SavedSearchResponse(
     }
 
 public record GetSavedSearchesResponse(
-    List<SavedSearchResponse> SavedSearches,
+    List<SavedSearchDto> SavedSearches,
     int TotalCount,
     int PageIndex,
     int PageSize,
@@ -67,7 +67,7 @@ public record GetSavedSearchesResponse(
     public static GetSavedSearchesResponse From(GetSavedSearchesQueryResult source)
     {
         return new GetSavedSearchesResponse(
-            source.SavedSearches.Select(SavedSearchResponse.From).ToList(),
+            source.SavedSearches.Select(SavedSearchDto.From).ToList(),
             source.TotalCount,
             source.PageIndex,
             source.PageSize,
