@@ -30,7 +30,7 @@ public class WhenPostingSavedSearch
         
         // act
         var response = await sut.SaveSearch(userReference, id, saveSearchRequest) as OkObjectResult;
-        var payload = response?.Value as PostSaveSearchResponse;
+        var payload = response?.Value as PutSaveSearchResponse;
         
         // assert
         response?.StatusCode.Should().Be(200);

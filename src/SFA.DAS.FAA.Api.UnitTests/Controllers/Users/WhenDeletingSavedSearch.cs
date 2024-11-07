@@ -18,7 +18,7 @@ public class WhenDeletingSavedSearch
         [Frozen] Mock<IMediator> mediator,
         [Greedy] UsersController sut)
     {
-        var actual = await sut.Delete(userReference, id, default) as NoContentResult;
+        var actual = await sut.DeleteSavedSearch(userReference, id, default) as NoContentResult;
 
         actual.Should().NotBeNull();
         mediator.Verify(
@@ -37,7 +37,7 @@ public class WhenDeletingSavedSearch
             .Setup(x => x.Send(It.Is<DeleteSavedSearchCommand>(c => c.Id.Equals(id)), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception());
         
-        var actual = await sut.Delete(userReference, id, default) as StatusCodeResult;
+        var actual = await sut.DeleteSavedSearch(userReference, id, default) as StatusCodeResult;
 
         actual.Should().NotBeNull();
         actual!.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
