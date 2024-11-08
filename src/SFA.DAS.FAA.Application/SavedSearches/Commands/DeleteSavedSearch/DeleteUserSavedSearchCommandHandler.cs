@@ -5,9 +5,9 @@ using SFA.DAS.FAA.Data.SavedSearch;
 
 namespace SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
 
-public class DeleteSavedSearchCommandHandler(ISavedSearchRepository savedSearchRepository) : IRequestHandler<DeleteSavedSearchCommand, Unit>
+public class DeleteUserSavedSearchCommandHandler(ISavedSearchRepository savedSearchRepository) : IRequestHandler<DeleteUserSavedSearchCommand, Unit>
 {
-    public async Task<Unit> Handle(DeleteSavedSearchCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteUserSavedSearchCommand request, CancellationToken cancellationToken)
     {
         await savedSearchRepository.Delete(request.UserReference, request.Id, cancellationToken);
         return Unit.Value;

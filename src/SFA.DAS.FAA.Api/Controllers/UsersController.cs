@@ -74,7 +74,7 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
     {
         try
         {
-            await mediator.Send(new DeleteSavedSearchCommand(id, userReference), cancellationToken);
+            await mediator.Send(new DeleteUserSavedSearchCommand(id, userReference), cancellationToken);
             return NoContent();
         }
         catch (Exception ex)

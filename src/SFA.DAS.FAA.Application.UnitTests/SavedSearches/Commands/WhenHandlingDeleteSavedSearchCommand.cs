@@ -5,13 +5,13 @@ using SFA.DAS.FAA.Data.SavedSearch;
 
 namespace SFA.DAS.FAA.Application.UnitTests.SavedSearches.Commands;
 
-public class WhenHandlingDeleteSavedSearchCommand
+public class WhenHandlingDeleteUserSavedSearchCommand
 {
     [Test, MoqAutoData]
     public async Task Then_The_Command_Is_Handled_And_Repository_Called(
-        DeleteSavedSearchCommand command,
+        DeleteUserSavedSearchCommand command,
         [Frozen] Mock<ISavedSearchRepository> repository,
-        DeleteSavedSearchCommandHandler handler)
+        DeleteUserSavedSearchCommandHandler handler)
     {
         await handler.Handle(command, CancellationToken.None);
         
