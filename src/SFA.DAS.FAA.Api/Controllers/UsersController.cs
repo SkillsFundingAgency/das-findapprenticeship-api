@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
-using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteUserSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.UpsertSaveSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchCount;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchesByUserReference;

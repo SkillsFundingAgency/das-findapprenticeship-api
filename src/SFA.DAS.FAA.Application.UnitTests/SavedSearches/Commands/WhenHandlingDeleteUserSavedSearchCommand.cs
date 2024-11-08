@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteUserSavedSearch;
 using SFA.DAS.FAA.Data.SavedSearch;
 
 namespace SFA.DAS.FAA.Application.UnitTests.SavedSearches.Commands;

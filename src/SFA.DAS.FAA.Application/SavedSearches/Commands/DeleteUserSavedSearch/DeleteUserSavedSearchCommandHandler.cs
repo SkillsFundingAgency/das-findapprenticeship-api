@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.FAA.Data.SavedSearch;
 
-namespace SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
+namespace SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteUserSavedSearch;
 
 public class DeleteUserSavedSearchCommandHandler(ISavedSearchRepository savedSearchRepository) : IRequestHandler<DeleteUserSavedSearchCommand, Unit>
 {

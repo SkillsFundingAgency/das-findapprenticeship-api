@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.Controllers;
-using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteUserSavedSearch;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Users;
 
