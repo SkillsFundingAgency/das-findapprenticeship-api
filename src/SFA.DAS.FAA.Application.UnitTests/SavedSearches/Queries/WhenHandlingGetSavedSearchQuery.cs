@@ -1,41 +1,40 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
 
-namespace SFA.DAS.FAA.Application.UnitTests.SavedSearches.Queries
+namespace SFA.DAS.FAA.Application.UnitTests.SavedSearches.Queries;
+
+public class WhenHandlingGetSavedSearchQuery
 {
-    [TestFixture]
-    public class WhenHandlingGetSavedSearchQuery
+    [Test, MoqAutoData]
+    public async Task Then_The_SavedSearch_Is_Returned_By_Id(
+        SearchParameters searchParameters,
+        GetSavedSearchQuery query,
+        SavedSearchEntity savedSearch,
+        [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
+        [Greedy] GetSavedSearchQueryHandler handler)
     {
-        [Test, MoqAutoData]
-        public async Task Then_Gets_SavedSearches_From_Repository(
-            SearchParameters searchParameters,
-            GetSavedSearchesQuery query,
-            PaginatedList<SavedSearchEntity> savedSearchEntities,
-            [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
-            [Greedy] GetSavedSearchesQueryHandler handler)
-        {
-            //arrange
-            foreach (var savedSearchEntity in savedSearchEntities.Items)
-            {
-                savedSearchEntity.SearchParameters = searchParameters.ToJson();
-            }
+        savedSearch.SearchParameters = searchParameters.ToJson();
+        savedSearchRepository.Setup(x => x.GetById(query.Id, It.IsAny<CancellationToken>())).ReturnsAsync(savedSearch);
+        
+        var actual = await handler.Handle(query, CancellationToken.None);
 
-            savedSearchRepository
-                .Setup(repository => repository.GetAll(query.LastRunDateFilter, query.PageNumber, query.PageSize, CancellationToken.None))
-                .ReturnsAsync(savedSearchEntities);
+        actual.SavedSearch.Should().BeEquivalentTo(SavedSearch.From(savedSearch));
+    }
 
-            var result = await handler.Handle(query, CancellationToken.None);
-
-            result.SavedSearches
-                .Should().BeEquivalentTo(savedSearchEntities.Items, options => options
-                    .Excluding(ex => ex.SearchParameters)
-                    .Excluding(ex => ex.UserRef)
-                );
-        }
+    [Test, MoqAutoData]
+    public async Task Then_If_The_SavedSearch_Does_Not_Exist_Null_Returned(
+        GetSavedSearchQuery query,
+        [Frozen] Mock<ISavedSearchRepository> savedSearchRepository,
+        [Greedy] GetSavedSearchQueryHandler handler)
+    {
+        savedSearchRepository.Setup(x => x.GetById(query.Id, It.IsAny<CancellationToken>())).ReturnsAsync((SavedSearchEntity)null);
+        
+        var actual = await handler.Handle(query, CancellationToken.None);
+        
+        actual.SavedSearch.Should().BeNull();
     }
 }
