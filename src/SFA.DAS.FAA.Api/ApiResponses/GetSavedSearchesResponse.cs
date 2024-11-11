@@ -33,7 +33,7 @@ public record SavedSearchDto(
     public record SearchParametersDto(
         string? SearchTerm,
         List<int>? SelectedRouteIds,
-        decimal? Distance,
+        int? Distance,
         bool DisabilityConfident,
         List<int>? SelectedLevelIds,
         string? Location,

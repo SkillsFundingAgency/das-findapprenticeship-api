@@ -41,7 +41,6 @@ public class WhenGettingUserSavedSearches
     [Test, MoqAutoData]
     public async Task Then_Exceptions_Are_Handled(
         Guid userReference,
-        GetSavedSearchesByUserReferenceQueryResult getSavedSearchesByUserReferenceQueryResult,
         [Frozen] Mock<IMediator> mediator,
         [Greedy] UsersController sut)
     {

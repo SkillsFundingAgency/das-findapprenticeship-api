@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,12 +13,14 @@ public interface ISavedSearchRepository
 {
     Task<SavedSearchEntity> GetById(Guid id, CancellationToken token);
     Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token);
+    Task<SavedSearchEntity> Get(Guid userReference, Guid id, CancellationToken token);
     Task<List<SavedSearchEntity>> GetByUserReference(Guid userReference, CancellationToken token);
     Task Update(SavedSearchEntity savedSearch, CancellationToken token);
     Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity, CancellationToken token);
     Task<int> Count(Guid userReference);
     Task Delete(Guid userReference, Guid id, CancellationToken token);
     Task DeleteAll(Guid userReference, CancellationToken token);
+    Task Delete(Guid id, CancellationToken token);
 }
 
 public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) : ISavedSearchRepository
@@ -46,7 +48,14 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
             
         return await PaginatedList<SavedSearchEntity?>.CreateAsync(query, count, pageNumber, pageSize);
     }
-    
+
+    public async Task<SavedSearchEntity> Get(Guid userReference, Guid id, CancellationToken token)
+    {
+        return await dataContext.SavedSearchEntities
+            .Where(x => x.UserRef == userReference && x.Id == id)
+            .FirstOrDefaultAsync(token);
+    }
+
     public async Task<List<SavedSearchEntity>> GetByUserReference(Guid userReference, CancellationToken token)
     {
         return await dataContext.SavedSearchEntities
@@ -89,6 +98,19 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
     public async Task Delete(Guid userReference, Guid id, CancellationToken token)
     {
         var savedSearch = await dataContext.SavedSearchEntities.SingleOrDefaultAsync(x => x.Id == id && x.UserRef == userReference, token);
+
+        if (savedSearch == null)
+        {
+            return;
+        }
+        
+        dataContext.SavedSearchEntities.Remove(savedSearch);
+        await dataContext.SaveChangesAsync(token);
+    }
+
+    public async Task Delete(Guid id, CancellationToken token)
+    {
+        var savedSearch = await dataContext.SavedSearchEntities.SingleOrDefaultAsync(x => x.Id == id, token);
 
         if (savedSearch == null)
         {
