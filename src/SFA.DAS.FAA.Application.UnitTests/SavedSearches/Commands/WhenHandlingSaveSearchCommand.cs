@@ -30,7 +30,7 @@ public class WhenHandlingSaveSearchCommand
         // assert
         result.Id.Should().Be(savedSearchEntity.Id);
         passedEntity.UserRef.Should().Be(request.UserReference);
-        passedEntity.UnSubscribeToken.Should().Be(request.UnSubscribeToken);
+        passedEntity.UnsubscribeToken.Should().Be(request.UnsubscribeToken);
         passedEntity.SearchParameters.Should().BeEquivalentTo(JsonConvert.SerializeObject(request.SearchParameters));
     }
 }

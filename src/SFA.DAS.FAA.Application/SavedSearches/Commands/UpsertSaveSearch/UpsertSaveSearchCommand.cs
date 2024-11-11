@@ -7,6 +7,6 @@ namespace SFA.DAS.FAA.Application.SavedSearches.Commands.UpsertSaveSearch;
 public record UpsertSaveSearchCommand(
     Guid Id,
     Guid UserReference,
-    string UnSubscribeToken,
+    string UnsubscribeToken,
     SearchParameters SearchParameters
 ) : IRequest<UpsertSaveSearchCommandResult>;

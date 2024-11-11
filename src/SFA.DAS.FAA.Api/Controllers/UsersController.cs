@@ -78,7 +78,7 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
             var result = await mediator.Send(new UpsertSaveSearchCommand(
                 id,
                 userReference,
-                saveSearchRequest.UnSubscribeToken,
+                saveSearchRequest.UnsubscribeToken,
                 saveSearchRequest.SearchParameters
             ), cancellationToken);
 

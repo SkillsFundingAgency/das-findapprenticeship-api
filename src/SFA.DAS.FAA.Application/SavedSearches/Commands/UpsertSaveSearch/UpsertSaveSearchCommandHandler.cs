@@ -14,7 +14,7 @@ public class UpsertSaveSearchCommandHandler(ISavedSearchRepository savedSearches
         {
             Id = request.Id,
             UserRef = request.UserReference,
-            UnSubscribeToken = request.UnSubscribeToken,
+            UnsubscribeToken = request.UnsubscribeToken,
             SearchParameters = request.SearchParameters.ToJson(),
         },
         cancellationToken);
