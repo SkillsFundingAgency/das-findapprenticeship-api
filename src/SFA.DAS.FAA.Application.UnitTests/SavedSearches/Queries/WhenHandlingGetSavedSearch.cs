@@ -23,7 +23,7 @@ public class WhenHandlingGetSavedSearch
         // arrange
         savedSearch.SearchParameters = searchParameters.ToJson();
         savedSearchRepository
-            .Setup(x => x.Get(It.IsAny<Guid>(), It.IsAny<Guid>(), default))
+            .Setup(x => x.GetById(query.Id, default))
             .ReturnsAsync(savedSearch);
         
         // act
@@ -33,8 +33,5 @@ public class WhenHandlingGetSavedSearch
         results.SavedSearch.Should().BeEquivalentTo(savedSearch, options => 
             options.Excluding(x => x.SearchParameters).WithMapping("UserRef", "UserReference"));
         results.SavedSearch!.SearchParameters.Should().BeEquivalentTo(searchParameters);
-        savedSearchRepository.Verify(x => 
-            x.Get(It.Is<Guid>(id => id == query.UserReference), It.Is<Guid>(id => id == query.Id), default),
-            Times.Once);
     }
 }

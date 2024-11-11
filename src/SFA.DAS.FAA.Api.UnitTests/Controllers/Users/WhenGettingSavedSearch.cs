@@ -3,11 +3,11 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetUserSavedSearch;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Users;
 
@@ -17,15 +17,15 @@ public class WhenGettingSavedSearch
     public async Task Then_The_Result_Is_Returned(
         Guid userReference,
         Guid id,
-        GetSavedSearchQueryResult getSavedSearchQueryResult,
+        GetUserSavedSearchQueryResult getSavedSearchQueryResult,
         [Frozen] Mock<IMediator> mediator,
         [Greedy] UsersController sut)
     {
         // arrange
-        GetSavedSearchQuery passedQuery = null;
+        GetUserSavedSearchQuery passedQuery = null;
         mediator
-            .Setup(x => x.Send(It.IsAny<GetSavedSearchQuery>(), It.IsAny<CancellationToken>()))
-            .Callback<IRequest<GetSavedSearchQueryResult>, CancellationToken>((x, _) => passedQuery = x as GetSavedSearchQuery)
+            .Setup(x => x.Send(It.IsAny<GetUserSavedSearchQuery>(), It.IsAny<CancellationToken>()))
+            .Callback<IRequest<GetUserSavedSearchQueryResult>, CancellationToken>((x, _) => passedQuery = x as GetUserSavedSearchQuery)
             .ReturnsAsync(getSavedSearchQueryResult);
 
         // act
@@ -49,8 +49,8 @@ public class WhenGettingSavedSearch
     {
         // arrange
         mediator
-            .Setup(x => x.Send(It.IsAny<GetSavedSearchQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((GetSavedSearchQueryResult)null);
+            .Setup(x => x.Send(It.IsAny<GetUserSavedSearchQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((GetUserSavedSearchQueryResult)null);
 
         // act
         var response = await sut.Get(userReference, id) as NotFoundResult;
@@ -68,7 +68,7 @@ public class WhenGettingSavedSearch
     {
         // arrange
         mediator
-            .Setup(x => x.Send(It.IsAny<GetSavedSearchQuery>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Send(It.IsAny<GetUserSavedSearchQuery>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException());
 
         // act

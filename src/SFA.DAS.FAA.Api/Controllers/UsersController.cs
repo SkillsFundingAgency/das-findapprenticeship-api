@@ -13,6 +13,7 @@ using SFA.DAS.FAA.Application.SavedSearches.Commands.UpsertSaveSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchCount;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchesByUserReference;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetUserSavedSearch;
 
 namespace SFA.DAS.FAA.Api.Controllers;
 
@@ -52,7 +53,7 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
     {
         try
         {
-            var result = await mediator.Send(new GetSavedSearchQuery(userReference, id), cancellationToken);
+            var result = await mediator.Send(new GetUserSavedSearchQuery(userReference, id), cancellationToken);
             return result is null
                 ? NotFound()
                 : Ok(new GetSavedSearchResponse(SavedSearchDto.From(result.SavedSearch)));
