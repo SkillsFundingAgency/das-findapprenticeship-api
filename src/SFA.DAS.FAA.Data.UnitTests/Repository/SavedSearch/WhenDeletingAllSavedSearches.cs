@@ -27,7 +27,8 @@ public class WhenDeletingAllSavedSearches
 
         await sut.DeleteAll(userReference, CancellationToken.None);
         
-        context.Verify(x=>x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Exactly(savedSearchEntities.Count));
+        context.Verify(x => x.SavedSearchEntities.RemoveRange(savedSearchEntities), Times.Once);
+        context.Verify(x=>x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
     
     [Test, RecursiveMoqAutoData]

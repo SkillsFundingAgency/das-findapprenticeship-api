@@ -104,10 +104,9 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
         var savedSearches = dataContext.SavedSearchEntities.Where(x => x.UserRef == userReference);
 
         if (savedSearches.Any())
-            foreach (var savedSearchEntity in savedSearches)
-            {
-                dataContext.SavedSearchEntities.Remove(savedSearchEntity);
-                await dataContext.SaveChangesAsync(token);
-            }
+        {
+            dataContext.SavedSearchEntities.RemoveRange(savedSearches);
+            await dataContext.SaveChangesAsync(token);
+        }
     }
 }
