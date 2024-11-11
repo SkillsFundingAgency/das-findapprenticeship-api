@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.FAA.Api.ApiResponses;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 using SFA.DAS.FAA.Domain.Entities;
 
@@ -36,6 +38,32 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
             return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
         }
     }
+    [HttpGet]
+    [Route("{id}")]
+    [ProducesResponseType<GetSavedSearchResponse>((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    {
+        try
+        {
+            var result = await mediator.Send(new GetSavedSearchQuery(id));
+
+            if (result.SavedSearch == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(new GetSavedSearchResponse{
+                SavedSearch = SavedSearchDto.From(result.SavedSearch)
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Get Saved Search By Id : An error occurred");
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+        }
+    }
 
     [HttpPatch]
     [Route("{id}")]
@@ -61,4 +89,26 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
             return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
         }
     }
+
+    [HttpDelete]
+    [Route("{id}")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> DeleteSavedSearch([FromRoute] Guid id)
+    {
+        try
+        {
+            await mediator.Send(new DeleteSavedSearchCommand
+            {
+                Id = id
+            });
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Delete Saved Search : An error occurred");
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+        }
+    }
+    
 }

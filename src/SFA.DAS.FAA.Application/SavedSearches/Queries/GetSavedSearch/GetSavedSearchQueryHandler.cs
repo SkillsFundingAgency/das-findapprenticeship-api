@@ -1,4 +1,5 @@
-﻿using System.Threading;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.FAA.Data.SavedSearch;
@@ -10,11 +11,11 @@ public class GetSavedSearchQueryHandler(ISavedSearchRepository savedSearchReposi
 {
     public async Task<GetSavedSearchQueryResult> Handle(GetSavedSearchQuery request, CancellationToken cancellationToken)
     {
-        var result = await savedSearchRepository.Get(request.UserReference, request.Id, cancellationToken);
-        var savedSearch = result is null
-            ? null 
-            : SavedSearch.From(result);
-        
-        return new GetSavedSearchQueryResult(savedSearch);
+        var result = await savedSearchRepository.GetById(request.Id, cancellationToken);
+
+        return new GetSavedSearchQueryResult
+        {
+            SavedSearch = result == null ? null : SavedSearch.From(result)
+        };
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.Controllers;
-using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteUserSavedSearch;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Users;
 
@@ -22,19 +22,19 @@ public class WhenDeletingSavedSearch
 
         actual.Should().NotBeNull();
         mediator.Verify(
-            x => x.Send(It.Is<DeleteSavedSearchCommand>(c => c.Id.Equals(id) && c.UserReference.Equals(userReference)), It.IsAny<CancellationToken>()),
+            x => x.Send(It.Is<DeleteUserSavedSearchCommand>(c => c.Id.Equals(id) && c.UserReference.Equals(userReference)), It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
     [Test, MoqAutoData]
-    public async Task Then_If_Exception_InteralServer_Error_Returned(
+    public async Task Then_If_Exception_InternalServer_Error_Returned(
         Guid userReference,
         Guid id,
         [Frozen] Mock<IMediator> mediator,
         [Greedy] UsersController sut)
     {
         mediator
-            .Setup(x => x.Send(It.Is<DeleteSavedSearchCommand>(c => c.Id.Equals(id)), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Send(It.Is<DeleteUserSavedSearchCommand>(c => c.Id.Equals(id)), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception());
         
         var actual = await sut.DeleteSavedSearch(userReference, id, default) as StatusCodeResult;
