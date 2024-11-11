@@ -18,6 +18,7 @@ public interface ISavedSearchRepository
     Task<SavedSearchEntity> Upsert(SavedSearchEntity savedSearchEntity, CancellationToken token);
     Task<int> Count(Guid userReference);
     Task Delete(Guid userReference, Guid id, CancellationToken token);
+    Task DeleteAll(Guid userReference, CancellationToken token);
 }
 
 public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) : ISavedSearchRepository
@@ -96,5 +97,16 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
         
         dataContext.SavedSearchEntities.Remove(savedSearch);
         await dataContext.SaveChangesAsync(token);
+    }
+
+    public async Task DeleteAll(Guid userReference, CancellationToken token)
+    {
+        var savedSearches = dataContext.SavedSearchEntities.Where(x => x.UserRef == userReference);
+
+        if (await savedSearches.AnyAsync(token))
+        {
+            dataContext.SavedSearchEntities.RemoveRange(savedSearches);
+            await dataContext.SaveChangesAsync(token);
+        }
     }
 }

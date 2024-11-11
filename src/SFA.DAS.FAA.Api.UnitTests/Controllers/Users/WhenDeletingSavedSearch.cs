@@ -27,7 +27,7 @@ public class WhenDeletingSavedSearch
     }
 
     [Test, MoqAutoData]
-    public async Task Then_If_Exception_InteralServer_Error_Returned(
+    public async Task Then_If_Exception_InternalServer_Error_Returned(
         Guid userReference,
         Guid id,
         [Frozen] Mock<IMediator> mediator,
