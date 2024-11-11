@@ -60,7 +60,7 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Get Saved Searches : An error occurred");
+            logger.LogError(ex, "Get Saved Search By Id : An error occurred");
             return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
         }
     }
