@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearches;
 
-public record DeleteSavedSearchesCommandHandler(ISavedSearchRepository SavedSearchRepository) : IRequestHandler<DeleteSavedSearchesCommand, Unit>
+public class DeleteSavedSearchesCommandHandler(ISavedSearchRepository savedSearchRepository) : IRequestHandler<DeleteSavedSearchesCommand>
 {
-    public async Task<Unit> Handle(DeleteSavedSearchesCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteSavedSearchesCommand request, CancellationToken cancellationToken)
     {
-        await SavedSearchRepository.DeleteAll(request.UserReference, cancellationToken);
-        return Unit.Value;
+        await savedSearchRepository.DeleteAll(request.UserReference, cancellationToken);
     }
 }

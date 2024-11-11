@@ -34,7 +34,7 @@ public class WhenDeletingSavedSearches
     {
         mediator
             .Setup(x => x.Send(It.Is<DeleteSavedSearchesCommand>(c => c.UserReference.Equals(userReference)), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new Exception());
+            .Throws(new Exception());
 
         var actual = await sut.DeleteSavedSearches(userReference, default) as StatusCodeResult;
 
