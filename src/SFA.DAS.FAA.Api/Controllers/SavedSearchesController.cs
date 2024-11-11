@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 using SFA.DAS.FAA.Domain.Entities;
 
@@ -30,6 +31,32 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
         {
             var result = await mediator.Send(new GetSavedSearchesQuery(lastRunDateFilter, pageNumber, pageSize));
             return Ok(GetSavedSearchesResponse.From(result));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Get Saved Searches : An error occurred");
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+        }
+    }
+    [HttpGet]
+    [Route("{id}")]
+    [ProducesResponseType<GetSavedSearchResponse>((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    {
+        try
+        {
+            var result = await mediator.Send(new GetSavedSearchQuery(id));
+
+            if (result.SavedSearch == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(new GetSavedSearchResponse{
+                SavedSearch = SavedSearchDto.From(result.SavedSearch)
+            });
         }
         catch (Exception ex)
         {
