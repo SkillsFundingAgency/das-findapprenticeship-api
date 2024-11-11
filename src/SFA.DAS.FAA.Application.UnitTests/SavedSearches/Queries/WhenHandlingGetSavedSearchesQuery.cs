@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 using SFA.DAS.FAA.Data.SavedSearch;

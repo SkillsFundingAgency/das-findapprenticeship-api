@@ -54,9 +54,9 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
                 return NotFound();
             }
             
-            return Ok(new GetSavedSearchResponse{
-                SavedSearch = SavedSearchDto.From(result.SavedSearch)
-            });
+            return Ok(new GetSavedSearchResponse(
+                SavedSearchDto.From(result.SavedSearch)
+            ));
         }
         catch (Exception ex)
         {
