@@ -12,11 +12,8 @@ namespace SFA.DAS.FAA.Api.AppStart
         public static void AddDatabaseRegistration(this IServiceCollection services, FindApprenticeshipsApiConfiguration config, string? environmentName)
         {
             services.AddHttpContextAccessor();
-            if (environmentName!.Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
-            {
-                services.AddDbContext<FindApprenticeshipsDataContext>(options => options.UseInMemoryDatabase("SFA.DAS.FAA"), ServiceLifetime.Transient);
-            }
-            else if (environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+            
+            if (environmentName!.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
                 services.AddDbContext<FindApprenticeshipsDataContext>(options => options.UseSqlServer(config.DatabaseConnectionString), ServiceLifetime.Transient);
             }
@@ -29,12 +26,6 @@ namespace SFA.DAS.FAA.Api.AppStart
 
             services.AddScoped<IFindApprenticeshipsDataContext, FindApprenticeshipsDataContext>(provider => provider.GetService<FindApprenticeshipsDataContext>()!);
             services.AddScoped(provider => new Lazy<FindApprenticeshipsDataContext>(provider.GetService<FindApprenticeshipsDataContext>()!));
-            services.AddSingleton(new ChainedTokenCredential(
-                new ManagedIdentityCredential(),
-                new AzureCliCredential(),
-                new VisualStudioCodeCredential(),
-                new VisualStudioCredential())
-            );
         }
     }
 }
