@@ -13,7 +13,6 @@ public class UpsertSaveSearchCommandHandler(ISavedSearchRepository savedSearches
     public async Task<UpsertSaveSearchCommandResult> Handle(UpsertSaveSearchCommand request, CancellationToken cancellationToken)
     {
         var count = await savedSearchesRepository.Count(request.UserReference);
-
         if (count >= Constants.SavedSearchLimit)
         {
             return UpsertSaveSearchCommandResult.None;
