@@ -29,7 +29,8 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
                 VacancySort = request.VacancySort,
                 Levels = request.Levels,
                 DisabilityConfident = request.DisabilityConfident,
-                AdditionalDataSources = request.AdditionalDataSources
+                AdditionalDataSources = request.AdditionalDataSources,
+                WageType = request.WageType,
             };
 
             var searchResult = await acsVacancySearchRepository.Find(model);

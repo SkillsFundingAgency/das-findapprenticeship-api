@@ -10,7 +10,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
     {
         public async Task<int> Handle(GetApprenticeshipVacancyCountQuery request, CancellationToken cancellationToken)
         {
-            return await acsVacancySearchRepository.Count(request.AdditionalDataSources);
+            return await acsVacancySearchRepository.Count(request.AdditionalDataSources, request.WageType);
         }
     }
 }

@@ -8,4 +8,6 @@ public class SearchVacancyTotalRequest
 {
     [FromQuery]
     public List<AdditionalDataSource> AdditionalDataSources { get; set; } = null;
+
+    [FromQuery] public WageType? WageType { get; set; } = null;
 }

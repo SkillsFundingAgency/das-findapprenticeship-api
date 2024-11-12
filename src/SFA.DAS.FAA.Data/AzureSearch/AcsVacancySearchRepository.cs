@@ -32,9 +32,9 @@ public class AcsVacancySearchRepository : IAcsVacancySearchRepository
         return await _searchHelper.Get(vacancyReference);
     }
 
-    public async Task<int> Count(List<AdditionalDataSource> additionalDataSources)
+    public async Task<int> Count(List<AdditionalDataSource> additionalDataSources, WageType? wageType = null)
     {
-        return await _searchHelper.Count(additionalDataSources);
+        return await _searchHelper.Count(additionalDataSources, wageType);
     }
 
     public async Task<HealthCheckResult> GetHealthCheckStatus(CancellationToken cancellationToken)

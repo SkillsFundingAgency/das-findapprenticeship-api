@@ -9,6 +9,6 @@ public interface IAcsVacancySearchRepository
 {
     Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
     Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
-    Task<int> Count(List<AdditionalDataSource> additionalDataSources);
+    Task<int> Count(List<AdditionalDataSource> additionalDataSources, WageType? wageType = null);
     Task<HealthCheckResult> GetHealthCheckStatus(CancellationToken cancellationToken);
 }

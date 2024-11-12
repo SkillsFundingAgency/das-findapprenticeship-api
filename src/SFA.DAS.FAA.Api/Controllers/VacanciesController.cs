@@ -75,6 +75,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                     StandardLarsCode = request.StandardLarsCode,
                     PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                     VacancySort = request.Sort ?? VacancySort.AgeDesc,
+                    WageType = request.WageType,
                     DisabilityConfident = request.DisabilityConfident,
                     AdditionalDataSources = request.AdditionalDataSources
                 });
@@ -98,7 +99,8 @@ namespace SFA.DAS.FAA.Api.Controllers
             {
                 var result = await mediator.Send(new GetApprenticeshipVacancyCountQuery
                 {
-                    AdditionalDataSources = request.AdditionalDataSources
+                    AdditionalDataSources = request.AdditionalDataSources,
+                    WageType = request.WageType,
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse { TotalVacancies = result });
             }

@@ -146,9 +146,9 @@ public class AzureSearchHelper : IAzureSearchHelper
         return result.Value.Name;
     }
 
-    public async Task<int> Count(List<AdditionalDataSource> additionalDataSources)
+    public async Task<int> Count(List<AdditionalDataSource> additionalDataSources, WageType? wageType = null)
     {
-        var totalCountSearchOptions = new SearchOptions().BuildFiltersForTotalCount(additionalDataSources);
+        var totalCountSearchOptions = new SearchOptions().BuildFiltersForTotalCount(additionalDataSources, wageType);
         var count = await _searchClient.SearchAsync<SearchDocument>("*", totalCountSearchOptions);
         return Convert.ToInt32(count.Value.TotalCount);
     }

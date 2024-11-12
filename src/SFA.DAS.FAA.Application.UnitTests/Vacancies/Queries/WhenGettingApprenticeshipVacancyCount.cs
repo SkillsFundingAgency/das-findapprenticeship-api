@@ -20,7 +20,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             GetApprenticeshipVacancyCountQueryHandler handler)
         {
             mockRepository
-                .Setup(repository => repository.Count(query.AdditionalDataSources))
+                .Setup(repository => repository.Count(query.AdditionalDataSources, query.WageType))
                 .ReturnsAsync(vacancyCount);
 
             var result = await handler.Handle(query, CancellationToken.None);
