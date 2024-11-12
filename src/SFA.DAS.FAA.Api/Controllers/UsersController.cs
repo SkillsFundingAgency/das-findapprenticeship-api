@@ -68,6 +68,7 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
     [HttpPut]
     [Route("{userReference:guid}/SavedSearches/{id:guid}")]
     [ProducesResponseType<PutSaveSearchResponse>((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> SaveSearch([FromRoute] Guid userReference, [FromRoute] Guid id, [FromBody] SaveSearchRequest saveSearchRequest, CancellationToken cancellationToken = default)
     {
@@ -78,8 +79,10 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
                 userReference,
                 saveSearchRequest.SearchParameters
             ), cancellationToken);
-
-            return Ok(PutSaveSearchResponse.From(result));
+            
+            return result == UpsertSaveSearchCommandResult.None
+                ? BadRequest()
+                : Ok(PutSaveSearchResponse.From(result));
         }
         catch (Exception ex)
         {
