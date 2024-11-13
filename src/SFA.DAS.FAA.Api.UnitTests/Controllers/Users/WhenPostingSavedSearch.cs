@@ -43,6 +43,26 @@ public class WhenPostingSavedSearch
     }
     
     [Test, MoqAutoData]
+    public async Task Then_When_No_Save_Result_Then_BadRequest_Is_Returned(
+        Guid userReference,
+        Guid id,
+        SaveSearchRequest saveSearchRequest,
+        [Frozen] Mock<IMediator> mediator,
+        [Greedy] UsersController sut)
+    {
+        // arrange
+        mediator
+            .Setup(x => x.Send(It.IsAny<UpsertSaveSearchCommand>(), CancellationToken.None))
+            .ReturnsAsync(UpsertSaveSearchCommandResult.None);
+        
+        // act
+        var response = await sut.SaveSearch(userReference, id, saveSearchRequest) as StatusCodeResult;
+        
+        // assert
+        response?.StatusCode.Should().Be(400);
+    }
+    
+    [Test, MoqAutoData]
     public async Task Then_Exceptions_Are_Handled(
         UpsertSaveSearchCommandResult upsertSaveSearchCommandResult,
         SaveSearchRequest saveSearchRequest,
