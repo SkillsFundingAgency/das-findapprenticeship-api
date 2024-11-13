@@ -33,12 +33,12 @@ public static class AzureSearchOptionExtensions
                 break;
             case VacancySort.SalaryAsc:
                 searchOptions.OrderBy.Add(searchVacanciesModel.WageType is not null
-                    ? "Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage asc"
+                    ? "Wage/WageType desc, Wage/Between18AndUnder21NationalMinimumWage asc"
                     : "Wage/Between18AndUnder21NationalMinimumWage asc");
                 break;
             case VacancySort.SalaryDesc:
                 searchOptions.OrderBy.Add(searchVacanciesModel.WageType is not null
-                    ? "Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage desc"
+                    ? "Wage/WageType desc, Wage/Between18AndUnder21NationalMinimumWage desc"
                     : "Wage/Between18AndUnder21NationalMinimumWage desc");
                 break;
             case VacancySort.DistanceAsc:
