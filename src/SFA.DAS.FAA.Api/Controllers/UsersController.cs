@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
+using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearches;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteUserSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.UpsertSaveSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
@@ -76,6 +78,7 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
             var result = await mediator.Send(new UpsertSaveSearchCommand(
                 id,
                 userReference,
+                saveSearchRequest.UnsubscribeToken,
                 saveSearchRequest.SearchParameters
             ), cancellationToken);
 
@@ -124,6 +127,24 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
         catch (Exception ex)
         {
             logger.LogError(ex, "Count Saved Searches : An error occurred");
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpDelete]
+    [Route("{userReference:guid}/SavedSearches")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> DeleteSavedSearches([FromRoute] Guid userReference, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await mediator.Send(new DeleteSavedSearchesCommand(userReference), cancellationToken);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Delete Saved Searches : An error occurred");
             return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
         }
     }

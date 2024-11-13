@@ -2,4 +2,4 @@
 
 namespace SFA.DAS.FAA.Api.ApiRequests;
 
-public record SaveSearchRequest(SearchParameters SearchParameters);
+public record SaveSearchRequest(string UnsubscribeToken, SearchParameters SearchParameters);

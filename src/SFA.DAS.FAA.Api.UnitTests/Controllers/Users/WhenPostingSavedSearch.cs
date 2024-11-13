@@ -38,6 +38,7 @@ public class WhenPostingSavedSearch
         passedCommand.Should().NotBeNull();
         passedCommand.UserReference.Should().Be(userReference);
         passedCommand.Id.Should().Be(id);
+        passedCommand.UnsubscribeToken.Should().Be(saveSearchRequest.UnsubscribeToken);
         passedCommand.SearchParameters.Should().BeEquivalentTo(saveSearchRequest.SearchParameters);
     }
     

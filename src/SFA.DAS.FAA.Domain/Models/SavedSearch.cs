@@ -9,6 +9,7 @@ public record SavedSearch(
     DateTime DateCreated,
     DateTime? LastRunDate,
     DateTime? EmailLastSendDate,
+    string UnsubscribeToken,
     SearchParameters SearchParameters
 )
 {
@@ -20,6 +21,7 @@ public record SavedSearch(
             source.DateCreated,
             source.LastRunDate,
             source.EmailLastSendDate,
+            source.UnsubscribeToken,
             SearchParameters.From(source.SearchParameters)
         );
     }

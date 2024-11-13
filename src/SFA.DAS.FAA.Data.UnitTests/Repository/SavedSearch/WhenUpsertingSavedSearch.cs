@@ -45,6 +45,7 @@ public class WhenUpsertingSavedSearch
             EmailLastSendDate = DateTime.UtcNow,
             SearchParameters = "new search parameters",
             UserRef = savedSearchEntity.UserRef,
+            UnsubscribeToken = savedSearchEntity.UnsubscribeToken
         };
         
         // act
