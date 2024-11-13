@@ -97,7 +97,7 @@ public static class AzureSearchOptionExtensions
 
         if (wageType is not null)
         {
-            searchFilters.Add($"Wage/WageType eq '{wageType}'");
+            searchFilters.Add($"Wage/WageType eq '{(int)wageType}'");
         }
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
@@ -185,7 +185,7 @@ public static class AzureSearchOptionExtensions
         {
             if (findVacanciesModel.WageType is null)
             {
-                searchFilters.Add($"Wage/WageType ne '{findVacanciesModel.WageType}'");
+                searchFilters.Add($"Wage/WageType ne '{(int)findVacanciesModel.WageType}'");
             }
         }
 
