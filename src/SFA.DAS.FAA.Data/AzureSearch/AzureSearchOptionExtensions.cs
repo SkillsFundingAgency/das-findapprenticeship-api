@@ -32,13 +32,13 @@ public static class AzureSearchOptionExtensions
                 searchOptions.OrderBy.Add("ClosingDate desc");
                 break;
             case VacancySort.SalaryAsc:
-                searchOptions.OrderBy.Add(searchVacanciesModel.WageType is not null
-                    ? "Wage/WageType desc, Wage/Between18AndUnder21NationalMinimumWage asc"
+                searchOptions.OrderBy.Add(searchVacanciesModel.SkipWageType is null
+                    ? "Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage asc"
                     : "Wage/Between18AndUnder21NationalMinimumWage asc");
                 break;
             case VacancySort.SalaryDesc:
-                searchOptions.OrderBy.Add(searchVacanciesModel.WageType is not null
-                    ? "Wage/WageType desc, Wage/Between18AndUnder21NationalMinimumWage desc"
+                searchOptions.OrderBy.Add(searchVacanciesModel.SkipWageType is null
+                    ? "Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage desc"
                     : "Wage/Between18AndUnder21NationalMinimumWage desc");
                 break;
             case VacancySort.DistanceAsc:
@@ -97,7 +97,7 @@ public static class AzureSearchOptionExtensions
 
         if (wageType is not null)
         {
-            searchFilters.Add($"Wage/WageType eq '{(int)wageType}'");
+            searchFilters.Add($"Wage/WageType eq '{wageType}'");
         }
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
@@ -183,9 +183,9 @@ public static class AzureSearchOptionExtensions
 
         if (findVacanciesModel.VacancySort is VacancySort.SalaryAsc or VacancySort.SalaryDesc)
         {
-            if (findVacanciesModel.WageType is null)
+            if (findVacanciesModel.SkipWageType is not null)
             {
-                searchFilters.Add($"Wage/WageType ne '{(int)findVacanciesModel.WageType}'");
+                searchFilters.Add($"Wage/WageType ne '{findVacanciesModel.SkipWageType}'");
             }
         }
 

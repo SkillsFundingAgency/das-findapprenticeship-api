@@ -39,7 +39,7 @@ public class SearchVacancyRequest
     [FromQuery]
     public VacancySort? Sort  { get; set; } = VacancySort.AgeDesc;
     [FromQuery]
-    public WageType? WageType { get; set; } = null;
+    public WageType? SkipWageType { get; set; } = null;
     [FromQuery]
     public bool DisabilityConfident { get; set; }
     [FromQuery]

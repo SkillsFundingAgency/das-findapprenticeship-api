@@ -75,7 +75,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                     StandardLarsCode = request.StandardLarsCode,
                     PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                     VacancySort = request.Sort ?? VacancySort.AgeDesc,
-                    WageType = request.WageType,
+                    SkipWageType = request.SkipWageType,
                     DisabilityConfident = request.DisabilityConfident,
                     AdditionalDataSources = request.AdditionalDataSources
                 });

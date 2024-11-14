@@ -30,7 +30,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
                 Levels = request.Levels,
                 DisabilityConfident = request.DisabilityConfident,
                 AdditionalDataSources = request.AdditionalDataSources,
-                WageType = request.WageType,
+                SkipWageType = request.SkipWageType,
             };
 
             var searchResult = await acsVacancySearchRepository.Find(model);
