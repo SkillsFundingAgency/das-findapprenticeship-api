@@ -103,6 +103,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             }
 
             var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
+            if (source.Wage is not {WageUnit: not null}) return source.ExpectedDuration;
+            
             var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
 
             if (durationUnit == Domain.Models.WageUnit.Month.GetDisplayName())
