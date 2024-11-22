@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.Spatial;
 using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
@@ -27,7 +26,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             
             return new GetApprenticeshipVacancyDetailResponse
             {
-                
                 Id = source.Id,
                 AnonymousEmployerName = source.AnonymousEmployerName,
                 ApprenticeshipLevel = source.ApprenticeshipLevel,
@@ -89,7 +87,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 AdditionalQuestion2 = source.AdditionalQuestion2,
                 AdditionalTrainingDescription = source.AdditionalTrainingDescription,
                 CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation,
-                WageAdditionalInformation = source.Wage != null ? source.Wage.WageAdditionalInformation : string.Empty
+                WageAdditionalInformation = source.Wage != null ? source.Wage.WageAdditionalInformation : string.Empty,
+                VacancySource = source.VacancySource
             };
         }
 
