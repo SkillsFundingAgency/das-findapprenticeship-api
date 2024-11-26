@@ -5,11 +5,13 @@ using SFA.DAS.FAA.Data.SavedSearch;
 
 namespace SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 
-public record GetSavedSearchesQueryHandler(ISavedSearchRepository SavedSearchRepository) : IRequestHandler<GetSavedSearchesQuery, GetSavedSearchesQueryResult>
+public class GetSavedSearchesQueryHandler(
+    ISavedSearchRepository savedSearchRepository) 
+    : IRequestHandler<GetSavedSearchesQuery, GetSavedSearchesQueryResult>
 {
     public async Task<GetSavedSearchesQueryResult> Handle(GetSavedSearchesQuery request, CancellationToken cancellationToken)
     {
-        return await SavedSearchRepository.GetAll(request.LastRunDateFilter,
+        return await savedSearchRepository.GetAll(request.LastRunDateFilter,
             request.PageNumber,
             request.PageSize,
             cancellationToken);
