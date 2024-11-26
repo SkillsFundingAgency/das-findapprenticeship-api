@@ -393,6 +393,10 @@
             "type": "string",
             "value": "[variables('resourceGroupName')]"
         },
+        "DatabaseName": {
+            "type": "string",
+            "value": "[variables('databaseName')]"
+        },
         "ApiAppServiceName": {
             "type": "string",
             "value": "[variables('apiAppServiceName')]"
