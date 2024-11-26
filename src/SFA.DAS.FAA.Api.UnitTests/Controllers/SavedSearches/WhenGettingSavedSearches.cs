@@ -7,10 +7,14 @@ using NUnit.Framework;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.Testing.AutoFixture;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
+using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearches
 {
@@ -20,10 +24,14 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearches
         [Test, MoqAutoData]
         public async Task Then_Gets_Result_From_Mediator(
             DateTime lastRunDateFilter,
-            GetSavedSearchesQueryResult mediatorResult,
+            SearchParameters searchParameters,
+            PaginatedList<SavedSearchEntity> paginatedResults,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] SavedSearchesController controller)
         {
+            paginatedResults.Items.ForEach(x => x.SearchParameters = searchParameters.ToJson());
+            var mediatorResult = (GetSavedSearchesQueryResult)paginatedResults;
+            
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetSavedSearchesQuery>(query =>
@@ -35,7 +43,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearches
 
             result.Should().NotBeNull();
             result!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            var apiModel = result.Value as GetSavedSearchesQueryResult;
+            var apiModel = result.Value as GetSavedSearchesResponse;
             apiModel.Should().NotBeNull();
             apiModel.Should().BeEquivalentTo(mediatorResult);
         }

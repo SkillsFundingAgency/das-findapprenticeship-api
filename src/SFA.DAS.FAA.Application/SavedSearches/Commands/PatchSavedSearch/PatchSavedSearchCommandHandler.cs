@@ -3,10 +3,11 @@ using SFA.DAS.FAA.Data.SavedSearch;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
 
-public record PatchSavedSearchCommandHandler(ISavedSearchRepository SavedSearchRepository) : IRequestHandler<PatchSavedSearchCommand, PatchSavedSearchCommandResponse>
+public class PatchSavedSearchCommandHandler(ISavedSearchRepository SavedSearchRepository) : IRequestHandler<PatchSavedSearchCommand, PatchSavedSearchCommandResponse>
 {
     public async Task<PatchSavedSearchCommandResponse> Handle(PatchSavedSearchCommand request, CancellationToken cancellationToken)
     {
@@ -27,7 +28,7 @@ public record PatchSavedSearchCommandHandler(ISavedSearchRepository SavedSearchR
 
         return new PatchSavedSearchCommandResponse
         {
-            SavedSearch = savedSearch
+            SavedSearch = SavedSearch.From(savedSearch)
         };
     }
 }
