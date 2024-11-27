@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,16 +41,9 @@ namespace SFA.DAS.FAA.Data
         {
             optionsBuilder.UseLazyLoadingProxies();
 
-            if (_configuration == null
-                || _environmentConfiguration.EnvironmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase)
-                || _environmentConfiguration.EnvironmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return;
-            }
-
             optionsBuilder.UseSqlServer(new SqlConnection
             {
-                ConnectionString = _configuration.DatabaseConnectionString,
+                ConnectionString = _configuration!.DatabaseConnectionString,
             }, options => options
                 .EnableRetryOnFailure(
                     5,

@@ -1,4 +1,4 @@
-﻿using SFA.DAS.FAA.Domain.Entities;
+﻿using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch
 {
