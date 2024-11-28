@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.Spatial;
 using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
@@ -27,7 +26,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             
             return new GetApprenticeshipVacancyDetailResponse
             {
-                
                 Id = source.Id,
                 AnonymousEmployerName = source.AnonymousEmployerName,
                 ApprenticeshipLevel = source.ApprenticeshipLevel,
@@ -89,7 +87,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 AdditionalQuestion2 = source.AdditionalQuestion2,
                 AdditionalTrainingDescription = source.AdditionalTrainingDescription,
                 CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation,
-                WageAdditionalInformation = source.Wage != null ? source.Wage.WageAdditionalInformation : string.Empty
+                WageAdditionalInformation = source.Wage != null ? source.Wage.WageAdditionalInformation : string.Empty,
+                VacancySource = source.VacancySource
             };
         }
 
@@ -103,30 +102,36 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             }
 
             var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
-            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
 
-            if (durationUnit == Domain.Models.WageUnit.Month.GetDisplayName())
+            if (source.Wage is {WageUnit: not null})
             {
-                var wholeYears = duration / 12;
-                var remainingMonths = duration % 12;
+                var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
 
-                switch (wholeYears)
+                if (durationUnit == Domain.Models.WageUnit.Month.GetDisplayName())
                 {
-                    case 0:
-                        return remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
-                    case 1 when remainingMonths == 0:
-                        return "1 Year";
-                    case 1:
+                    var wholeYears = duration / 12;
+                    var remainingMonths = duration % 12;
+
+                    switch (wholeYears)
                     {
-                        var months = remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
-                        return $"1 Year {months}";
+                        case 0:
+                            return remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
+                        case 1 when remainingMonths == 0:
+                            return "1 Year";
+                        case 1:
+                        {
+                            var months = remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
+                            return $"1 Year {months}";
+                        }
+                        default:
+                            return remainingMonths == 0 ? $"{wholeYears} Years" : $"{wholeYears} Years {remainingMonths} Months";
                     }
-                    default:
-                        return remainingMonths == 0 ? $"{wholeYears} Years" : $"{wholeYears} Years {remainingMonths} Months";
                 }
+
+                return $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}";
             }
 
-            return $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}";
+            return source.ExpectedDuration;
         }
     }
     
