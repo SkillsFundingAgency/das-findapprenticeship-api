@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
 {
@@ -70,7 +72,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ThingsToConsider = source.ThingsToConsider,
                 Skills = source.Skills,
                 Qualifications = source.Qualifications.Select(c => (Qualification)c).ToList(),
-                ExpectedDuration = GetDuration(source),
+                ExpectedDuration = source.VacancySource.Equals(AdditionalDataSource.Nhs.ToString(), StringComparison.CurrentCultureIgnoreCase) ? string.Empty : GetDuration(source),
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,
@@ -103,35 +105,30 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 
             var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
 
-            if (source.Wage is {WageUnit: not null})
+            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
+
+            if (durationUnit == Domain.Models.WageUnit.Month.GetDisplayName())
             {
-                var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
+                var wholeYears = duration / 12;
+                var remainingMonths = duration % 12;
 
-                if (durationUnit == Domain.Models.WageUnit.Month.GetDisplayName())
+                switch (wholeYears)
                 {
-                    var wholeYears = duration / 12;
-                    var remainingMonths = duration % 12;
-
-                    switch (wholeYears)
+                    case 0:
+                        return remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
+                    case 1 when remainingMonths == 0:
+                        return "1 Year";
+                    case 1:
                     {
-                        case 0:
-                            return remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
-                        case 1 when remainingMonths == 0:
-                            return "1 Year";
-                        case 1:
-                        {
-                            var months = remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
-                            return $"1 Year {months}";
-                        }
-                        default:
-                            return remainingMonths == 0 ? $"{wholeYears} Years" : $"{wholeYears} Years {remainingMonths} Months";
+                        var months = remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
+                        return $"1 Year {months}";
                     }
+                    default:
+                        return remainingMonths == 0 ? $"{wholeYears} Years" : $"{wholeYears} Years {remainingMonths} Months";
                 }
-
-                return $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}";
             }
 
-            return source.ExpectedDuration;
+            return $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}";
         }
     }
     
