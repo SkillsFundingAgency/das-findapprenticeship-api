@@ -36,11 +36,18 @@ public static class AzureSearchOptionExtensions
                 {
                     if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
                     {
-                        searchOptions.OrderBy.Add($"Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage asc, geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc, PostedDate asc, ClosingDate asc");
+                        searchOptions.OrderBy.Add("Wage/WageType asc");
+                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                        searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
+                        searchOptions.OrderBy.Add("PostedDate asc");
+                        searchOptions.OrderBy.Add("ClosingDate asc");
                     }
                     else
                     {
-                        searchOptions.OrderBy.Add("Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage asc, PostedDate asc, ClosingDate asc");
+                        searchOptions.OrderBy.Add("Wage/WageType asc");
+                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                        searchOptions.OrderBy.Add("PostedDate asc");
+                        searchOptions.OrderBy.Add("ClosingDate asc");
                     }
                 }
                 else
@@ -53,11 +60,18 @@ public static class AzureSearchOptionExtensions
                 {
                     if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
                     {
-                        searchOptions.OrderBy.Add($"Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage desc, geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc, PostedDate asc, ClosingDate asc");
+                        searchOptions.OrderBy.Add("Wage/WageType asc");
+                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                        searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
+                        searchOptions.OrderBy.Add("PostedDate asc");
+                        searchOptions.OrderBy.Add("ClosingDate asc");
                     }
                     else
                     {
-                        searchOptions.OrderBy.Add("Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage desc, PostedDate asc, ClosingDate asc");
+                        searchOptions.OrderBy.Add("Wage/WageType asc");
+                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                        searchOptions.OrderBy.Add("PostedDate asc");
+                        searchOptions.OrderBy.Add("ClosingDate asc");
                     }
                 }
                 else
