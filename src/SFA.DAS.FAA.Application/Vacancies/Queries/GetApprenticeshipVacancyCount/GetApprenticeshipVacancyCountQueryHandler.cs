@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.FAA.Domain.Interfaces;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount
 {
@@ -10,7 +11,20 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
     {
         public async Task<int> Handle(GetApprenticeshipVacancyCountQuery request, CancellationToken cancellationToken)
         {
-            return await acsVacancySearchRepository.Count(request.AdditionalDataSources, request.WageType);
+            var model = new FindVacanciesCountModel
+            {
+                SearchTerm = request.SearchTerm,
+                Categories = request.Categories,
+                Lat = request.Lat,
+                Lon = request.Lon,
+                DistanceInMiles = request.DistanceInMiles,
+                NationWideOnly = request.NationWideOnly,
+                Levels = request.Levels,
+                DisabilityConfident = request.DisabilityConfident,
+                AdditionalDataSources = request.AdditionalDataSources,
+                WageType = request.WageType,
+            };
+            return await acsVacancySearchRepository.Count(model);
         }
     }
 }

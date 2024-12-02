@@ -144,11 +144,18 @@ public class AzureSearchHelper : IAzureSearchHelper
         return result.Value.Name;
     }
 
-    public async Task<int> Count(List<AdditionalDataSource> additionalDataSources, WageType? wageType = null)
+    public async Task<int> Count(FindVacanciesCountModel findVacanciesModel)
     {
-        var totalCountSearchOptions = new SearchOptions().BuildFiltersForTotalCount(additionalDataSources, wageType);
-        var count = await _searchClient.SearchAsync<SearchDocument>("*", totalCountSearchOptions);
-        return Convert.ToInt32(count.Value.TotalCount);
+        var searchOptions = new SearchOptions()
+            .BuildFiltersForTotalSearchCount(findVacanciesModel);
+        searchOptions.IncludeTotalCount = true;
+        searchOptions.SearchMode = SearchMode.All;
+        searchOptions.QueryType = SearchQueryType.Simple;
+
+        var searchTerm = BuildSearchTerm(findVacanciesModel.SearchTerm);
+        var searchResults = await _searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
+        
+        return Convert.ToInt32(searchResults.Value.TotalCount);
     }
 
     private string BuildSearchTerm(string? searchTerm)

@@ -22,7 +22,6 @@ namespace SFA.DAS.FAA.Domain.Models
 
     public class FindFilteredVacanciesModel
     {
-
         public double? Lat { get; set; }
         public double? Lon { get; set; }
         public uint? DistanceInMiles { get; set; }

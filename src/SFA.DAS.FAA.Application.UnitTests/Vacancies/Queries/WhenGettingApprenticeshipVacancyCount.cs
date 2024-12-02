@@ -1,12 +1,8 @@
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Domain.Interfaces;
-using SFA.DAS.Testing.AutoFixture;
+using SFA.DAS.FAA.Domain.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
 {
@@ -20,7 +16,18 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             GetApprenticeshipVacancyCountQueryHandler handler)
         {
             mockRepository
-                .Setup(repository => repository.Count(query.AdditionalDataSources, query.WageType))
+                .Setup(repository => repository.Count(It.Is<FindVacanciesCountModel>(c =>
+                    c.Categories.Equals(query.Categories) &&
+                    c.Levels.Equals(query.Levels) &&
+                    c.Lat.Equals(query.Lat) &&
+                    c.Lon.Equals(query.Lon) &&
+                    c.DistanceInMiles.Equals(query.DistanceInMiles) &&
+                    c.NationWideOnly.Equals(query.NationWideOnly) &&
+                    c.SearchTerm.Equals(query.SearchTerm) &&
+                    c.WageType.Equals(query.WageType) &&
+                    c.DisabilityConfident.Equals(query.DisabilityConfident) &&
+                    c.AdditionalDataSources.Equals(query.AdditionalDataSources)
+                )))
                 .ReturnsAsync(vacancyCount);
 
             var result = await handler.Handle(query, CancellationToken.None);
