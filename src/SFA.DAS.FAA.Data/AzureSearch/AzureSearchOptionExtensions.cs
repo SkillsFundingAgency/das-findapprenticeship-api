@@ -299,6 +299,7 @@ public static class AzureSearchOptionExtensions
         searchOptions.SearchFields.Add("EmployerName");
         searchOptions.SearchFields.Add("ProviderName");
         searchOptions.SearchFields.Add("Ukprn");
+        searchOptions.SearchFields.Add("SearchTags");
 
         return searchOptions;
     }
