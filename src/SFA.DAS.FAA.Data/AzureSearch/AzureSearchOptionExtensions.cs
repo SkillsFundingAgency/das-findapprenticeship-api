@@ -32,10 +32,14 @@ public static class AzureSearchOptionExtensions
                 searchOptions.OrderBy.Add("ClosingDate desc");
                 break;
             case VacancySort.SalaryAsc:
-                searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                searchOptions.OrderBy.Add(searchVacanciesModel.SkipWageType is null
+                    ? "Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage asc"
+                    : "Wage/Between18AndUnder21NationalMinimumWage asc");
                 break;
             case VacancySort.SalaryDesc:
-                searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                searchOptions.OrderBy.Add(searchVacanciesModel.SkipWageType is null
+                    ? "Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage desc"
+                    : "Wage/Between18AndUnder21NationalMinimumWage desc");
                 break;
             case VacancySort.DistanceAsc:
                 if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
@@ -74,9 +78,10 @@ public static class AzureSearchOptionExtensions
         return searchOptions;
     }
 
-    public static SearchOptions BuildFiltersForTotalCount(this SearchOptions searchOptions, List<AdditionalDataSource> additionalDataSources)
+    public static SearchOptions BuildFiltersForTotalCount(this SearchOptions searchOptions,
+        List<AdditionalDataSource> additionalDataSources)
     {
-        List<string> searchFilters = new();
+        List<string> searchFilters = [];
 
         if (additionalDataSources != null && additionalDataSources.Count != 0)
         {
@@ -96,7 +101,7 @@ public static class AzureSearchOptionExtensions
 
     public static SearchOptions BuildFilters(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
     {
-        List<string> searchFilters = new();
+        List<string> searchFilters = [];
 
         if (findVacanciesModel.AdditionalDataSources != null && findVacanciesModel.AdditionalDataSources.Count != 0)
         {
@@ -154,14 +159,9 @@ public static class AzureSearchOptionExtensions
 
         if (findVacanciesModel.NationWideOnly.HasValue)
         {
-            if (findVacanciesModel.NationWideOnly == true)
-            {
-                searchFilters.Add("VacancyLocationType eq 'National'");
-            }
-            else
-            {
-                searchFilters.Add("VacancyLocationType eq 'NonNational'");
-            }
+            searchFilters.Add(findVacanciesModel.NationWideOnly == true
+                ? "VacancyLocationType eq 'National'"
+                : "VacancyLocationType eq 'NonNational'");
         }
 
         if (findVacanciesModel.PostedInLastNumberOfDays.HasValue)
@@ -173,6 +173,77 @@ public static class AzureSearchOptionExtensions
         if (findVacanciesModel.DisabilityConfident != false)
         {
             searchFilters.Add("IsDisabilityConfident eq true");
+        }
+
+        if (findVacanciesModel.VacancySort is VacancySort.SalaryAsc or VacancySort.SalaryDesc)
+        {
+            if (findVacanciesModel.SkipWageType is not null)
+            {
+                searchFilters.Add($"Wage/WageType ne '{findVacanciesModel.SkipWageType}'");
+            }
+        }
+
+        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+
+        return searchOptions;
+    }
+
+    public static SearchOptions BuildFiltersForTotalSearchCount(this SearchOptions searchOptions, FindVacanciesCountModel findVacanciesModel)
+    {
+        List<string> searchFilters = [];
+
+        if (findVacanciesModel.AdditionalDataSources != null && findVacanciesModel.AdditionalDataSources.Count != 0)
+        {
+            var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
+            findVacanciesModel.AdditionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
+        }
+        else
+        {
+            searchFilters.Add(AzureSearchConstants.VacancySourceEqualsRaa);
+        }
+
+        if (findVacanciesModel.Ukprn.HasValue)
+        {
+            searchFilters.Add($"Ukprn eq '{findVacanciesModel.Ukprn}'");
+        }
+
+        if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Count != 0)
+        {
+            var categoryClauses = new List<string>();
+            findVacanciesModel.Categories.ForEach(category => categoryClauses.Add($"Route eq '{category}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
+        }
+
+        if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
+        {
+            var levelClauses = new List<string>();
+            findVacanciesModel.Levels.ForEach(level => levelClauses.Add($"Course/Level eq '{level}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. levelClauses])})");
+        }
+
+        if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue && findVacanciesModel.DistanceInMiles.HasValue)
+        {
+            var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
+            var distanceInKm = (distanceInMiles - (distanceInMiles / 5)) * 2;
+            searchFilters.Add($"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}");
+        }
+
+        if (findVacanciesModel.NationWideOnly.HasValue)
+        {
+            searchFilters.Add(findVacanciesModel.NationWideOnly == true
+                ? "VacancyLocationType eq 'National'"
+                : "VacancyLocationType eq 'NonNational'");
+        }
+
+        if (findVacanciesModel.DisabilityConfident != false)
+        {
+            searchFilters.Add("IsDisabilityConfident eq true");
+        }
+
+        if (findVacanciesModel.WageType is not null)
+        {
+            searchFilters.Add($"Wage/WageType eq '{findVacanciesModel.WageType}'");
         }
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());

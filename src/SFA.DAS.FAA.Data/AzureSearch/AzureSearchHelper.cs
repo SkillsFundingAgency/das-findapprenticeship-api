@@ -12,11 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
-using Microsoft.Extensions.Primitives;
 using SFA.DAS.FAA.Domain.Constants;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
@@ -146,11 +144,18 @@ public class AzureSearchHelper : IAzureSearchHelper
         return result.Value.Name;
     }
 
-    public async Task<int> Count(List<AdditionalDataSource> additionalDataSources)
+    public async Task<int> Count(FindVacanciesCountModel findVacanciesModel)
     {
-        var totalCountSearchOptions = new SearchOptions().BuildFiltersForTotalCount(additionalDataSources);
-        var count = await _searchClient.SearchAsync<SearchDocument>("*", totalCountSearchOptions);
-        return Convert.ToInt32(count.Value.TotalCount);
+        var searchOptions = new SearchOptions()
+            .BuildFiltersForTotalSearchCount(findVacanciesModel);
+        searchOptions.IncludeTotalCount = true;
+        searchOptions.SearchMode = SearchMode.All;
+        searchOptions.QueryType = SearchQueryType.Simple;
+
+        var searchTerm = BuildSearchTerm(findVacanciesModel.SearchTerm);
+        var searchResults = await _searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
+        
+        return Convert.ToInt32(searchResults.Value.TotalCount);
     }
 
     private string BuildSearchTerm(string? searchTerm)

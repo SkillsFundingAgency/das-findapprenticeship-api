@@ -16,12 +16,12 @@ namespace SFA.DAS.FAA.Domain.Models
         public uint? PostedInLastNumberOfDays { get; set; }
         public VacancySort VacancySort { get; set; }
         public bool DisabilityConfident { get; set; }
+        public WageType? SkipWageType { get; set; }
         public List<AdditionalDataSource> AdditionalDataSources { get; set; }
     }
 
     public class FindFilteredVacanciesModel
     {
-
         public double? Lat { get; set; }
         public double? Lon { get; set; }
         public uint? DistanceInMiles { get; set; }

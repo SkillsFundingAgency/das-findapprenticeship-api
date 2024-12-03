@@ -9,7 +9,7 @@ public interface IAzureSearchHelper
 {
     Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
     Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
-    Task<int> Count(List<AdditionalDataSource> additionalDataSources);
+    Task<int> Count(FindVacanciesCountModel countModel);
     Task<List<ApprenticeshipSearchItem>> Get(List<string> vacancyReferences);
     Task<string> GetIndexName(CancellationToken cancellationToken);
 }
