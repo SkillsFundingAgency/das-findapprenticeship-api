@@ -32,14 +32,52 @@ public static class AzureSearchOptionExtensions
                 searchOptions.OrderBy.Add("ClosingDate desc");
                 break;
             case VacancySort.SalaryAsc:
-                searchOptions.OrderBy.Add(searchVacanciesModel.SkipWageType is null
-                    ? "Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage asc"
-                    : "Wage/Between18AndUnder21NationalMinimumWage asc");
+                if (searchVacanciesModel.SkipWageType is null)
+                {
+                    if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
+                    {
+                        searchOptions.OrderBy.Add("Wage/WageType asc");
+                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                        searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
+                        searchOptions.OrderBy.Add("PostedDate asc");
+                        searchOptions.OrderBy.Add("ClosingDate asc");
+                    }
+                    else
+                    {
+                        searchOptions.OrderBy.Add("Wage/WageType asc");
+                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                        searchOptions.OrderBy.Add("PostedDate asc");
+                        searchOptions.OrderBy.Add("ClosingDate asc");
+                    }
+                }
+                else
+                {
+                    searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                }
                 break;
             case VacancySort.SalaryDesc:
-                searchOptions.OrderBy.Add(searchVacanciesModel.SkipWageType is null
-                    ? "Wage/WageType asc, Wage/Between18AndUnder21NationalMinimumWage desc"
-                    : "Wage/Between18AndUnder21NationalMinimumWage desc");
+                if (searchVacanciesModel.SkipWageType is null)
+                {
+                    if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
+                    {
+                        searchOptions.OrderBy.Add("Wage/WageType asc");
+                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                        searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
+                        searchOptions.OrderBy.Add("PostedDate asc");
+                        searchOptions.OrderBy.Add("ClosingDate asc");
+                    }
+                    else
+                    {
+                        searchOptions.OrderBy.Add("Wage/WageType asc");
+                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                        searchOptions.OrderBy.Add("PostedDate asc");
+                        searchOptions.OrderBy.Add("ClosingDate asc");
+                    }
+                }
+                else
+                {
+                    searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                }
                 break;
             case VacancySort.DistanceAsc:
                 if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
@@ -261,6 +299,7 @@ public static class AzureSearchOptionExtensions
         searchOptions.SearchFields.Add("EmployerName");
         searchOptions.SearchFields.Add("ProviderName");
         searchOptions.SearchFields.Add("Ukprn");
+        searchOptions.SearchFields.Add("SearchTags");
 
         return searchOptions;
     }

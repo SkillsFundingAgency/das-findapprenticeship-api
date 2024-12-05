@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.Spatial;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
 {
@@ -27,7 +28,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             
             return new GetApprenticeshipVacancyDetailResponse
             {
-                
                 Id = source.Id,
                 AnonymousEmployerName = source.AnonymousEmployerName,
                 ApprenticeshipLevel = source.ApprenticeshipLevel,
@@ -72,7 +72,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ThingsToConsider = source.ThingsToConsider,
                 Skills = source.Skills,
                 Qualifications = source.Qualifications.Select(c => (Qualification)c).ToList(),
-                ExpectedDuration = GetDuration(source),
+                ExpectedDuration = source.VacancySource.Equals(AdditionalDataSource.Nhs.ToString(), StringComparison.CurrentCultureIgnoreCase) ? string.Empty : GetDuration(source),
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,
@@ -89,7 +89,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 AdditionalQuestion2 = source.AdditionalQuestion2,
                 AdditionalTrainingDescription = source.AdditionalTrainingDescription,
                 CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation,
-                WageAdditionalInformation = source.Wage != null ? source.Wage.WageAdditionalInformation : string.Empty
+                WageAdditionalInformation = source.Wage != null ? source.Wage.WageAdditionalInformation : string.Empty,
+                VacancySource = source.VacancySource
             };
         }
 
@@ -103,6 +104,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             }
 
             var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
+
             var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
 
             if (durationUnit == Domain.Models.WageUnit.Month.GetDisplayName())
