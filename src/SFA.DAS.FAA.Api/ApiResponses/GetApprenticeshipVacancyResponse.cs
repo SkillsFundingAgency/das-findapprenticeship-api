@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using SFA.DAS.FAA.Domain.Entities;
 
@@ -46,6 +48,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public decimal? Distance { get; set; }
         public double Score { get; set; }
         public Address Address { get ; set ; }
+        public bool IsPrimaryLocation { get; set; }
+        public List<Address> OtherAddresses { get; set; }
         public string EmployerDescription { get ; set ; }
         public string EmployerWebsiteUrl { get ; set ; }
         public string EmployerContactPhone { get ; set ; }
@@ -124,6 +128,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ProviderContactName = source.ProviderContactName,
                 ProviderContactPhone = source.ProviderContactPhone,
                 Address = source.Address,
+                OtherAddresses = source.OtherAddresses.Select(add => (Address)add).ToList(),
+                IsPrimaryLocation = source.IsPrimaryLocation,
                 ApplicationMethod = source.ApplicationMethod,
                 ApplicationUrl = source.ApplicationUrl,
                 ApplicationInstructions = source.ApplicationInstructions,
