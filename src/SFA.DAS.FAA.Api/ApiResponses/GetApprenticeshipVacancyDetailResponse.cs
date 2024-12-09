@@ -90,7 +90,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 AdditionalTrainingDescription = source.AdditionalTrainingDescription,
                 CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation,
                 WageAdditionalInformation = source.Wage != null ? source.Wage.WageAdditionalInformation : string.Empty,
-                VacancySource = source.VacancySource
+                VacancySource = source.VacancySource,
+                OtherAddresses = source.OtherAddresses.Select(add => (Address)add).ToList(),
+                IsPrimaryLocation = source.IsPrimaryLocation,
             };
         }
 

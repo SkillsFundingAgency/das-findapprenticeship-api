@@ -16,7 +16,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             public string Title { get; set; }
             public DateTime ClosingDate { get; set; }
             public string ApplicationUrl { get; set; }
+            public bool IsPrimaryLocation { get; set; }
             public Address Address { get; set; }
+            public List<Address> OtherAddresses { get; set; }
         }
 
         public class Address
@@ -26,6 +28,18 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             public string AddressLine3 { get; set; }
             public string AddressLine4 { get; set; }
             public string Postcode { get; set; }
+
+            public static implicit operator Address(GetApprenticeshipVacanciesByReferenceQueryResult.Address source)
+            {
+                return new Address
+                {
+                    AddressLine1 = source.AddressLine1,
+                    AddressLine2 = source.AddressLine2,
+                    AddressLine3 = source.AddressLine3,
+                    AddressLine4 = source.AddressLine4,
+                    Postcode = source.Postcode
+                };
+            }
         }
 
         public static implicit operator GetApprenticeshipVacanciesByReferenceApiResponse(
@@ -40,14 +54,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                     Title = x.Title,
                     ClosingDate = x.ClosingDate,
                     ApplicationUrl = x.ApplicationUrl,
-                    Address = new Address
-                    {
-                        AddressLine1 = x.Address.AddressLine1,
-                        AddressLine2 = x.Address.AddressLine2,
-                        AddressLine3 = x.Address.AddressLine3,
-                        AddressLine4 = x.Address.AddressLine4,
-                        Postcode = x.Address.Postcode
-                    }
+                    OtherAddresses = x.OtherAddresses.Select(add => (Address)add).ToList(),
+                    Address = x.Address,
+                    IsPrimaryLocation = x.IsPrimaryLocation,
                 })
             };
         }

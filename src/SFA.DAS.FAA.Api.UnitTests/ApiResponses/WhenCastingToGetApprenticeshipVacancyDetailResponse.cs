@@ -68,6 +68,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             response.WageUnit.Should().Be(4);
             response.WageType.Should().Be((int)source.Wage.WageType);
             response.WageAdditionalInformation.Should().Be(source.Wage.WageAdditionalInformation);
+            response.OtherAddresses.Should().BeEquivalentTo(source.OtherAddresses);
+            response.IsPrimaryLocation.Should().Be(source.IsPrimaryLocation);
         }
         
         [Test, AutoData]
@@ -113,6 +115,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             response.WageUnit.Should().Be(4);
             response.Distance.Should().Be(0);
             response.WageType.Should().Be((int)source.Wage.WageType);
+            response.OtherAddresses.Should().BeEquivalentTo(source.OtherAddresses);
+            response.IsPrimaryLocation.Should().Be(source.IsPrimaryLocation);
         }
         
         
