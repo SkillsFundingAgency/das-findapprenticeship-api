@@ -4,7 +4,9 @@ using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +23,11 @@ public class AcsVacancySearchRepository(ILogger<AcsVacancySearchRepository> logg
     public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
     {
         return await searchHelper.Get(vacancyReference);
+    }
+
+    public async Task<List<ApprenticeshipSearchItem>> GetAll(List<string> vacancyReferences)
+    {
+        return (await searchHelper.Get(vacancyReferences)).Select(vacancyItem => (ApprenticeshipSearchItem)vacancyItem).ToList();
     }
 
     public async Task<int> Count(FindVacanciesCountModel findVacanciesCountModel)
