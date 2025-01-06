@@ -79,6 +79,7 @@ namespace SFA.DAS.FAA.Domain.Entities
                 Title = source.Title,
                 Ukprn = source.Ukprn,
                 VacancyLocationType = source.VacancyLocationType,
+                OtherAddresses = source.OtherAddresses
             };
         }
     }
