@@ -15,6 +15,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
             {
                 SearchTerm = request.SearchTerm,
                 Categories = request.Categories,
+                RouteIds = request.RouteIds,
                 Lat = request.Lat,
                 Lon = request.Lon,
                 DistanceInMiles = request.DistanceInMiles,

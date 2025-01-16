@@ -21,6 +21,8 @@ public class SearchVacancyTotalRequest
     [ModelBinder(typeof(NonNullListStringModelBinder))]
     public List<string> Categories { get; set; } = null;
     [FromQuery]
+    public List<int> RouteIds { get; set; } = null;
+    [FromQuery]
     [ModelBinder(typeof(NonNullListStringModelBinder))]
     public List<string> Levels { get; set; } = null;
     [FromQuery]

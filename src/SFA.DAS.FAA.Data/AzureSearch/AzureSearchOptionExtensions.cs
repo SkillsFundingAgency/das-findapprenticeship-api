@@ -181,6 +181,13 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
         }
 
+        if (findVacanciesModel.RouteIds is { Count: not 0 })
+        {
+            var routeIdClauses = new List<string>();
+            findVacanciesModel.RouteIds.ForEach(route => routeIdClauses.Add($"Course/RouteCode eq {route}"));
+            searchFilters.Add($"({string.Join(" or ", [.. routeIdClauses])})");
+        }
+
         if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
         {
             var levelClauses = new List<string>();
@@ -251,6 +258,13 @@ public static class AzureSearchOptionExtensions
             var categoryClauses = new List<string>();
             findVacanciesModel.Categories.ForEach(category => categoryClauses.Add($"Route eq '{category}'"));
             searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
+        }
+
+        if (findVacanciesModel.RouteIds is { Count: not 0 })
+        {
+            var routeIdClauses = new List<string>();
+            findVacanciesModel.RouteIds.ForEach(route => routeIdClauses.Add($"Course/RouteCode eq {route}"));
+            searchFilters.Add($"({string.Join(" or ", [.. routeIdClauses])})");
         }
 
         if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
