@@ -35,7 +35,6 @@ public class WhenGettingVacancySearch
                     query.DistanceInMiles == request.DistanceInMiles &&
                     query.Categories == request.Categories &&
                     query.RouteIds == request.RouteIds &&
-                    query.RouteIds == request.RouteIds &&
                     query.Levels == request.Levels &&
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                     query.VacancySort.Equals(request.Sort) &&
