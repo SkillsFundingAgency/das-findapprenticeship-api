@@ -5,11 +5,12 @@ namespace SFA.DAS.FAA.Data.Extensions
 {
     public static class AdditionalDataSourceExtensions
     {
-        public static string GetAzureSearchTerm(this AdditionalDataSource source)
+        public static string GetAzureSearchTerm(this DataSource source)
         {
             return source switch
             {
-                AdditionalDataSource.Nhs => "NHS",
+                DataSource.Raa => "RAA",
+                DataSource.Nhs => "NHS",
                 _ => throw new InvalidOperationException("Unable to map data source to azure search term")
             };
         }

@@ -108,7 +108,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                     NationWideOnly = request.NationWideOnly,
                     WageType = request.WageType,
                     DisabilityConfident = request.DisabilityConfident,
-                    AdditionalDataSources = request.AdditionalDataSources
+                    DataSources = request.DataSources
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse { TotalVacancies = result });
             }

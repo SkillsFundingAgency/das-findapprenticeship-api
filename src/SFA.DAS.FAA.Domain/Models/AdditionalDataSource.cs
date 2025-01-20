@@ -1,7 +1,8 @@
 ﻿namespace SFA.DAS.FAA.Domain.Models
 {
-    public enum AdditionalDataSource
+    public enum DataSource
     {
+        Raa,
         Nhs
     }
 }

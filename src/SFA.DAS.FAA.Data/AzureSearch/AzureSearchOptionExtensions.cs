@@ -117,7 +117,7 @@ public static class AzureSearchOptionExtensions
     }
 
     public static SearchOptions BuildFiltersForTotalCount(this SearchOptions searchOptions,
-        List<AdditionalDataSource> additionalDataSources)
+        List<DataSource> additionalDataSources)
     {
         List<string> searchFilters = [];
 
@@ -230,10 +230,10 @@ public static class AzureSearchOptionExtensions
     {
         List<string> searchFilters = [];
 
-        if (findVacanciesModel.AdditionalDataSources != null && findVacanciesModel.AdditionalDataSources.Count != 0)
+        if (findVacanciesModel.DataSources != null && findVacanciesModel.DataSources.Count != 0)
         {
-            var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
-            findVacanciesModel.AdditionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
+            var sourceClauses = new List<string>();
+            findVacanciesModel.DataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
             searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
         }
         else

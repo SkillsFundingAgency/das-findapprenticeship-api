@@ -28,7 +28,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetApprenticeshipVacancyCountQuery>(query =>
-                        query.AdditionalDataSources == request.AdditionalDataSources),
+                        query.DataSources == request.DataSources),
                     It.IsAny<CancellationToken>()))
 
                 .ReturnsAsync(mediatorResult);
