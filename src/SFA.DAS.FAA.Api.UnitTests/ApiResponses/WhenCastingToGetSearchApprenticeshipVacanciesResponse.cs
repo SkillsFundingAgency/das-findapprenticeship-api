@@ -28,6 +28,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.SearchGeoPoint)
                 .Excluding(c => c.AdditionalQuestion1)
                 .Excluding(c => c.AdditionalQuestion2)
+                .Excluding(c => c.Address.Country)
             );
         }
     }

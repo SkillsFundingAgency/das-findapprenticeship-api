@@ -26,6 +26,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c=>c.SearchGeoPoint)
                 .Excluding(c => c.VacancySource)
                 .Excluding(c => c.AdditionalTrainingDescription)
+                .Excluding(c => c.Address.Country)
             );
         }
         [Test, AutoData]
@@ -57,6 +58,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.VacancySource)
                 .Excluding(c => c.Wage.WageAdditionalInformation)
                 .Excluding(c => c.AdditionalTrainingDescription)
+                .Excluding(c => c.Address.Country)
             );
             response.StandardTitle.Should().Be(source.Course.Title);
             response.Category.Should().Be(source.Course.Title);
@@ -104,6 +106,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.VacancySource)
                 .Excluding(c => c.Wage.WageAdditionalInformation)
                 .Excluding(c => c.AdditionalTrainingDescription)
+                .Excluding(c => c.Address.Country)
             );
             response.StandardTitle.Should().Be(source.Course.Title);
             response.Category.Should().Be(source.Course.Title);

@@ -87,6 +87,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string Postcode { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
+        public string Country { get; set; }
     }
     public class CourseSearchDocument
     {
