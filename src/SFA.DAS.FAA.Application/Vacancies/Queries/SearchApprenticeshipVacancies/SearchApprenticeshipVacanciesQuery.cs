@@ -17,6 +17,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
         public uint? DistanceInMiles { get ; init ; }
         public uint? PostedInLastNumberOfDays { get ; init ; }
         public List<string> Categories { get ; init ; }
+        public List<int> RouteIds { get; init; }
         public List<string> Levels { get; init; }
         public double? Lat { get ; init ; }
         public double? Lon { get ; init ; }

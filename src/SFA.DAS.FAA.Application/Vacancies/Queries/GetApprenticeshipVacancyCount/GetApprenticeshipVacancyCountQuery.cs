@@ -10,6 +10,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
         public bool? NationWideOnly { get; init; }
         public uint? DistanceInMiles { get; init; }
         public List<string> Categories { get; init; }
+        public List<int> RouteIds { get; init; }
         public List<string> Levels { get; init; }
         public double? Lat { get; init; }
         public double? Lon { get; init; }
