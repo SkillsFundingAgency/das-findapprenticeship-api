@@ -18,7 +18,7 @@ namespace SFA.DAS.FAA.Domain.Models
         public VacancySort VacancySort { get; set; }
         public bool DisabilityConfident { get; set; }
         public WageType? SkipWageType { get; set; }
-        public List<AdditionalDataSource> AdditionalDataSources { get; set; }
+        public List<DataSource> AdditionalDataSources { get; set; }
     }
 
     public class FindFilteredVacanciesModel

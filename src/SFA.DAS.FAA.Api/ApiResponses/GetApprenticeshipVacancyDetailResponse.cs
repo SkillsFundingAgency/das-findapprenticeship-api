@@ -72,7 +72,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ThingsToConsider = source.ThingsToConsider,
                 Skills = source.Skills,
                 Qualifications = source.Qualifications.Select(c => (Qualification)c).ToList(),
-                ExpectedDuration = source.VacancySource.Equals(AdditionalDataSource.Nhs.ToString(), StringComparison.CurrentCultureIgnoreCase) ? string.Empty : GetDuration(source),
+                ExpectedDuration = source.VacancySource.Equals(DataSource.Nhs.ToString(), StringComparison.CurrentCultureIgnoreCase) ? string.Empty : GetDuration(source),
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactPhone = source.EmployerContactPhone,

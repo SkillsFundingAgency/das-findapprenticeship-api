@@ -22,7 +22,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
                 NationWideOnly = request.NationWideOnly,
                 Levels = request.Levels,
                 DisabilityConfident = request.DisabilityConfident,
-                AdditionalDataSources = request.AdditionalDataSources,
+                DataSources = request.DataSources,
                 WageType = request.WageType,
             };
             return await acsVacancySearchRepository.Count(model);

@@ -11,6 +11,6 @@ namespace SFA.DAS.FAA.Domain.Models
         public List<string> Levels { get; init; }
         public bool DisabilityConfident { get; set; }
         public WageType? WageType { get; set; }
-        public List<AdditionalDataSource> AdditionalDataSources { get; set; }
+        public List<DataSource> DataSources { get; set; }
     }
 }

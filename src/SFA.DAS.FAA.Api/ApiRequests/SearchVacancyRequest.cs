@@ -45,5 +45,5 @@ public class SearchVacancyRequest
     [FromQuery]
     public bool DisabilityConfident { get; set; }
     [FromQuery]
-    public List<AdditionalDataSource> AdditionalDataSources { get; set; } = null;
+    public List<DataSource> AdditionalDataSources { get; set; } = null;
 }
