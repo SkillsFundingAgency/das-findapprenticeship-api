@@ -12,12 +12,13 @@ namespace SFA.DAS.FAA.Domain.Models
         public string AccountLegalEntityPublicHashedId { get; init; }
         public List<int> StandardLarsCode { get; set; }
         public List<string> Categories { get; set; }
+        public List<int> RouteIds { get; set; }
         public List<string> Levels { get; init; }
         public uint? PostedInLastNumberOfDays { get; set; }
         public VacancySort VacancySort { get; set; }
         public bool DisabilityConfident { get; set; }
         public WageType? SkipWageType { get; set; }
-        public List<AdditionalDataSource> AdditionalDataSources { get; set; }
+        public List<DataSource> AdditionalDataSources { get; set; }
     }
 
     public class FindFilteredVacanciesModel

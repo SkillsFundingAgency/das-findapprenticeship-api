@@ -32,6 +32,8 @@ public class SearchVacancyRequest
     [FromQuery] [ModelBinder(typeof(NonNullListStringModelBinder))]
     public List<string> Categories  { get; set; } = null;
     [FromQuery]
+    public List<int> RouteIds { get; set; } = null;
+    [FromQuery]
     [ModelBinder(typeof(NonNullListStringModelBinder))]
     public List<string> Levels { get; set; } = null;
     [FromQuery]
@@ -43,5 +45,5 @@ public class SearchVacancyRequest
     [FromQuery]
     public bool DisabilityConfident { get; set; }
     [FromQuery]
-    public List<AdditionalDataSource> AdditionalDataSources { get; set; } = null;
+    public List<DataSource> AdditionalDataSources { get; set; } = null;
 }

@@ -1,18 +1,13 @@
-﻿using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using FluentAssertions;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Models;
-using SFA.DAS.Testing.AutoFixture;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2;
 public class WhenGettingVacancySearch
@@ -39,6 +34,7 @@ public class WhenGettingVacancySearch
                     query.Lon.Equals(request.Lon) &&
                     query.DistanceInMiles == request.DistanceInMiles &&
                     query.Categories == request.Categories &&
+                    query.RouteIds == request.RouteIds &&
                     query.Levels == request.Levels &&
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                     query.VacancySort.Equals(request.Sort) &&

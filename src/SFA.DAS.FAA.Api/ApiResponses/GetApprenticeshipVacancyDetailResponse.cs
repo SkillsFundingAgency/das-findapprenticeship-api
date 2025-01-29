@@ -49,7 +49,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 EmployerName = source.EmployerName,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
                 EmploymentLocationInformation = source.EmploymentLocationInformation,
-                ExpectedDuration = source.VacancySource.Equals(AdditionalDataSource.Nhs.ToString(), StringComparison.CurrentCultureIgnoreCase) ? string.Empty : GetDuration(source),
+                ExpectedDuration = source.VacancySource.Equals(DataSource.Nhs.ToString(), StringComparison.CurrentCultureIgnoreCase) ? string.Empty : GetDuration(source),
                 FrameworkLarsCode = source.FrameworkLarsCode,
                 HoursPerWeek = source.HoursPerWeek,
                 Id = source.Id,

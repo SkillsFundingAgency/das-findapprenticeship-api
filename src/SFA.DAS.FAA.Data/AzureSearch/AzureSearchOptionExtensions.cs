@@ -117,7 +117,7 @@ public static class AzureSearchOptionExtensions
     }
 
     public static SearchOptions BuildFiltersForTotalCount(this SearchOptions searchOptions,
-        List<AdditionalDataSource> additionalDataSources)
+        List<DataSource> additionalDataSources)
     {
         List<string> searchFilters = [];
 
@@ -181,6 +181,13 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
         }
 
+        if (findVacanciesModel.RouteIds is { Count: not 0 })
+        {
+            var routeIdClauses = new List<string>();
+            findVacanciesModel.RouteIds.ForEach(route => routeIdClauses.Add($"Course/RouteCode eq {route}"));
+            searchFilters.Add($"({string.Join(" or ", [.. routeIdClauses])})");
+        }
+
         if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
         {
             var levelClauses = new List<string>();
@@ -230,10 +237,10 @@ public static class AzureSearchOptionExtensions
     {
         List<string> searchFilters = [];
 
-        if (findVacanciesModel.AdditionalDataSources != null && findVacanciesModel.AdditionalDataSources.Count != 0)
+        if (findVacanciesModel.DataSources != null && findVacanciesModel.DataSources.Count != 0)
         {
-            var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
-            findVacanciesModel.AdditionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
+            var sourceClauses = new List<string>();
+            findVacanciesModel.DataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
             searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
         }
         else
@@ -251,6 +258,13 @@ public static class AzureSearchOptionExtensions
             var categoryClauses = new List<string>();
             findVacanciesModel.Categories.ForEach(category => categoryClauses.Add($"Route eq '{category}'"));
             searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
+        }
+
+        if (findVacanciesModel.RouteIds is { Count: not 0 })
+        {
+            var routeIdClauses = new List<string>();
+            findVacanciesModel.RouteIds.ForEach(route => routeIdClauses.Add($"Course/RouteCode eq {route}"));
+            searchFilters.Add($"({string.Join(" or ", [.. routeIdClauses])})");
         }
 
         if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)

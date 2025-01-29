@@ -26,7 +26,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                     c.SearchTerm.Equals(query.SearchTerm) &&
                     c.WageType.Equals(query.WageType) &&
                     c.DisabilityConfident.Equals(query.DisabilityConfident) &&
-                    c.AdditionalDataSources.Equals(query.AdditionalDataSources)
+                    c.DataSources.Equals(query.DataSources)
                 )))
                 .ReturnsAsync(vacancyCount);
 

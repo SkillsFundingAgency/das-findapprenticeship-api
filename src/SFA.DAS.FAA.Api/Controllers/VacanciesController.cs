@@ -67,6 +67,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                     AccountPublicHashedId = request.AccountPublicHashedId,
                     AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
                     Categories = request.Categories,
+                    RouteIds = request.RouteIds,
                     Levels = request.Levels,
                     Lat = request.Lat,
                     Lon = request.Lon,
@@ -101,6 +102,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                 {
                     SearchTerm = request.SearchTerm,
                     Categories = request.Categories,
+                    RouteIds = request.RouteIds,
                     Levels = request.Levels,
                     Lat = request.Lat,
                     Lon = request.Lon,
@@ -108,7 +110,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                     NationWideOnly = request.NationWideOnly,
                     WageType = request.WageType,
                     DisabilityConfident = request.DisabilityConfident,
-                    AdditionalDataSources = request.AdditionalDataSources
+                    DataSources = request.DataSources
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse { TotalVacancies = result });
             }
