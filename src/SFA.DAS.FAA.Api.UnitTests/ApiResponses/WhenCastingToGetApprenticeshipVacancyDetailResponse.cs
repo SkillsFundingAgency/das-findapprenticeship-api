@@ -27,6 +27,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.VacancySource)
                 .Excluding(c => c.AdditionalTrainingDescription)
                 .Excluding(c => c.Address.Country)
+                .Excluding(c => c.OtherAddresses)
             );
         }
         [Test, AutoData]
@@ -59,6 +60,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.Wage.WageAdditionalInformation)
                 .Excluding(c => c.AdditionalTrainingDescription)
                 .Excluding(c => c.Address.Country)
+                .Excluding(c => c.OtherAddresses)
             );
             response.StandardTitle.Should().Be(source.Course.Title);
             response.Category.Should().Be(source.Course.Title);
@@ -70,6 +72,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             response.WageUnit.Should().Be(4);
             response.WageType.Should().Be((int)source.Wage.WageType);
             response.WageAdditionalInformation.Should().Be(source.Wage.WageAdditionalInformation);
+            response.IsPrimaryLocation.Should().Be(source.IsPrimaryLocation);
         }
         
         [Test, AutoData]
@@ -105,6 +108,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.Wage.WageAdditionalInformation)
                 .Excluding(c => c.AdditionalTrainingDescription)
                 .Excluding(c => c.Address.Country)
+                .Excluding(c => c.OtherAddresses)
             );
             response.StandardTitle.Should().Be(source.Course.Title);
             response.Category.Should().Be(source.Course.Title);
@@ -116,6 +120,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             response.WageUnit.Should().Be(4);
             response.Distance.Should().Be(0);
             response.WageType.Should().Be((int)source.Wage.WageType);
+            response.IsPrimaryLocation.Should().Be(source.IsPrimaryLocation);
         }
         
         

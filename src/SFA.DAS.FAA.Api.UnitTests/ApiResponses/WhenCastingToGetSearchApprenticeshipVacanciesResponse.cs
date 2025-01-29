@@ -29,6 +29,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.AdditionalQuestion1)
                 .Excluding(c => c.AdditionalQuestion2)
                 .Excluding(c => c.Address.Country)
+                .Excluding(c => c.OtherAddresses)
             );
         }
     }

@@ -30,6 +30,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.AdditionalQuestion2)
                 .Excluding(c => c.VacancySource)
                 .Excluding(c => c.Address.Country)
+                .Excluding(c => c.OtherAddresses)
             );
             response.ExpectedDuration.Should().Be($"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}");
         }
@@ -50,26 +51,27 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             
             var response = (GetApprenticeshipVacancyResponse)source;
 
-            response.Should().BeEquivalentTo(source, options=>options
-                .Excluding(c=>c.Duration)
-                .Excluding(c=>c.DurationUnit)
-                .Excluding(c=>c.EmployerDescription)
-                .Excluding(c=>c.ExpectedDuration)
-                .Excluding(c=>c.Wage)
-                .Excluding(c=>c.Course)
-                .Excluding(c=>c.Category)
-                .Excluding(c=>c.CategoryCode)
-                .Excluding(c=>c.Location)
-                .Excluding(c=>c.StandardLarsCode)
+            response.Should().BeEquivalentTo(source, options => options
+                .Excluding(c => c.Duration)
+                .Excluding(c => c.DurationUnit)
+                .Excluding(c => c.EmployerDescription)
+                .Excluding(c => c.ExpectedDuration)
+                .Excluding(c => c.Wage)
+                .Excluding(c => c.Course)
+                .Excluding(c => c.Category)
+                .Excluding(c => c.CategoryCode)
+                .Excluding(c => c.Location)
+                .Excluding(c => c.StandardLarsCode)
                 .Excluding(c => c.WageType)
                 .Excluding(c => c.WageUnit)
-                .Excluding(c=>c.SearchGeoPoint)
-                .Excluding(c=>c.Distance)
+                .Excluding(c => c.SearchGeoPoint)
+                .Excluding(c => c.Distance)
                 .Excluding(c => c.AdditionalQuestion1)
                 .Excluding(c => c.AdditionalQuestion2)
                 .Excluding(c => c.TypicalJobTitles)
                 .Excluding(c => c.VacancySource)
-                .Excluding(c => c.Address.Country));
+                .Excluding(c => c.Address.Country)
+                .Excluding(c => c.OtherAddresses));
 
             response.Distance.Should().Be(0);
         }
@@ -111,6 +113,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.AdditionalQuestion2)
                 .Excluding(c => c.VacancySource)
                 .Excluding(c => c.Address.Country)
+                .Excluding(c => c.OtherAddresses)
             );
             response.ExpectedDuration.Should().Be($"{source.Duration} {(source.Duration == 1 ? source.DurationUnit : $"{source.DurationUnit}s")}");
             response.StandardTitle.Should().Be(source.Course.Title);
@@ -161,6 +164,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.AdditionalQuestion2)
                 .Excluding(c => c.VacancySource)
                 .Excluding(c => c.Address.Country)
+                .Excluding(c => c.OtherAddresses)
             );
             response.WageUnit.Should().Be(4);
             response.WageType.Should().Be((int)source.Wage.WageType);
