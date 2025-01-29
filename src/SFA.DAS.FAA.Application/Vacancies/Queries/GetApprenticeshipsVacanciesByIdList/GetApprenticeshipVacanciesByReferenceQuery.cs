@@ -26,7 +26,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
             public string ApplicationUrl { get; set; }
             public bool IsPrimaryLocation { get; set; }
             public Address Address { get; set; }
-            public List<Address> OtherAddresses { get; set; }
+            public List<Address>? OtherAddresses { get; set; }
         }
 
         public class Address
@@ -68,7 +68,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
                         ClosingDate = x.ClosingDate,
                         IsPrimaryLocation = x.IsPrimaryLocation,
                         Address = x.Address,
-                        OtherAddresses = x.OtherAddresses.Select(add => (GetApprenticeshipVacanciesByReferenceQueryResult.Address)add).ToList(),
+                        OtherAddresses = x.OtherAddresses?.Select(add => (GetApprenticeshipVacanciesByReferenceQueryResult.Address)add).ToList(),
                         ApplicationUrl = x.ApplicationUrl
 
                     }).ToList()

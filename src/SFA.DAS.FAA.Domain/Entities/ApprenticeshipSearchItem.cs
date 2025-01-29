@@ -42,7 +42,8 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string WorkingWeek { get; set; }
         public Address Address { get; set; }
         public bool IsPrimaryLocation { get; set; } = true;
-        public List<Address> OtherAddresses { get; set; } = [];
+        public List<Address>? OtherAddresses { get; set; }
+        public string EmploymentLocationInformation { get; set; }
         public string EmployerWebsiteUrl { get; set; }
         public string EmployerDescription { get; set; }
         public string EmployerContactName { get; set; }
