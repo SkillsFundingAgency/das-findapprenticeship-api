@@ -51,6 +51,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public bool IsPrimaryLocation { get; set; }
         public List<Address>? OtherAddresses { get; set; }
         public string? EmploymentLocationInformation { get; set; }
+        public string? AvailableWhere { get; set; }
         public string EmployerDescription { get ; set ; }
         public string EmployerWebsiteUrl { get ; set ; }
         public string EmployerContactPhone { get ; set ; }
@@ -110,6 +111,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 Location =  source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location,
                 NumberOfPositions = source.NumberOfPositions,
                 OtherAddresses = source.OtherAddresses?.Select(add => (Address)add).ToList(),
+                AvailableWhere = source.AvailableWhere,
                 PostedDate = source.PostedDate,
                 ProviderContactEmail = source.ProviderContactEmail,
                 ProviderContactName = source.ProviderContactName,

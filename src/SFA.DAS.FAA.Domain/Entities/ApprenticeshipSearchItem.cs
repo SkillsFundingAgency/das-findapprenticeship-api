@@ -44,6 +44,7 @@ namespace SFA.DAS.FAA.Domain.Entities
         public bool IsPrimaryLocation { get; set; } = true;
         public List<Address>? OtherAddresses { get; set; }
         public string EmploymentLocationInformation { get; set; }
+        public string? AvailableWhere { get; set; }
         public string EmployerWebsiteUrl { get; set; }
         public string EmployerDescription { get; set; }
         public string EmployerContactName { get; set; }

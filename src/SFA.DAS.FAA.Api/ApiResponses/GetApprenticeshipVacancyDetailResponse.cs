@@ -57,6 +57,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 IsEmployerAnonymous = source.IsEmployerAnonymous,
                 IsPositiveAboutDisability = source.IsPositiveAboutDisability,
                 IsPrimaryLocation = source.IsPrimaryLocation,
+                AvailableWhere = source.AvailableWhere,
                 IsRecruitVacancy = source.IsRecruitVacancy,
                 Location =  sourceLocation,
                 LongDescription = source.LongDescription,
