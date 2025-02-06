@@ -61,42 +61,67 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string? ApplicationInstructions { get; set; }
         public string? CompanyBenefitsInformation { get; set; }
         public string? AdditionalTrainingDescription { get; set; }
-
         public string VacancySource { get; set; }
+        public string? EmploymentLocationInformation { get; set; }
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
             var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
             var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit?.GetDisplayName() : source.DurationUnit;
 
-            var sourceLocation = source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;
+            var sourceLocation = source.Location is { Lat: 0, Lon: 0 } 
+                ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} 
+                : source.Location;
 
-            var distance = source.Distance ?? (source.SearchGeoPoint != null ? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat) : 0);
+            decimal? distance = null;
+            if (sourceLocation is not null)
+            {
+                distance = source.Distance ?? (source.SearchGeoPoint != null ? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat) : 0);
+            }
             
             return new GetApprenticeshipVacancyResponse
             {
-                Id = source.Id,
+                AdditionalTrainingDescription = source.AdditionalTrainingDescription,
+                Address = source.Address,
                 AnonymousEmployerName = source.AnonymousEmployerName,
+                ApplicationInstructions = source.ApplicationInstructions,
+                ApplicationMethod = source.ApplicationMethod,
+                ApplicationUrl = source.ApplicationUrl,
                 ApprenticeshipLevel = source.ApprenticeshipLevel,
                 Category = source.Category ?? source.Course?.Title,
                 CategoryCode = source.CategoryCode ?? "SSAT1.UNKNOWN",
                 ClosingDate = source.ClosingDate,
+                CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation,
                 Description = source.Description,
+                Distance = distance,
+                EmployerContactEmail = source.EmployerContactEmail,
+                EmployerContactName = source.EmployerContactName,
+                EmployerContactPhone = source.EmployerContactPhone,
                 EmployerName = source.EmployerName,
+                EmployerWebsiteUrl = source.EmployerWebsiteUrl,
+                EmploymentLocationInformation = source.EmploymentLocationInformation,
+                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration)
+                    ? source.ExpectedDuration
+                    : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
                 FrameworkLarsCode = source.FrameworkLarsCode,
                 HoursPerWeek = source.HoursPerWeek,
+                Id = source.Id,
                 IsDisabilityConfident = source.IsDisabilityConfident,
                 IsEmployerAnonymous = source.IsEmployerAnonymous,
                 IsPositiveAboutDisability = source.IsPositiveAboutDisability,
                 IsRecruitVacancy = source.IsRecruitVacancy,
-                Location =  source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location,
+                Location = sourceLocation,
                 NumberOfPositions = source.NumberOfPositions,
                 PostedDate = source.PostedDate,
+                ProviderContactEmail = source.ProviderContactEmail,
+                ProviderContactName = source.ProviderContactName,
+                ProviderContactPhone = source.ProviderContactPhone,
                 ProviderName = source.ProviderName,
-                StandardTitle = source.Course?.Title,
+                RouteCode = source.Course?.RouteCode,
+                Score = source.Score,
                 StandardLarsCode = source.StandardLarsCode ?? source.Course?.LarsCode,
                 StandardLevel = source.Course?.Level,
-                RouteCode = source.Course?.RouteCode,
+                StandardTitle = source.Course?.Title,
                 StartDate = source.StartDate,
                 SubCategory = source.SubCategory?? source.Course?.Title,
                 SubCategoryCode = source.SubCategoryCode?? source.Course?.Title,
@@ -104,32 +129,14 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 Ukprn = source.Ukprn,
                 VacancyLocationType = source.VacancyLocationType,
                 VacancyReference = source.VacancyReference,
+                VacancySource = source.VacancySource,
                 WageAmount = source.WageAmount,
                 WageAmountLowerBound = source.WageAmountLowerBound,
                 WageAmountUpperBound = source.WageAmountUpperBound,
                 WageText = source.WageText,
-                WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
                 WageType = source.Wage != null && source.Wage.WageType.HasValue ? (int)source.Wage.WageType : source.WageType ?? 0,
+                WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
                 WorkingWeek = source.WorkingWeek ?? source.Wage.WorkingWeekDescription,
-                Distance = source.Distance ?? (decimal)distance,
-                Score = source.Score,
-                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) 
-                    ? source.ExpectedDuration 
-                    : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
-                EmployerContactName = source.EmployerContactName,
-                EmployerContactEmail = source.EmployerContactEmail,
-                EmployerContactPhone = source.EmployerContactPhone,
-                EmployerWebsiteUrl = source.EmployerWebsiteUrl,
-                ProviderContactEmail = source.ProviderContactEmail,
-                ProviderContactName = source.ProviderContactName,
-                ProviderContactPhone = source.ProviderContactPhone,
-                Address = source.Address,
-                ApplicationMethod = source.ApplicationMethod,
-                ApplicationUrl = source.ApplicationUrl,
-                ApplicationInstructions = source.ApplicationInstructions,
-                VacancySource = source.VacancySource,
-                CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation,
-                AdditionalTrainingDescription = source.AdditionalTrainingDescription
             };
         }
 
@@ -160,11 +167,13 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 
         public static implicit operator GeoPoint(Domain.Entities.GeoPoint source)
         {
-            return new GeoPoint
-            {
-                Lon = source.Lon,
-                Lat = source.Lat
-            };
+            return source is null
+                ? null
+                : new GeoPoint
+                {
+                    Lon = source.Lon,
+                    Lat = source.Lat
+                };
         }
     }
 
