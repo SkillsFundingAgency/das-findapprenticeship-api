@@ -10,7 +10,7 @@ public class SearchVacancyTotalRequest
     [FromQuery]
     public string? SearchTerm { get; set; }
     [FromQuery]
-    public bool? NationWideOnly { get; set; } = null;
+    public bool? ExcludeNational { get; set; } = null;
     [FromQuery]
     public double? Lat { get; set; } = null;
     [FromQuery]

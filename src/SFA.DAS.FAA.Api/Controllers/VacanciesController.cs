@@ -72,7 +72,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                     Lat = request.Lat,
                     Lon = request.Lon,
                     DistanceInMiles = request.DistanceInMiles,
-                    NationWideOnly = request.NationWideOnly,
+                    ExcludeNational = request.ExcludeNational,
                     StandardLarsCode = request.StandardLarsCode,
                     PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
                     VacancySort = request.Sort ?? VacancySort.AgeDesc,
@@ -107,7 +107,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                     Lat = request.Lat,
                     Lon = request.Lon,
                     DistanceInMiles = request.DistanceInMiles,
-                    NationWideOnly = request.NationWideOnly,
+                    ExcludeNational = request.ExcludeNational,
                     WageType = request.WageType,
                     DisabilityConfident = request.DisabilityConfident,
                     DataSources = request.DataSources

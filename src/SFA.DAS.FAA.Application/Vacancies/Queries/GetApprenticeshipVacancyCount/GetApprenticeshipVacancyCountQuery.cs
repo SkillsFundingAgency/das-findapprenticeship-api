@@ -7,7 +7,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
     public class GetApprenticeshipVacancyCountQuery : IRequest<int>
     {
         public string? SearchTerm { get; init; }
-        public bool? NationWideOnly { get; init; }
+        public bool? ExcludeNational { get; init; }
         public uint? DistanceInMiles { get; init; }
         public List<string> Categories { get; init; }
         public List<int> RouteIds { get; init; }
