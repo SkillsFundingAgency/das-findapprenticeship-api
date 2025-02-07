@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using SFA.DAS.FAA.Domain.Entities;
 
@@ -46,6 +48,10 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public decimal? Distance { get; set; }
         public double Score { get; set; }
         public Address Address { get ; set ; }
+        public bool IsPrimaryLocation { get; set; }
+        public List<Address>? OtherAddresses { get; set; }
+        public string? EmploymentLocationInformation { get; set; }
+        public string? AvailableWhere { get; set; }
         public string EmployerDescription { get ; set ; }
         public string EmployerWebsiteUrl { get ; set ; }
         public string EmployerContactPhone { get ; set ; }
@@ -62,7 +68,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string? CompanyBenefitsInformation { get; set; }
         public string? AdditionalTrainingDescription { get; set; }
         public string VacancySource { get; set; }
-        public string? EmploymentLocationInformation { get; set; }
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
@@ -100,18 +105,19 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 EmployerName = source.EmployerName,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
                 EmploymentLocationInformation = source.EmploymentLocationInformation,
-                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration)
-                    ? source.ExpectedDuration
-                    : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
+                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) ? source.ExpectedDuration : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
                 FrameworkLarsCode = source.FrameworkLarsCode,
                 HoursPerWeek = source.HoursPerWeek,
                 Id = source.Id,
                 IsDisabilityConfident = source.IsDisabilityConfident,
                 IsEmployerAnonymous = source.IsEmployerAnonymous,
                 IsPositiveAboutDisability = source.IsPositiveAboutDisability,
+                IsPrimaryLocation = source.IsPrimaryLocation,
                 IsRecruitVacancy = source.IsRecruitVacancy,
                 Location = sourceLocation,
                 NumberOfPositions = source.NumberOfPositions,
+                OtherAddresses = source.OtherAddresses?.Select(add => (Address)add).ToList(),
+                AvailableWhere = source.AvailableWhere,
                 PostedDate = source.PostedDate,
                 ProviderContactEmail = source.ProviderContactEmail,
                 ProviderContactName = source.ProviderContactName,
