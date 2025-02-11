@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using SFA.DAS.FAA.Domain.Entities;
 
@@ -46,6 +48,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public decimal? Distance { get; set; }
         public double Score { get; set; }
         public Address Address { get ; set ; }
+        public bool IsPrimaryLocation { get; set; }
+        public List<Address>? OtherAddresses { get; set; }
+        public string? EmploymentLocationInformation { get; set; }
         public string EmployerDescription { get ; set ; }
         public string EmployerWebsiteUrl { get ; set ; }
         public string EmployerContactPhone { get ; set ; }
@@ -70,33 +75,51 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit?.GetDisplayName() : source.DurationUnit;
 
             var sourceLocation = source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;
-
             var distance = source.Distance ?? (source.SearchGeoPoint != null ? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat) : 0);
             
             return new GetApprenticeshipVacancyResponse
             {
-                Id = source.Id,
+                AdditionalTrainingDescription = source.AdditionalTrainingDescription,
+                Address = source.Address,
                 AnonymousEmployerName = source.AnonymousEmployerName,
+                ApplicationInstructions = source.ApplicationInstructions,
+                ApplicationMethod = source.ApplicationMethod,
+                ApplicationUrl = source.ApplicationUrl,
                 ApprenticeshipLevel = source.ApprenticeshipLevel,
                 Category = source.Category ?? source.Course?.Title,
                 CategoryCode = source.CategoryCode ?? "SSAT1.UNKNOWN",
                 ClosingDate = source.ClosingDate,
+                CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation,
                 Description = source.Description,
+                Distance = distance,
+                EmployerContactEmail = source.EmployerContactEmail,
+                EmployerContactName = source.EmployerContactName,
+                EmployerContactPhone = source.EmployerContactPhone,
                 EmployerName = source.EmployerName,
+                EmployerWebsiteUrl = source.EmployerWebsiteUrl,
+                EmploymentLocationInformation = source.EmploymentLocationInformation,
+                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) ? source.ExpectedDuration : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
                 FrameworkLarsCode = source.FrameworkLarsCode,
                 HoursPerWeek = source.HoursPerWeek,
+                Id = source.Id,
                 IsDisabilityConfident = source.IsDisabilityConfident,
                 IsEmployerAnonymous = source.IsEmployerAnonymous,
                 IsPositiveAboutDisability = source.IsPositiveAboutDisability,
+                IsPrimaryLocation = source.IsPrimaryLocation,
                 IsRecruitVacancy = source.IsRecruitVacancy,
                 Location =  source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location,
                 NumberOfPositions = source.NumberOfPositions,
+                OtherAddresses = source.OtherAddresses?.Select(add => (Address)add).ToList(),
                 PostedDate = source.PostedDate,
+                ProviderContactEmail = source.ProviderContactEmail,
+                ProviderContactName = source.ProviderContactName,
+                ProviderContactPhone = source.ProviderContactPhone,
                 ProviderName = source.ProviderName,
-                StandardTitle = source.Course?.Title,
+                RouteCode = source.Course?.RouteCode,
+                Score = source.Score,
                 StandardLarsCode = source.StandardLarsCode ?? source.Course?.LarsCode,
                 StandardLevel = source.Course?.Level,
-                RouteCode = source.Course?.RouteCode,
+                StandardTitle = source.Course?.Title,
                 StartDate = source.StartDate,
                 SubCategory = source.SubCategory?? source.Course?.Title,
                 SubCategoryCode = source.SubCategoryCode?? source.Course?.Title,
@@ -104,32 +127,14 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 Ukprn = source.Ukprn,
                 VacancyLocationType = source.VacancyLocationType,
                 VacancyReference = source.VacancyReference,
+                VacancySource = source.VacancySource,
                 WageAmount = source.WageAmount,
                 WageAmountLowerBound = source.WageAmountLowerBound,
                 WageAmountUpperBound = source.WageAmountUpperBound,
                 WageText = source.WageText,
-                WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
                 WageType = source.Wage != null && source.Wage.WageType.HasValue ? (int)source.Wage.WageType : source.WageType ?? 0,
+                WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
                 WorkingWeek = source.WorkingWeek ?? source.Wage.WorkingWeekDescription,
-                Distance = source.Distance ?? (decimal)distance,
-                Score = source.Score,
-                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) 
-                    ? source.ExpectedDuration 
-                    : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
-                EmployerContactName = source.EmployerContactName,
-                EmployerContactEmail = source.EmployerContactEmail,
-                EmployerContactPhone = source.EmployerContactPhone,
-                EmployerWebsiteUrl = source.EmployerWebsiteUrl,
-                ProviderContactEmail = source.ProviderContactEmail,
-                ProviderContactName = source.ProviderContactName,
-                ProviderContactPhone = source.ProviderContactPhone,
-                Address = source.Address,
-                ApplicationMethod = source.ApplicationMethod,
-                ApplicationUrl = source.ApplicationUrl,
-                ApplicationInstructions = source.ApplicationInstructions,
-                VacancySource = source.VacancySource,
-                CompanyBenefitsInformation = source.Wage?.CompanyBenefitsInformation,
-                AdditionalTrainingDescription = source.AdditionalTrainingDescription
             };
         }
 
