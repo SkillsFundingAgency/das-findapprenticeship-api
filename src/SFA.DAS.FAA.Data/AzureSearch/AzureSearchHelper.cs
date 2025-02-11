@@ -126,7 +126,7 @@ public class AzureSearchHelper : IAzureSearchHelper
                 filters.Append(" or ");
 
             count++;
-            filters.Append($"VacancyReference eq '{reference}'");
+            filters.Append($"VacancyReference eq '{reference}' and IsPrimaryLocation eq true");
         }
 
         var searchOptions = new SearchOptions { Filter = filters.ToString(),QueryType = SearchQueryType.Full, Size = 500};
