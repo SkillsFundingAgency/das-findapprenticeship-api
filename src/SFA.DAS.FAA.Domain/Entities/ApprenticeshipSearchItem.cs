@@ -70,7 +70,6 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string AdditionalQuestion2 { get; set; }
         public string? AdditionalTrainingDescription { get; set; }
         public string VacancySource { get; set; }
-        public string EmploymentLocationInformation { get; set; }
     }
     
     public class GeoPoint

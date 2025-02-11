@@ -68,7 +68,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string? CompanyBenefitsInformation { get; set; }
         public string? AdditionalTrainingDescription { get; set; }
         public string VacancySource { get; set; }
-        public string? EmploymentLocationInformation { get; set; }
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
