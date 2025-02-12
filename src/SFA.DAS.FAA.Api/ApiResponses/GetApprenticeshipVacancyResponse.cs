@@ -67,7 +67,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string? ApplicationInstructions { get; set; }
         public string? CompanyBenefitsInformation { get; set; }
         public string? AdditionalTrainingDescription { get; set; }
-
         public string VacancySource { get; set; }
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
@@ -75,8 +74,15 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
             var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit?.GetDisplayName() : source.DurationUnit;
 
-            var sourceLocation = source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;
-            var distance = source.Distance ?? (source.SearchGeoPoint != null ? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat) : 0);
+            var sourceLocation = source.Location is { Lat: 0, Lon: 0 } 
+                ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} 
+                : source.Location;
+
+            decimal? distance = null;
+            if (sourceLocation is not null)
+            {
+                distance = source.Distance ?? (source.SearchGeoPoint != null ? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat) : 0);
+            }
             
             return new GetApprenticeshipVacancyResponse
             {
@@ -108,7 +114,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 IsPositiveAboutDisability = source.IsPositiveAboutDisability,
                 IsPrimaryLocation = source.IsPrimaryLocation,
                 IsRecruitVacancy = source.IsRecruitVacancy,
-                Location =  source.Location.Lat == 0 && source.Location.Lon == 0 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location,
+                Location = sourceLocation,
                 NumberOfPositions = source.NumberOfPositions,
                 OtherAddresses = source.OtherAddresses?.Select(add => (Address)add).ToList(),
                 AvailableWhere = source.AvailableWhere,
@@ -167,11 +173,13 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 
         public static implicit operator GeoPoint(Domain.Entities.GeoPoint source)
         {
-            return new GeoPoint
-            {
-                Lon = source.Lon,
-                Lat = source.Lat
-            };
+            return source is null
+                ? null
+                : new GeoPoint
+                {
+                    Lon = source.Lon,
+                    Lat = source.Lat
+                };
         }
     }
 

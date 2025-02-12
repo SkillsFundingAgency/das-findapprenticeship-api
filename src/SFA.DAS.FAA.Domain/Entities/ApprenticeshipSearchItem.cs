@@ -72,8 +72,6 @@ namespace SFA.DAS.FAA.Domain.Entities
         public string VacancySource { get; set; }
     }
     
-    
-    
     public class GeoPoint
     {
         public double Lon { get; set; }

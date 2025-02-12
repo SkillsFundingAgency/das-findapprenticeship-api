@@ -199,7 +199,13 @@ public static class AzureSearchOptionExtensions
         {
             var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
             var distanceInKm = (distanceInMiles - (distanceInMiles / 5)) * 2;
-            searchFilters.Add($"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}");
+
+            List<string> geoFilters = [
+                $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
+                "Location eq null"
+            ];
+            
+            searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
         }
 
         if (findVacanciesModel.NationWideOnly.HasValue)
@@ -215,7 +221,7 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays):O}");
         }
 
-        if (findVacanciesModel.DisabilityConfident != false)
+        if (findVacanciesModel.DisabilityConfident)
         {
             searchFilters.Add("IsDisabilityConfident eq true");
         }
