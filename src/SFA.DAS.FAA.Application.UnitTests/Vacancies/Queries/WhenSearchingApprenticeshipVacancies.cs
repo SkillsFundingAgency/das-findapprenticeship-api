@@ -1,14 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
-using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
 {
@@ -34,7 +29,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                         c.Lat.Equals(query.Lat) &&
                         c.Lon.Equals(query.Lon) &&
                         c.DistanceInMiles.Equals(query.DistanceInMiles) &&
-                        c.NationWideOnly.Equals(query.NationWideOnly) &&
+                        c.ExcludeNational.Equals(query.ExcludeNational) &&
                         c.PostedInLastNumberOfDays.Equals(query.PostedInLastNumberOfDays) &&
                         c.VacancySort.Equals(query.VacancySort) &&
                         c.SearchTerm.Equals(query.SearchTerm) &&

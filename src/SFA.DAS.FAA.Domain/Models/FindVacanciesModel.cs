@@ -26,6 +26,6 @@ namespace SFA.DAS.FAA.Domain.Models
         public double? Lat { get; set; }
         public double? Lon { get; set; }
         public uint? DistanceInMiles { get; set; }
-        public bool? NationWideOnly { get; init; }
+        public bool? ExcludeNational { get; init; }
     }
 }

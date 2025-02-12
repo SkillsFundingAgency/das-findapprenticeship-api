@@ -19,7 +19,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
                 Lat = request.Lat,
                 Lon = request.Lon,
                 DistanceInMiles = request.DistanceInMiles,
-                NationWideOnly = request.NationWideOnly,
+                ExcludeNational = request.ExcludeNational,
                 Levels = request.Levels,
                 DisabilityConfident = request.DisabilityConfident,
                 DataSources = request.DataSources,

@@ -208,11 +208,9 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
         }
 
-        if (findVacanciesModel.NationWideOnly.HasValue)
+        if (findVacanciesModel.ExcludeNational is true)
         {
-            searchFilters.Add(findVacanciesModel.NationWideOnly == true
-                ? "VacancyLocationType eq 'National'"
-                : "VacancyLocationType eq 'NonNational'");
+            searchFilters.Add("VacancyLocationType ne 'National'");
         }
 
         if (findVacanciesModel.PostedInLastNumberOfDays.HasValue)
@@ -284,14 +282,17 @@ public static class AzureSearchOptionExtensions
         {
             var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
             var distanceInKm = (distanceInMiles - (distanceInMiles / 5)) * 2;
-            searchFilters.Add($"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}");
+            List<string> geoFilters = [
+                $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
+                "Location eq null"
+            ];
+            
+            searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
         }
 
-        if (findVacanciesModel.NationWideOnly.HasValue)
+        if (findVacanciesModel.ExcludeNational is true)
         {
-            searchFilters.Add(findVacanciesModel.NationWideOnly == true
-                ? "VacancyLocationType eq 'National'"
-                : "VacancyLocationType eq 'NonNational'");
+            searchFilters.Add("VacancyLocationType ne 'National'");
         }
 
         if (findVacanciesModel.DisabilityConfident != false)
