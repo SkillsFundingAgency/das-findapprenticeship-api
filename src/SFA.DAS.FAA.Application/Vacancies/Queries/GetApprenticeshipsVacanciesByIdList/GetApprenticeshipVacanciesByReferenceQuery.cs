@@ -26,7 +26,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
             public string ApplicationUrl { get; set; }
             public bool IsPrimaryLocation { get; set; }
             public Address Address { get; set; }
-            public List<Address>? OtherAddresses { get; set; }
+            public List<Address>? OtherAddresses { get; set; } = [];
             public string? EmploymentLocationInformation { get; set; }
             public string? AvailableWhere { get; set; }
         }
@@ -41,6 +41,8 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
 
             public static implicit operator Address(Domain.Entities.Address source)
             {
+                if (source is null) return null;
+
                 return new Address
                 {
                     AddressLine4 = source.AddressLine4,
