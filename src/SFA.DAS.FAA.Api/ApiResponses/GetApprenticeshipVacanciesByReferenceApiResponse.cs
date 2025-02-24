@@ -18,7 +18,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             public string ApplicationUrl { get; set; }
             public bool IsPrimaryLocation { get; set; }
             public Address Address { get; set; }
-            public List<Address> OtherAddresses { get; set; }
+            public List<Address>? OtherAddresses { get; set; } = [];
+            public string? EmploymentLocationInformation { get; set; }
+            public string? AvailableWhere { get; set; }
         }
 
         public class Address
@@ -31,6 +33,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 
             public static implicit operator Address(GetApprenticeshipVacanciesByReferenceQueryResult.Address source)
             {
+                if (source is null) return null;
+
                 return new Address
                 {
                     AddressLine1 = source.AddressLine1,
@@ -54,9 +58,11 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                     Title = x.Title,
                     ClosingDate = x.ClosingDate,
                     ApplicationUrl = x.ApplicationUrl,
-                    OtherAddresses = x.OtherAddresses.Select(add => (Address)add).ToList(),
+                    OtherAddresses = x.OtherAddresses?.Select(add => (Address)add).ToList(),
                     Address = x.Address,
                     IsPrimaryLocation = x.IsPrimaryLocation,
+                    AvailableWhere = x.AvailableWhere,
+                    EmploymentLocationInformation = x.EmploymentLocationInformation,
                 })
             };
         }

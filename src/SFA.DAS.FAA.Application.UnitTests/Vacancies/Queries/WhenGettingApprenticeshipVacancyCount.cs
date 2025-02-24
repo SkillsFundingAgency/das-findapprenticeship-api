@@ -22,7 +22,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                     c.Lat.Equals(query.Lat) &&
                     c.Lon.Equals(query.Lon) &&
                     c.DistanceInMiles.Equals(query.DistanceInMiles) &&
-                    c.NationWideOnly.Equals(query.NationWideOnly) &&
+                    c.ExcludeNational.Equals(query.ExcludeNational) &&
                     c.SearchTerm.Equals(query.SearchTerm) &&
                     c.WageType.Equals(query.WageType) &&
                     c.DisabilityConfident.Equals(query.DisabilityConfident) &&

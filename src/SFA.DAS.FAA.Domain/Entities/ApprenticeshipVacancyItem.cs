@@ -39,6 +39,7 @@ namespace SFA.DAS.FAA.Domain.Entities
                 EmployerName = source.EmployerName,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
                 EmploymentLocationInformation = source.EmploymentLocationInformation,
+                AvailableWhere = source.AvailableWhere,
                 ExpectedDuration = source.ExpectedDuration,
                 FrameworkLarsCode = source.FrameworkLarsCode,
                 HoursPerWeek = source.HoursPerWeek,

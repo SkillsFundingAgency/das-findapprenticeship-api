@@ -22,7 +22,7 @@ public class SearchVacancyRequest
     [FromQuery]
     public List<int> StandardLarsCode  { get; set; } = null;
     [FromQuery]
-    public bool? NationWideOnly  { get; set; } = null;
+    public bool? ExcludeNational  { get; set; } = null;
     [FromQuery]
     public double? Lat  { get; set; } = null;
     [FromQuery]

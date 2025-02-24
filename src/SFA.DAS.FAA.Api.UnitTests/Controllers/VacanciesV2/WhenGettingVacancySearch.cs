@@ -29,7 +29,7 @@ public class WhenGettingVacancySearch
                     query.AccountPublicHashedId == request.AccountPublicHashedId &&
                     query.AccountLegalEntityPublicHashedId == request.AccountLegalEntityPublicHashedId &&
                     query.StandardLarsCode == request.StandardLarsCode &&
-                    query.NationWideOnly == request.NationWideOnly &&
+                    query.ExcludeNational == request.ExcludeNational &&
                     query.Lat.Equals(request.Lat) &&
                     query.Lon.Equals(request.Lon) &&
                     query.DistanceInMiles == request.DistanceInMiles &&

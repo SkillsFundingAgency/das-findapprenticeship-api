@@ -199,14 +199,18 @@ public static class AzureSearchOptionExtensions
         {
             var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
             var distanceInKm = (distanceInMiles - (distanceInMiles / 5)) * 2;
-            searchFilters.Add($"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}");
+
+            List<string> geoFilters = [
+                $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
+                "Location eq null"
+            ];
+            
+            searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
         }
 
-        if (findVacanciesModel.NationWideOnly.HasValue)
+        if (findVacanciesModel.ExcludeNational is true)
         {
-            searchFilters.Add(findVacanciesModel.NationWideOnly == true
-                ? "VacancyLocationType eq 'National'"
-                : "VacancyLocationType eq 'NonNational'");
+            searchFilters.Add("VacancyLocationType ne 'National'");
         }
 
         if (findVacanciesModel.PostedInLastNumberOfDays.HasValue)
@@ -215,7 +219,7 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays):O}");
         }
 
-        if (findVacanciesModel.DisabilityConfident != false)
+        if (findVacanciesModel.DisabilityConfident)
         {
             searchFilters.Add("IsDisabilityConfident eq true");
         }
@@ -235,7 +239,10 @@ public static class AzureSearchOptionExtensions
 
     public static SearchOptions BuildFiltersForTotalSearchCount(this SearchOptions searchOptions, FindVacanciesCountModel findVacanciesModel)
     {
-        List<string> searchFilters = [];
+        List<string> searchFilters =
+        [
+            "IsPrimaryLocation eq true"
+        ];
 
         if (findVacanciesModel.DataSources != null && findVacanciesModel.DataSources.Count != 0)
         {
@@ -278,14 +285,17 @@ public static class AzureSearchOptionExtensions
         {
             var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
             var distanceInKm = (distanceInMiles - (distanceInMiles / 5)) * 2;
-            searchFilters.Add($"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}");
+            List<string> geoFilters = [
+                $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
+                "Location eq null"
+            ];
+            
+            searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
         }
 
-        if (findVacanciesModel.NationWideOnly.HasValue)
+        if (findVacanciesModel.ExcludeNational is true)
         {
-            searchFilters.Add(findVacanciesModel.NationWideOnly == true
-                ? "VacancyLocationType eq 'National'"
-                : "VacancyLocationType eq 'NonNational'");
+            searchFilters.Add("VacancyLocationType ne 'National'");
         }
 
         if (findVacanciesModel.DisabilityConfident != false)
