@@ -95,6 +95,11 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageAmount = source.WageAmount,
                 WageAmountLowerBound = source.WageAmountLowerBound,
                 WageAmountUpperBound = source.WageAmountUpperBound,
+                ApprenticeMinimumWage = source.Wage?.ApprenticeMinimumWage,
+                Under18NationalMinimumWage = source.Wage?.Under18NationalMinimumWage,
+                Between18AndUnder21NationalMinimumWage = source.Wage?.Between18AndUnder21NationalMinimumWage,
+                Between21AndUnder25NationalMinimumWage = source.Wage?.Between21AndUnder25NationalMinimumWage,
+                Over25NationalMinimumWage = source.Wage?.Over25NationalMinimumWage,
                 WageText = source.WageText,
                 WageType = source.Wage is { WageType: not null } ? (int)source.Wage.WageType : source.WageType ?? 0,
                 WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
