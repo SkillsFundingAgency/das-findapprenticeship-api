@@ -125,6 +125,11 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             response.Location.Lat.Should().Be(source.Address.Latitude);
             response.WageUnit.Should().Be(4);
             response.WageType.Should().Be((int)source.Wage.WageType);
+            response.ApprenticeMinimumWage.Should().Be(source.Wage.ApprenticeMinimumWage);
+            response.Over25NationalMinimumWage.Should().Be(source.Wage.Over25NationalMinimumWage);
+            response.Under18NationalMinimumWage.Should().Be(source.Wage.Under18NationalMinimumWage);
+            response.Between18AndUnder21NationalMinimumWage.Should().Be(source.Wage.Between18AndUnder21NationalMinimumWage);
+            response.Between21AndUnder25NationalMinimumWage.Should().Be(source.Wage.Between21AndUnder25NationalMinimumWage);
             response.Distance.Should().Be(6.92865669536914M);
         }
 

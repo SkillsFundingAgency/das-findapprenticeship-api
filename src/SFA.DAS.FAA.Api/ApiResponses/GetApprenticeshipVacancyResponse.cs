@@ -38,6 +38,11 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public decimal? WageAmount { get; set; }
         public decimal? WageAmountLowerBound { get; set; }
         public decimal? WageAmountUpperBound { get; set; }
+        public decimal? Over25NationalMinimumWage { get; set; }
+        public decimal? Between21AndUnder25NationalMinimumWage { get; set; }
+        public decimal? Between18AndUnder21NationalMinimumWage { get; set; }
+        public decimal? Under18NationalMinimumWage { get; set; }
+        public decimal? ApprenticeMinimumWage { get; set; }
         public string WageText { get; set; }
         public int WageUnit { get; set; }
         public int WageType { get; set; }
@@ -139,12 +144,20 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageAmount = source.WageAmount,
                 WageAmountLowerBound = source.WageAmountLowerBound,
                 WageAmountUpperBound = source.WageAmountUpperBound,
+                ApprenticeMinimumWage = source.Wage?.ApprenticeMinimumWage,
+                Under18NationalMinimumWage = source.Wage?.Under18NationalMinimumWage,
+                Between18AndUnder21NationalMinimumWage = source.Wage?.Between18AndUnder21NationalMinimumWage,
+                Between21AndUnder25NationalMinimumWage = source.Wage?.Between21AndUnder25NationalMinimumWage,
+                Over25NationalMinimumWage = source.Wage?.Over25NationalMinimumWage,
+                
                 WageText = source.WageText,
                 WageType = source.Wage != null && source.Wage.WageType.HasValue ? (int)source.Wage.WageType : source.WageType ?? 0,
                 WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
                 WorkingWeek = source.WorkingWeek ?? source.Wage.WorkingWeekDescription,
             };
         }
+
+        
 
         internal static double GetDistanceBetweenPointsInMiles(
             double lon1,
