@@ -11,8 +11,8 @@ public record SearchParameters(
     List<int>? SelectedLevelIds,
     string? Location,
     string? Latitude,
-    string? Longitude
-)
+    string? Longitude,
+    bool ExcludeNational)
 {
     public static SearchParameters From(string source)
     {
