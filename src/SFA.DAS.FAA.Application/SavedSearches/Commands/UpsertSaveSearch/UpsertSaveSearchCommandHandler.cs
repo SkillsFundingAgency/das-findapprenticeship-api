@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Constants;
 using SFA.DAS.FAA.Domain.Entities;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Application.SavedSearches.Commands.UpsertSaveSearch;
 
