@@ -102,6 +102,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 EmployerContactEmail = source.EmployerContactEmail,
                 EmployerContactName = source.EmployerContactName,
                 EmployerContactPhone = source.EmployerContactPhone,
+                EmployerDescription = source.EmployerDescription,
                 EmployerName = source.EmployerName,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
                 EmploymentLocationInformation = source.EmploymentLocationInformation,
