@@ -9,6 +9,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 {
     public class GetApprenticeshipVacancyDetailResponse : GetApprenticeshipVacancyResponse
     {
+        public long? AccountId { get; set; }
+        public long? AccountLegalEntityId { get; set; }
         public string LongDescription { get; set; }
         public string OutcomeDescription { get; set; }
         public string TrainingDescription { get; set; }
@@ -29,9 +31,11 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             {
                 distance = source.Distance ?? (source.SearchGeoPoint != null ? (decimal)GetDistanceBetweenPointsInMiles(sourceLocation.Lon, sourceLocation.Lat, source.SearchGeoPoint.Lon, source.SearchGeoPoint.Lat) : 0);
             }
-            
+
             return new GetApprenticeshipVacancyDetailResponse
             {
+                AccountId = source.AccountId,
+                AccountLegalEntityId = source.AccountLegalEntityId,
                 AdditionalQuestion1 = source.AdditionalQuestion1,
                 AdditionalQuestion2 = source.AdditionalQuestion2,
                 AdditionalTrainingDescription = source.AdditionalTrainingDescription,
