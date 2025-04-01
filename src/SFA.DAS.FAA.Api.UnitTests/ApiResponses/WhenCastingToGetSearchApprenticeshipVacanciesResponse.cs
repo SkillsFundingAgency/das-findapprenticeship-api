@@ -1,7 +1,4 @@
 ﻿using System.Linq;
-using AutoFixture.NUnit3;
-using FluentAssertions;
-using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 
@@ -18,18 +15,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
 
             response.Should().BeEquivalentTo(source, options=>options.Excluding(c=>c.ApprenticeshipVacancies));
             response.ApprenticeshipVacancies.Should().BeEquivalentTo(source.ApprenticeshipVacancies, options => options
-                .Excluding(c => c.EmployerDescription)
-                .Excluding(c => c.Duration)
-                .Excluding(c => c.DurationUnit)
-                .Excluding(c=>c.ExpectedDuration)
-                .Excluding(c=>c.Wage)
-                .Excluding(c=>c.Course)
-                .Excluding(c => c.TypicalJobTitles)
-                .Excluding(c=>c.SearchGeoPoint)
-                .Excluding(c => c.AdditionalQuestion1)
-                .Excluding(c => c.AdditionalQuestion2)
-                .Excluding(c => c.Address.Country)
-                .Excluding(c => c.OtherAddresses)
+                .ExcludingMissingMembers()
             );
         }
     }
