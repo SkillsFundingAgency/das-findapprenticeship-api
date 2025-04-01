@@ -141,7 +141,9 @@ public static class AzureSearchOptionExtensions
     {
         List<string> searchFilters = [];
 
-        if (findVacanciesModel.AdditionalDataSources != null && findVacanciesModel.AdditionalDataSources.Count != 0)
+        if (findVacanciesModel.AdditionalDataSources != null
+            && findVacanciesModel.AdditionalDataSources.Count != 0
+            && findVacanciesModel.VacancySort != VacancySort.ExpectedStartDateAsc && findVacanciesModel.VacancySort != VacancySort.ExpectedStartDateDesc)
         {
             var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
             findVacanciesModel.AdditionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
@@ -230,7 +232,7 @@ public static class AzureSearchOptionExtensions
             {
                 searchFilters.Add($"Wage/WageType ne '{findVacanciesModel.SkipWageType}'");
             }
-        }
+        }       
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
 

@@ -112,5 +112,10 @@ namespace SFA.DAS.FAA.Domain.Entities
         public long? WageAmount { get; set; }
         public int Duration { get; set; }
         public string? CompanyBenefitsInformation { get; set; }
+        public decimal? ApprenticeMinimumWage { get; set; }
+        public decimal? Under18NationalMinimumWage { get; set; }
+        public decimal? Between18AndUnder21NationalMinimumWage { get; set; }
+        public decimal? Between21AndUnder25NationalMinimumWage { get; set; }
+        public decimal? Over25NationalMinimumWage { get; set; }
     }
 }
