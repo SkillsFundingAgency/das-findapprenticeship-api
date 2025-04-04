@@ -1,449 +1,470 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "resourceEnvironmentName": {
-            "type": "string"
-        },
-        "environmentName": {
-            "type": "string"
-        },
-        "serviceName": {
-            "type": "string"
-        },
-        "sharedEnvResourceGroup": {
-            "type": "string"
-        },
-        "configurationStorageConnectionString": {
-            "type": "securestring"
-        },
-        "logAnalyticsWorkspaceName": {
-            "type": "string"
-        },
-        "logAnalyticsSubscriptionId": {
-            "type": "string",
-            "defaultValue": "[subscription().subscriptionId]"
-        },
-        "loggingRedisConnectionString": {
-            "type": "securestring"
-        },
-        "loggingRedisKey": {
-            "type": "string"
-        },
-        "tags": {
-            "type": "object"
-        },
-        "resourceGroupLocation": {
-            "type": "string"
-        },
-        "sharedManagementResourceGroup": {
-            "type": "string"
-        },
-        "sharedKeyVaultName": {
-            "type": "string"
-        },
-        "apiCustomHostName": {
-            "type": "string"
-        },
-        "keyVaultCertificateName": {
-            "type": "string"
-        },
-        "backEndAccessRestrictions": {
-            "type": "array"
-        },
-        "sharedAiSearchName": {
-            "type": "string"
-        },
-        "utcValue": {
-            "type": "string",
-            "defaultValue": "[utcNow()]"
-        },
-        "tenant": {
-            "type": "string"
-        },
-        "aspSize": {
-            "type": "string",
-            "defaultValue": "1"
-        },
-        "aspInstances": {
-            "type": "int",
-            "defaultValue": 1
-        },
-        "sharedSQLServerName": {
-            "type": "string"
-        },
-        "elasticPoolName": {
-            "defaultValue": "",
-            "type": "string"
-        },
-        "databaseSkuName": {
-            "type": "string",
-            "defaultValue": "S0"
-        },
-        "databaseTier": {
-            "type": "string",
-            "defaultValue": "Standard"
-        },
-        "nonASETier": {
-            "type": "string",
-            "defaultValue": "PremiumV2"
-        },
-        "sharedEnvVirtualNetworkName": {
-            "type": "string"
-        },
-        "subnetObject": {
-            "type": "object"
-        },
-        "subnetServiceEndpointList": {
-            "type": "array"
-        },
-        "subnetDelegations": {
-            "type": "array"
-        },
-        "healthCheckPath": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "applicationInsightsConnectionString": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Shared application insights connection string retrieved from the get-product-app-insights step"
-            }
-        },
-        "applicationInsightsResourceId": {
-            "type": "string",
-            "metadata": {
-                "description": "Shared application insights resource ID retrieved from the get-product-app-insights step"
-            }
-        },
-        "alertActionGroupResourceId": {
-            "type": "string",
-            "metadata": {
-                "description": "Alert group resource ID found in the management resources variable groups"
-            }
-        },
-        "enableFailedRequestAlert": {
-            "type": "bool",
-            "defaultValue": false,
-            "metadata": {
-                "description": "Enables alerting on app insights failed requests"
-            }
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "resourceEnvironmentName": {
+      "type": "string"
     },
-    "variables": {
-        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
-        "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
-        "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
-        "apiAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
-        "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]",
-        "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
-        "configNames": "SFA.DAS.FindApprenticeships.Api"
+    "environmentName": {
+      "type": "string"
     },
-    "resources": [
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[variables('resourceGroupName')]",
-            "type": "Microsoft.Resources/resourceGroups",
-            "location": "[parameters('resourceGroupLocation')]",
-            "tags": "[parameters('tags')]",
-            "properties": {}
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[concat(parameters('subnetObject').name, '-', parameters('utcValue'))]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "virtualNetworkName": {
-                        "value": "[parameters('sharedEnvVirtualNetworkName')]"
-                    },
-                    "subnetName": {
-                        "value": "[parameters('subnetObject').name]"
-                    },
-                    "subnetAddressPrefix": {
-                        "value": "[parameters('subnetObject').addressSpace]"
-                    },
-                    "serviceEndpointList": {
-                        "value": "[parameters('subnetServiceEndpointList')]"
-                    },
-                    "delegations": {
-                        "value": "[parameters('subnetDelegations')]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[variables('resourceGroupName')]"
-            ]
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[concat(parameters('subnetObject').name, '-sql-firewall-rule-', parameters('utcValue'))]",
-            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'), 'sql-server-firewall-rules.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "serverName": {
-                        "value": "[parameters('sharedSQLServerName')]"
-                    },
-                    "subnetResourceIdList": {
-                        "value": "[createArray(reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.SubnetResourceId.value)]"
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[concat(variables('apiAppServiceName'), '-app-service-plan-', parameters('utcValue'))]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "appServicePlanName": {
-                        "value": "[variables('appServicePlanName')]"
-                    },
-                    "aspSize": {
-                        "value": "[parameters('aspSize')]"
-                    },
-                    "aspInstances": {
-                        "value": "[parameters('aspInstances')]"
-                    },
-                    "nonASETier": {
-                        "value": "[parameters('nonASETier')]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[variables('resourceGroupName')]"
-            ]
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[concat(variables('apiAppServiceName'), '-app-service-certificate-', parameters('utcValue'))]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-certificate.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "keyVaultCertificateName": {
-                        "value": "[parameters('keyVaultCertificateName')]"
-                    },
-                    "keyVaultName": {
-                        "value": "[parameters('sharedKeyVaultName')]"
-                    },
-                    "keyVaultResourceGroup": {
-                        "value": "[parameters('sharedManagementResourceGroup')]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[variables('resourceGroupName')]"
-            ]
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[concat(variables('apiAppServiceName'), '-', parameters('utcValue'))]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[variables('resourceGroupName')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-v2.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "appServiceName": {
-                        "value": "[variables('apiAppServiceName')]"
-                    },
-                    "appServicePlanName": {
-                        "value": "[variables('appServicePlanName')]"
-                    },
-                    "appServicePlanResourceGroup": {
-                        "value": "[parameters('sharedEnvResourceGroup')]"
-                    },
-                    "subnetResourceId": {
-                        "value": "[reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.subnetResourceId.value]"
-                    },
-                    "appServiceAppSettings": {
-                        "value": {
-                            "array": [
-                                {
-                                    "name": "EnvironmentName",
-                                    "value": "[parameters('environmentName')]"
-                                },
-                                {
-                                    "name": "Environment",
-                                    "value": "[parameters('environmentName')]"
-                                },
-                                {
-                                    "name": "ResourceEnvironmentName",
-                                    "value": "[parameters('resourceEnvironmentName')]"
-                                },
-                                {
-                                    "name": "ConfigurationStorageConnectionString",
-                                    "value": "[parameters('configurationStorageConnectionString')]"
-                                },
-                                {
-                                    "name": "ConfigNames",
-                                    "value": "[variables('configNames')]"
-                                },
-                                {
-                                    "name": "Version",
-                                    "value": "1.0"
-                                },
-                                {
-                                    "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                                    "value": "[parameters('applicationInsightsConnectionString')]"
-                                },
-                                {
-                                    "name": "LoggingRedisConnectionString",
-                                    "value": "[parameters('loggingRedisConnectionString')]"
-                                },
-                                {
-                                    "name": "LoggingRedisKey",
-                                    "value": "[parameters('loggingRedisKey')]"
-                                }
-                            ]
-                        }
-                    },
-                    "customHostName": {
-                        "value": "[parameters('apiCustomHostName')]"
-                    },
-                    "certificateThumbprint": {
-                        "value": "[reference(concat(variables('apiAppServiceName'), '-app-service-certificate-', parameters('utcValue'))).outputs.certificateThumbprint.value]"
-                    },
-                    "ipSecurityRestrictions": {
-                        "value": "[parameters('backEndAccessRestrictions')]"
-                    },
-                    "healthCheckPath": {
-                        "value": "[parameters('healthCheckPath')]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[concat(variables('apiAppServiceName'), '-app-service-plan-', parameters('utcValue'))]"
-            ]
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[concat(variables('apiAppServiceName'), '-sql-database-', parameters('utcValue'))]",
-            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'sql-database.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "databaseName": {
-                        "value": "[variables('databaseName')]"
-                    },
-                    "sqlServerName": {
-                        "value": "[parameters('sharedSQLServerName')]"
-                    },
-                    "elasticPoolName": {
-                        "value": "[parameters('elasticPoolName')]"
-                    },
-                    "databaseSkuName": {
-                        "value": "[parameters('databaseSkuName')]"
-                    },
-                    "databaseTier": {
-                        "value": "[parameters('databaseTier')]"
-                    },
-                    "logAnalyticsSubscriptionId": {
-                        "value": "[parameters('logAnalyticsSubscriptionId')]"
-                    },
-                    "logAnalyticsResourceGroup": {
-                        "value": "[parameters('sharedManagementResourceGroup')]"
-                    },
-                    "logAnalyticsWorkspaceName": {
-                        "value": "[parameters('logAnalyticsWorkspaceName')]"
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "[concat('role-assignment-', variables('apiAppServiceName'), '-', parameters('utcValue'))]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'role-assignments/role-assignment-ai-search.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "principalId": {
-                        "value": "[reference(concat(variables('apiAppServiceName'), '-', parameters('utcValue'))).outputs.managedServiceIdentityId.value]"
-                    },
-                    "assignmentType": {
-                        "value": "AiSearchIndexReader"
-                    },
-                    "resourceName": {
-                        "value": "[parameters('sharedAiSearchName')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[equals(parameters('enableFailedRequestAlert'), true())]",
-            "apiVersion": "2021-04-01",
-            "name": "[concat('application-insights-', variables('apiAppServiceName'), '-alert-', parameters('utcValue'))]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[variables('resourceGroupName')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'application-insights-failed-requests-alert.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "serviceName": {
-                        "value": "[variables('apiAppServiceName')]"
-                    },
-                    "applicationInsightsResourceId": {
-                        "value": "[parameters('applicationInsightsResourceId')]"
-                    },
-                    "alertActionGroupResourceId": {
-                        "value": "[parameters('alertActionGroupResourceId')]"
-                    }
-                }
-            }
-        }
-    ],
-    "outputs": {
-        "ResourceGroupName": {
-            "type": "string",
-            "value": "[variables('resourceGroupName')]"
-        },
-        "DatabaseName": {
-            "type": "string",
-            "value": "[variables('databaseName')]"
-        },
-        "ApiAppServiceName": {
-            "type": "string",
-            "value": "[variables('apiAppServiceName')]"
-        }
+    "serviceName": {
+      "type": "string"
+    },
+    "sharedEnvResourceGroup": {
+      "type": "string"
+    },
+    "configurationStorageConnectionString": {
+      "type": "securestring"
+    },
+    "logAnalyticsWorkspaceName": {
+      "type": "string"
+    },
+    "logAnalyticsSubscriptionId": {
+      "type": "string",
+      "defaultValue": "[subscription().subscriptionId]"
+    },
+    "loggingRedisConnectionString": {
+      "type": "securestring"
+    },
+    "loggingRedisKey": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "object"
+    },
+    "resourceGroupLocation": {
+      "type": "string"
+    },
+    "sharedManagementResourceGroup": {
+      "type": "string"
+    },
+    "sharedKeyVaultName": {
+      "type": "string"
+    },
+    "apiCustomHostName": {
+      "type": "string"
+    },
+    "keyVaultCertificateName": {
+      "type": "string"
+    },
+    "backEndAccessRestrictions": {
+      "type": "array"
+    },
+    "sharedAiSearchName": {
+      "type": "string"
+    },
+    "utcValue": {
+      "type": "string",
+      "defaultValue": "[utcNow()]"
+    },
+    "tenant": {
+      "type": "string"
+    },
+    "aspSize": {
+      "type": "string",
+      "defaultValue": "1"
+    },
+    "aspInstances": {
+      "type": "int",
+      "defaultValue": 1
+    },
+    "sharedSQLServerName": {
+      "type": "string"
+    },
+    "elasticPoolName": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "databaseSkuName": {
+      "type": "string",
+      "defaultValue": "S0"
+    },
+    "databaseTier": {
+      "type": "string",
+      "defaultValue": "Standard"
+    },
+    "nonASETier": {
+      "type": "string",
+      "defaultValue": "PremiumV2"
+    },
+    "sharedEnvVirtualNetworkName": {
+      "type": "string"
+    },
+    "subnetObject": {
+      "type": "object"
+    },
+    "subnetServiceEndpointList": {
+      "type": "array"
+    },
+    "subnetDelegations": {
+      "type": "array"
+    },
+    "healthCheckPath": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "applicationInsightsConnectionString": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Shared application insights connection string retrieved from the get-product-app-insights step"
+      }
+    },
+    "applicationInsightsResourceId": {
+      "type": "string",
+      "metadata": {
+        "description": "Shared application insights resource ID retrieved from the get-product-app-insights step"
+      }
+    },
+    "alertActionGroupResourceId": {
+      "type": "string",
+      "metadata": {
+        "description": "Alert group resource ID found in the management resources variable groups"
+      }
+    },
+    "enableFailedRequestAlert": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Enables alerting on app insights failed requests"
+      }
+    },
+    "EnableRouteTableAssociation": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Determines whether to enable route table association on subnet"
+      }
+    },
+    "SharedRouteTableName": {
+      "type": "string",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Determines whether to enable route table association on subnet"
+      }
     }
+  },
+  "variables": {
+    "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
+    "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
+    "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
+    "apiAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
+    "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]",
+    "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
+    "configNames": "SFA.DAS.FindApprenticeships.Api",
+    "routeTableId": {
+      "id": "[resourceId(subscription().subscriptionId, parameters('sharedEnvResourceGroup'), 'Microsoft.Network/routeTables', parameters('SharedRouteTableName'))]"
+    },
+    "emptyObject": {}
+  },
+  "resources": [
+    {
+      "apiVersion": "2021-04-01",
+      "name": "[variables('resourceGroupName')]",
+      "type": "Microsoft.Resources/resourceGroups",
+      "location": "[parameters('resourceGroupLocation')]",
+      "tags": "[parameters('tags')]",
+      "properties": {}
+    },
+    {
+      "apiVersion": "2021-04-01",
+      "name": "[concat(parameters('subnetObject').name, '-', parameters('utcValue'))]",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualNetworkName": {
+            "value": "[parameters('sharedEnvVirtualNetworkName')]"
+          },
+          "subnetName": {
+            "value": "[parameters('subnetObject').name]"
+          },
+          "subnetAddressPrefix": {
+            "value": "[parameters('subnetObject').addressSpace]"
+          },
+          "serviceEndpointList": {
+            "value": "[parameters('subnetServiceEndpointList')]"
+          },
+          "delegations": {
+            "value": "[parameters('subnetDelegations')]"
+          },
+          "routeTable": {
+            "value": "[if(parameters('enableRouteTableAssociation'), variables('routeTableId') , variables('emptyObject'))]"
+          }
+        }
+      },
+      "dependsOn": [
+        "[variables('resourceGroupName')]"
+      ]
+    },
+    {
+      "apiVersion": "2021-04-01",
+      "name": "[concat(parameters('subnetObject').name, '-sql-firewall-rule-', parameters('utcValue'))]",
+      "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'), 'sql-server-firewall-rules.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "serverName": {
+            "value": "[parameters('sharedSQLServerName')]"
+          },
+          "subnetResourceIdList": {
+            "value": "[createArray(reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.SubnetResourceId.value)]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2021-04-01",
+      "name": "[concat(variables('apiAppServiceName'), '-app-service-plan-', parameters('utcValue'))]",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "appServicePlanName": {
+            "value": "[variables('appServicePlanName')]"
+          },
+          "aspSize": {
+            "value": "[parameters('aspSize')]"
+          },
+          "aspInstances": {
+            "value": "[parameters('aspInstances')]"
+          },
+          "nonASETier": {
+            "value": "[parameters('nonASETier')]"
+          }
+        }
+      },
+      "dependsOn": [
+        "[variables('resourceGroupName')]"
+      ]
+    },
+    {
+      "apiVersion": "2021-04-01",
+      "name": "[concat(variables('apiAppServiceName'), '-app-service-certificate-', parameters('utcValue'))]",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'),'app-service-certificate.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultCertificateName": {
+            "value": "[parameters('keyVaultCertificateName')]"
+          },
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "keyVaultResourceGroup": {
+            "value": "[parameters('sharedManagementResourceGroup')]"
+          }
+        }
+      },
+      "dependsOn": [
+        "[variables('resourceGroupName')]"
+      ]
+    },
+    {
+      "apiVersion": "2021-04-01",
+      "name": "[concat(variables('apiAppServiceName'), '-', parameters('utcValue'))]",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'),'app-service-v2.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "appServiceName": {
+            "value": "[variables('apiAppServiceName')]"
+          },
+          "appServicePlanName": {
+            "value": "[variables('appServicePlanName')]"
+          },
+          "appServicePlanResourceGroup": {
+            "value": "[parameters('sharedEnvResourceGroup')]"
+          },
+          "subnetResourceId": {
+            "value": "[reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.subnetResourceId.value]"
+          },
+          "appServiceAppSettings": {
+            "value": {
+              "array": [
+                {
+                  "name": "EnvironmentName",
+                  "value": "[parameters('environmentName')]"
+                },
+                {
+                  "name": "Environment",
+                  "value": "[parameters('environmentName')]"
+                },
+                {
+                  "name": "ResourceEnvironmentName",
+                  "value": "[parameters('resourceEnvironmentName')]"
+                },
+                {
+                  "name": "ConfigurationStorageConnectionString",
+                  "value": "[parameters('configurationStorageConnectionString')]"
+                },
+                {
+                  "name": "ConfigNames",
+                  "value": "[variables('configNames')]"
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0"
+                },
+                {
+                  "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                  "value": "[parameters('applicationInsightsConnectionString')]"
+                },
+                {
+                  "name": "LoggingRedisConnectionString",
+                  "value": "[parameters('loggingRedisConnectionString')]"
+                },
+                {
+                  "name": "LoggingRedisKey",
+                  "value": "[parameters('loggingRedisKey')]"
+                }
+              ]
+            }
+          },
+          "customHostName": {
+            "value": "[parameters('apiCustomHostName')]"
+          },
+          "certificateThumbprint": {
+            "value": "[reference(concat(variables('apiAppServiceName'), '-app-service-certificate-', parameters('utcValue'))).outputs.certificateThumbprint.value]"
+          },
+          "ipSecurityRestrictions": {
+            "value": "[parameters('backEndAccessRestrictions')]"
+          },
+          "healthCheckPath": {
+            "value": "[parameters('healthCheckPath')]"
+          }
+        }
+      },
+      "dependsOn": [
+        "[concat(variables('apiAppServiceName'), '-app-service-plan-', parameters('utcValue'))]"
+      ]
+    },
+    {
+      "apiVersion": "2021-04-01",
+      "name": "[concat(variables('apiAppServiceName'), '-sql-database-', parameters('utcValue'))]",
+      "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'),'sql-database.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "databaseName": {
+            "value": "[variables('databaseName')]"
+          },
+          "sqlServerName": {
+            "value": "[parameters('sharedSQLServerName')]"
+          },
+          "elasticPoolName": {
+            "value": "[parameters('elasticPoolName')]"
+          },
+          "databaseSkuName": {
+            "value": "[parameters('databaseSkuName')]"
+          },
+          "databaseTier": {
+            "value": "[parameters('databaseTier')]"
+          },
+          "logAnalyticsSubscriptionId": {
+            "value": "[parameters('logAnalyticsSubscriptionId')]"
+          },
+          "logAnalyticsResourceGroup": {
+            "value": "[parameters('sharedManagementResourceGroup')]"
+          },
+          "logAnalyticsWorkspaceName": {
+            "value": "[parameters('logAnalyticsWorkspaceName')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2021-04-01",
+      "name": "[concat('role-assignment-', variables('apiAppServiceName'), '-', parameters('utcValue'))]",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'),'role-assignments/role-assignment-ai-search.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "principalId": {
+            "value": "[reference(concat(variables('apiAppServiceName'), '-', parameters('utcValue'))).outputs.managedServiceIdentityId.value]"
+          },
+          "assignmentType": {
+            "value": "AiSearchIndexReader"
+          },
+          "resourceName": {
+            "value": "[parameters('sharedAiSearchName')]"
+          }
+        }
+      }
+    },
+    {
+      "condition": "[equals(parameters('enableFailedRequestAlert'), true())]",
+      "apiVersion": "2021-04-01",
+      "name": "[concat('application-insights-', variables('apiAppServiceName'), '-alert-', parameters('utcValue'))]",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'),'application-insights-failed-requests-alert.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "serviceName": {
+            "value": "[variables('apiAppServiceName')]"
+          },
+          "applicationInsightsResourceId": {
+            "value": "[parameters('applicationInsightsResourceId')]"
+          },
+          "alertActionGroupResourceId": {
+            "value": "[parameters('alertActionGroupResourceId')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "ResourceGroupName": {
+      "type": "string",
+      "value": "[variables('resourceGroupName')]"
+    },
+    "DatabaseName": {
+      "type": "string",
+      "value": "[variables('databaseName')]"
+    },
+    "ApiAppServiceName": {
+      "type": "string",
+      "value": "[variables('apiAppServiceName')]"
+    }
+  }
 }
