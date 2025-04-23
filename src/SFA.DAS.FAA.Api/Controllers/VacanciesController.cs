@@ -66,6 +66,7 @@ namespace SFA.DAS.FAA.Api.Controllers
                     Ukprn = request.Ukprn,
                     AccountPublicHashedId = request.AccountPublicHashedId,
                     AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
+                    EmployerName = request.EmployerName,
                     Categories = request.Categories,
                     RouteIds = request.RouteIds,
                     Levels = request.Levels,

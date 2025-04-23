@@ -169,6 +169,11 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"AccountLegalEntityPublicHashedId eq '{findVacanciesModel.AccountLegalEntityPublicHashedId}'");
         }
 
+        if (!string.IsNullOrEmpty(findVacanciesModel.EmployerName))
+        {
+            searchFilters.Add($"EmployerName eq '{findVacanciesModel.EmployerName}'");
+        }
+
         if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Count != 0)
         {
             var larsCodeClauses = new List<string>();

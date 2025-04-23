@@ -28,6 +28,7 @@ public class WhenGettingVacancySearch
                     query.Ukprn == request.Ukprn &&
                     query.AccountPublicHashedId == request.AccountPublicHashedId &&
                     query.AccountLegalEntityPublicHashedId == request.AccountLegalEntityPublicHashedId &&
+                    query.EmployerName == request.EmployerName &&
                     query.StandardLarsCode == request.StandardLarsCode &&
                     query.ExcludeNational == request.ExcludeNational &&
                     query.Lat.Equals(request.Lat) &&

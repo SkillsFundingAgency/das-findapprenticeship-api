@@ -20,6 +20,8 @@ public class SearchVacancyRequest
     [FromQuery]
     public string AccountLegalEntityPublicHashedId  { get; set; } = null;
     [FromQuery]
+    public string EmployerName { get; set; } = null;
+    [FromQuery]
     public List<int> StandardLarsCode  { get; set; } = null;
     [FromQuery]
     public bool? ExcludeNational  { get; set; } = null;

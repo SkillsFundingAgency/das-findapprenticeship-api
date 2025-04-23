@@ -15,6 +15,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
             {
                 AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
                 AccountPublicHashedId = request.AccountPublicHashedId,
+                EmployerName = request.EmployerName,
                 AdditionalDataSources = request.AdditionalDataSources,
                 Categories = request.Categories,
                 DisabilityConfident = request.DisabilityConfident,
