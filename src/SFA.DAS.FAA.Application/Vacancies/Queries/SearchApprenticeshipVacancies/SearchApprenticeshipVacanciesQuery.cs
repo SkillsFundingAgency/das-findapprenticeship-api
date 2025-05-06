@@ -12,6 +12,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
         public int? Ukprn { get; init; }
         public string AccountPublicHashedId { get; init; }
         public string AccountLegalEntityPublicHashedId { get ; init ; }
+        public string EmployerName { get; init; }
         public List<int> StandardLarsCode { get ; init ; }
         public bool? ExcludeNational { get ; init ; }
         public uint? DistanceInMiles { get ; init ; }

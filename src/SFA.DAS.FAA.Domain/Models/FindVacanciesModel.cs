@@ -10,6 +10,7 @@ namespace SFA.DAS.FAA.Domain.Models
         public int? Ukprn { get; init; }
         public string AccountPublicHashedId { get; init; }
         public string AccountLegalEntityPublicHashedId { get; init; }
+        public string EmployerName { get; init; }
         public List<int> StandardLarsCode { get; set; }
         public List<string> Categories { get; set; }
         public List<int> RouteIds { get; set; }
