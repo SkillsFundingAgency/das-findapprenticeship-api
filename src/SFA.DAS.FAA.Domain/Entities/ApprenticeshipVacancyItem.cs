@@ -15,6 +15,8 @@ namespace SFA.DAS.FAA.Domain.Entities
         {
             return new ApprenticeshipVacancyItem
             {
+                AccountId = source.AccountId,
+                AccountLegalEntityId = source.AccountLegalEntityId,
                 AdditionalQuestion1 = source.AdditionalQuestion1,
                 AdditionalQuestion2 = source.AdditionalQuestion2,
                 AdditionalTrainingDescription = source.AdditionalTrainingDescription,

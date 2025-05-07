@@ -7,6 +7,8 @@ namespace SFA.DAS.FAA.Domain.Entities
 {
     public class ApprenticeshipSearchItem
     {
+        public long? AccountId { get; init; }
+        public long? AccountLegalEntityId { get; init; }
         public string Id { get; set; }
         public string AnonymousEmployerName { get; set; }
         public string ApprenticeshipLevel { get; set; } 

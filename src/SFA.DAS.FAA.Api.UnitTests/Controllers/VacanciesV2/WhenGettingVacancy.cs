@@ -35,7 +35,7 @@ public class WhenGettingVacancy
         result.StatusCode.Should().Be((int) HttpStatusCode.OK);
         var apiModel = result.Value as GetApprenticeshipVacancyDetailResponse;
         apiModel.Should().NotBeNull();
-        apiModel.Should().BeEquivalentTo((GetApprenticeshipVacancyDetailResponse)mediatorResult.ApprenticeshipVacancy);
+        apiModel.Should().BeEquivalentTo(GetApprenticeshipVacancyDetailResponse.From(mediatorResult.ApprenticeshipVacancy));
     }
     
     [Test, MoqAutoData]
