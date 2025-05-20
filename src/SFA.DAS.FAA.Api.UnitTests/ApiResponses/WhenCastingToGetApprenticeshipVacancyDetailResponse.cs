@@ -15,7 +15,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             source.Course = null;
             source.Wage = null;
             
-            var actual = (GetApprenticeshipVacancyDetailResponse)source;
+            var actual = GetApprenticeshipVacancyDetailResponse.From(source);
 
             actual.Should().BeEquivalentTo(source, options=> options
                 .Excluding(c => c.Duration)
@@ -39,7 +39,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             source.Location.Lat = 0;
             source.StandardLarsCode = null;
             
-            var response = (GetApprenticeshipVacancyDetailResponse)source;
+            var response = GetApprenticeshipVacancyDetailResponse.From(source);
 
             response.Should().BeEquivalentTo(source, options=>options
                 .Excluding(c=>c.Duration)
@@ -91,7 +91,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             source.SearchGeoPoint = null;
             source.Distance = null;
             
-            var response = (GetApprenticeshipVacancyDetailResponse)source;
+            var response = GetApprenticeshipVacancyDetailResponse.From(source);
 
             response.Should().BeEquivalentTo(source, options=>options
                 .Excluding(c=>c.Duration)
@@ -145,7 +145,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             source.Duration = duration;
             source.DurationUnit = unit;
             source.Wage = null;
-            var response = (GetApprenticeshipVacancyDetailResponse)source;
+            var response = GetApprenticeshipVacancyDetailResponse.From(source);
 
             response.ExpectedDuration.Should().Be(expectedText);
         }
@@ -167,7 +167,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 WageUnit = unit,
                 Duration = duration
             };
-            var response = (GetApprenticeshipVacancyDetailResponse)source;
+            var response = GetApprenticeshipVacancyDetailResponse.From(source);
 
             response.ExpectedDuration.Should().Be(expectedText);
         }
