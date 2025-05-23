@@ -11,6 +11,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string Id { get; set; }
         public string AnonymousEmployerName { get; set; }
         public string ApprenticeshipLevel { get; set; }
+        public ApprenticeshipTypes ApprenticeshipType { get; set; }
         public string Category { get; set; }
         public string CategoryCode { get; set; }
         public DateTime ClosingDate { get; set; }
@@ -98,6 +99,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ApplicationMethod = source.ApplicationMethod,
                 ApplicationUrl = source.ApplicationUrl,
                 ApprenticeshipLevel = source.ApprenticeshipLevel,
+                ApprenticeshipType = source.ApprenticeshipType ?? ApprenticeshipTypes.Standard,
                 Category = source.Category ?? source.Course?.Title,
                 CategoryCode = source.CategoryCode ?? "SSAT1.UNKNOWN",
                 ClosingDate = source.ClosingDate,

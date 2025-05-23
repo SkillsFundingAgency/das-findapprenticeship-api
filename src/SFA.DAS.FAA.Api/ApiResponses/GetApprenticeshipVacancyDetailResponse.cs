@@ -22,7 +22,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string WageAdditionalInformation { get; set; }
         public string ApplicationInstructions { get; set; }
 
-        //public static implicit operator GetApprenticeshipVacancyDetailResponse(ApprenticeshipVacancyItem source)
         public static GetApprenticeshipVacancyDetailResponse From(ApprenticeshipVacancyItem source)
         {
             var sourceLocation = source.Location is { Lat: 0, Lon: 0 } ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;

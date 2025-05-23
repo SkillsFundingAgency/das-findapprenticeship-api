@@ -34,6 +34,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IAcsVacancySearchRepository> mockVacancyIndexRepository,
             GetApprenticeshipVacancyQueryHandler handler)
         {
+            // arrange
             mockVacancyIndexRepository
                 .Setup(repository => repository.Get(query.VacancyReference))
                 .ReturnsAsync((ApprenticeshipVacancyItem)null);
@@ -42,10 +43,11 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                 .Setup(repository => repository.GetAll(new List<string>{ query.VacancyReference }))
                 .ReturnsAsync(mockApprenticeshipSearchItems);
             
+            // act
             var result = await handler.Handle(query, CancellationToken.None);
 
-            result.ApprenticeshipVacancy
-                .Should().BeEquivalentTo(mockApprenticeshipSearchItems.FirstOrDefault());
+            // assert
+            result.ApprenticeshipVacancy.Should().BeEquivalentTo(mockApprenticeshipSearchItems.FirstOrDefault());
         }
 
 
