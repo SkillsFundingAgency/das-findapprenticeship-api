@@ -56,7 +56,7 @@ public class UsersController(IMediator mediator, ILogger<SavedSearchesController
         try
         {
             var result = await mediator.Send(new GetUserSavedSearchQuery(userReference, id), cancellationToken);
-            return result is null
+            return result?.SavedSearch is null
                 ? NotFound()
                 : Ok(new GetSavedSearchResponse(SavedSearchDto.From(result.SavedSearch)));
         }

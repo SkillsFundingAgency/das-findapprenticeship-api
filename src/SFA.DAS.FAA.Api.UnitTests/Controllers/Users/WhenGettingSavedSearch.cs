@@ -58,7 +58,29 @@ public class WhenGettingSavedSearch
         // assert
         response.Should().NotBeNull();
     }
-    
+
+
+    [Test, MoqAutoData]
+    public async Task When_SavedSearch_Is_Null_Then_NotFound_Is_Returned(
+        Guid userReference,
+        Guid id,
+        GetUserSavedSearchQueryResult result,
+        [Frozen] Mock<IMediator> mediator,
+        [Greedy] UsersController sut)
+    {
+        // arrange
+        result = new GetUserSavedSearchQueryResult(null);
+        mediator
+            .Setup(x => x.Send(It.IsAny<GetUserSavedSearchQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+
+        // act
+        var response = await sut.Get(userReference, id) as NotFoundResult;
+
+        // assert
+        response.Should().NotBeNull();
+    }
+
     [Test, MoqAutoData]
     public async Task Then_Exceptions_Are_Handled(
         Guid userReference,
