@@ -21,10 +21,10 @@ using System.IO;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
 using Newtonsoft.Json.Converters;
+using SFA.DAS.Common.Domain.Json;
+using SFA.DAS.Common.Domain.Models;
 using SFA.DAS.FAA.Api.Infrastructure;
 using SFA.DAS.FAA.Data;
-using SFA.DAS.FAA.Domain.Json;
-using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api
 {

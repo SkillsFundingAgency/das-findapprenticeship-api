@@ -15,6 +15,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
+using SFA.DAS.Common.Domain.Models;
 using SFA.DAS.FAA.Domain.Constants;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;

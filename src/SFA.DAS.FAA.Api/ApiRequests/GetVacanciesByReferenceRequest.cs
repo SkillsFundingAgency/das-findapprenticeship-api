@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SFA.DAS.FAA.Domain.Models;
+using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiRequests
 {

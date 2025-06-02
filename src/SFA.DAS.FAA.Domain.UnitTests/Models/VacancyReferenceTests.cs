@@ -1,8 +1,8 @@
-﻿using System.Globalization;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.FAA.Domain.Models;
+using SFA.DAS.Common.Domain.Models;
+using System.Globalization;
 
 namespace SFA.DAS.FAA.Domain.UnitTests.Models
 {
@@ -259,7 +259,7 @@ namespace SFA.DAS.FAA.Domain.UnitTests.Models
         public void Can_Get_Value_As_Long()
         {
             // act
-            long result = new VacancyReference("12345").Value;
+            var result = new VacancyReference("12345").Value;
 
             // assert
             result.Should().Be(12345);
@@ -299,7 +299,7 @@ namespace SFA.DAS.FAA.Domain.UnitTests.Models
         public void None_As_Long_Is_Zero()
         {
             // act
-            long result = VacancyReference.None.Value;
+            var result = VacancyReference.None.Value;
 
             // assert
             result.Should().Be(0);

@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
-using SFA.DAS.FAA.Domain.Models;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2;
 public class WhenGettingVacancy

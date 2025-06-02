@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SFA.DAS.FAA.Domain.Models;
+using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy
 {

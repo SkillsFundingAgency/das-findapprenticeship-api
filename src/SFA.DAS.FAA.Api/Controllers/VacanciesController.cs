@@ -11,6 +11,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Asp.Versioning;
+using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {

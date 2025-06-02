@@ -1,18 +1,17 @@
-﻿using SFA.DAS.FAA.Application.UnitTests.Extensions;
-using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
+﻿using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.FAA.Domain.Models;
+using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
 {
     public class WhenGettingApprenticeshipVacancy
     {
-        [Test, AutoDataWithValidVacancyReference]
+        [Test, MoqAutoData]
         public async Task Then_Gets_Vacancies_From_Azure_Repository_When_Source_Is_Azure(
             GetApprenticeshipVacancyQuery query,
             ApprenticeshipVacancyItem responseFromRepository,
@@ -32,7 +31,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                 .Should().BeEquivalentTo(responseFromRepository);
         }
 
-        [Test, AutoDataWithValidVacancyReference]
+        [Test, MoqAutoData]
         public async Task Then_Get_Vacancy_Is_Null_And_Match_By_Reference_From_Azure_Repository_When_Source_Is_Azure(
             GetApprenticeshipVacancyQuery query,
             List<ApprenticeshipSearchItem> mockApprenticeshipSearchItems,
@@ -55,7 +54,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             result.ApprenticeshipVacancy.Should().BeEquivalentTo(mockApprenticeshipSearchItems.FirstOrDefault());
         }
 
-        [Test, AutoDataWithValidVacancyReference]
+        [Test, MoqAutoData]
         public async Task Then_Get_Vacancy_Is_Null_And_No_Match_By_Reference_From_Azure_Repository_When_Source_Is_Null(
             GetApprenticeshipVacancyQuery query,
             [Frozen] Mock<IAcsVacancySearchRepository> mockVacancyIndexRepository,

@@ -1,19 +1,18 @@
-﻿using SFA.DAS.FAA.Application.UnitTests.Extensions;
-using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
+﻿using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.FAA.Domain.Models;
+using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
 {
     [TestFixture]
     public class WhenGettingApprenticeshipVacanciesByReference
     {
-        [Test, AutoDataWithValidVacancyReference]
+        [Test, MoqAutoData]
         public async Task Then_Gets_Vacancies_From_Azure_Search_Helper(
             GetApprenticeshipVacanciesByReferenceQuery query,
             List<ApprenticeshipSearchItem> helperResult,

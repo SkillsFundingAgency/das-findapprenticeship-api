@@ -3,6 +3,7 @@ using SFA.DAS.FAA.Domain.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Domain.Interfaces;
 public interface IAzureSearchHelper
