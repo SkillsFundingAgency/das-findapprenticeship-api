@@ -22,7 +22,7 @@ namespace SFA.DAS.FAA.Api.Controllers
     {
         [HttpGet]
         [Route("{vacancyReference}")]
-        public async Task<IActionResult> Get(string vacancyReference)
+        public async Task<IActionResult> Get(VacancyReference vacancyReference)
         {
             var result = await mediator.Send(new GetApprenticeshipVacancyQuery
             {
@@ -42,13 +42,21 @@ namespace SFA.DAS.FAA.Api.Controllers
         [Route("")]
         public async Task<IActionResult> GetByVacancyReferences([FromBody] GetVacanciesByReferenceRequest request)
         {
-            var result = await mediator.Send(new GetApprenticeshipVacanciesByReferenceQuery
+            try
             {
-                VacancyReferences = request.VacancyReferences
-            });
+                var result = await mediator.Send(new GetApprenticeshipVacanciesByReferenceQuery
+                {
+                    VacancyReferences = request.VacancyReferences
+                });
 
-            var apiResponse = (GetApprenticeshipVacanciesByReferenceApiResponse)result;
-            return Ok(apiResponse);
+                var apiResponse = (GetApprenticeshipVacanciesByReferenceApiResponse)result;
+                return Ok(apiResponse);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [HttpGet]

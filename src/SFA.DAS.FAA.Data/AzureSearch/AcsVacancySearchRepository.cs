@@ -20,12 +20,12 @@ public class AcsVacancySearchRepository(ILogger<AcsVacancySearchRepository> logg
         return await searchHelper.Find(findVacanciesModel);
     }
 
-    public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
+    public async Task<ApprenticeshipVacancyItem> Get(VacancyReference vacancyReference)
     {
         return await searchHelper.Get(vacancyReference);
     }
 
-    public async Task<List<ApprenticeshipSearchItem>> GetAll(List<string> vacancyReferences)
+    public async Task<List<ApprenticeshipSearchItem>> GetAll(List<VacancyReference> vacancyReferences)
     {
         return (await searchHelper.Get(vacancyReferences)).Select(vacancyItem => (ApprenticeshipSearchItem)vacancyItem).ToList();
     }

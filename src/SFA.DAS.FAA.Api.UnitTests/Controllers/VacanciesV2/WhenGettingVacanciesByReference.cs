@@ -10,6 +10,7 @@ using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
+using SFA.DAS.FAA.Api.UnitTests.Extensions;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -18,7 +19,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2
     [TestFixture]
     public class WhenGettingVacanciesByReference
     {
-        [Test, MoqAutoData]
+        [Test, AutoDataWithValidVacancyReference]
         public async Task Then_Gets_Result_From_Mediator(
             GetVacanciesByReferenceRequest request,
             GetApprenticeshipVacanciesByReferenceQueryResult mediatorResult,

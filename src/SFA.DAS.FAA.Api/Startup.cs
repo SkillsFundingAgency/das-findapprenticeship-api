@@ -23,6 +23,8 @@ using Asp.Versioning;
 using Newtonsoft.Json.Converters;
 using SFA.DAS.FAA.Api.Infrastructure;
 using SFA.DAS.FAA.Data;
+using SFA.DAS.FAA.Domain.Json;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api
 {
@@ -115,6 +117,7 @@ namespace SFA.DAS.FAA.Api
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    options.SerializerSettings.Converters.Add(new VacancyReferenceJsonConverter());
                 });
 
             services.AddApplicationInsightsTelemetry();
@@ -124,6 +127,7 @@ namespace SFA.DAS.FAA.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FindApprenticeshipsApi", Version = "v2" });
                 c.OperationFilter<SwaggerVersionHeaderFilter>();
                 c.DocumentFilter<JsonPatchDocumentFilter>();
+                c.MapType<VacancyReference>(() => new OpenApiSchema { Type = "string" });
             });
 
             services.AddApiVersioning(opt =>

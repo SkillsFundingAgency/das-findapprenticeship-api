@@ -101,12 +101,11 @@ public class AzureSearchHelper : IAzureSearchHelper
         };
     }
 
-    public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
+    public async Task<ApprenticeshipVacancyItem> Get(VacancyReference vacancyReference)
     {
-        vacancyReference = vacancyReference.Replace("VAC", "", StringComparison.CurrentCultureIgnoreCase);
         try
         {
-            var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
+            var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference.ToShortString());
             return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
         }
         catch (RequestFailedException)
@@ -115,7 +114,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         }
     }
 
-    public async Task<List<ApprenticeshipSearchItem>> Get(List<string> vacancyReferences)
+    public async Task<List<ApprenticeshipSearchItem>> Get(List<VacancyReference> vacancyReferences)
     {
         var filters = new StringBuilder();
         var count = 0;

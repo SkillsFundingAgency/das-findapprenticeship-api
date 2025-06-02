@@ -8,8 +8,8 @@ namespace SFA.DAS.FAA.Domain.Interfaces;
 public interface IAzureSearchHelper
 {
     Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
-    Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
+    Task<ApprenticeshipVacancyItem> Get(VacancyReference vacancyReference);
     Task<int> Count(FindVacanciesCountModel countModel);
-    Task<List<ApprenticeshipSearchItem>> Get(List<string> vacancyReferences);
+    Task<List<ApprenticeshipSearchItem>> Get(List<VacancyReference> vacancyReferences);
     Task<string> GetIndexName(CancellationToken cancellationToken);
 }

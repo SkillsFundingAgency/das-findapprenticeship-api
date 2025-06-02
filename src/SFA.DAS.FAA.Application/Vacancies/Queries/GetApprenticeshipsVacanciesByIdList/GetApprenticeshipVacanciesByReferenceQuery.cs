@@ -5,12 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.FAA.Domain.Interfaces;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList
 {
     public class GetApprenticeshipVacanciesByReferenceQuery : IRequest<GetApprenticeshipVacanciesByReferenceQueryResult>
     {
-        public List<string> VacancyReferences { get; set; }
+        public List<VacancyReference> VacancyReferences { get; set; }
     }
 
     public class GetApprenticeshipVacanciesByReferenceQueryResult

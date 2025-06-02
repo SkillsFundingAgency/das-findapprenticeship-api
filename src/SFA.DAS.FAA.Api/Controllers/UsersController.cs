@@ -1,21 +1,19 @@
-using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
-using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearches;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteUserSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.UpsertSaveSearch;
-using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchCount;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchesByUserReference;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetUserSavedSearch;
+using System;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Api.Controllers;
 
