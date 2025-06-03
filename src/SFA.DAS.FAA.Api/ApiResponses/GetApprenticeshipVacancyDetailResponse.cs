@@ -22,7 +22,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
         public string WageAdditionalInformation { get; set; }
         public string ApplicationInstructions { get; set; }
 
-        //public static implicit operator GetApprenticeshipVacancyDetailResponse(ApprenticeshipVacancyItem source)
         public static GetApprenticeshipVacancyDetailResponse From(ApprenticeshipVacancyItem source)
         {
             var sourceLocation = source.Location is { Lat: 0, Lon: 0 } ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} : source.Location;
@@ -109,6 +108,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageType = source.Wage is { WageType: not null } ? (int)source.Wage.WageType : source.WageType ?? 0,
                 WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
                 WorkingWeek = source.WorkingWeek ?? source.Wage?.WorkingWeekDescription,
+                ApprenticeshipType = source.ApprenticeshipType ?? ApprenticeshipTypes.Standard,
             };
         }
 

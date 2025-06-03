@@ -26,6 +26,7 @@ namespace SFA.DAS.FAA.Domain.Entities
                 ApplicationMethod = source.ApplicationMethod,
                 ApplicationUrl = source.ApplicationUrl,
                 ApprenticeshipLevel = source.ApprenticeshipLevel,
+                ApprenticeshipType = source.ApprenticeshipType ?? ApprenticeshipTypes.Standard,
                 Category = source.Category,
                 CategoryCode = source.CategoryCode,
                 ClosingDate = source.ClosingDate,
