@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace SFA.DAS.FAA.Domain.Models;
 
@@ -16,7 +16,16 @@ public record SearchParameters(
 {
     public static SearchParameters From(string source)
     {
-        return JsonConvert.DeserializeObject<SearchParameters>(source);
+        if (string.IsNullOrWhiteSpace(source))
+            return null;
+        try
+        {
+            return JsonConvert.DeserializeObject<SearchParameters>(source);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 
     public string ToJson()
