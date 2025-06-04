@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
+﻿using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
 {
@@ -17,12 +18,15 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IAcsVacancySearchRepository> mockVacancyIndexRepository,
             GetApprenticeshipVacancyQueryHandler handler)
         {
+            // Arrange
             mockVacancyIndexRepository
                 .Setup(repository => repository.Get(query.VacancyReference))
                 .ReturnsAsync(responseFromRepository);
-            
+
+            // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
+            // Assert
             result.ApprenticeshipVacancy
                 .Should().BeEquivalentTo(responseFromRepository);
         }
@@ -34,22 +38,21 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IAcsVacancySearchRepository> mockVacancyIndexRepository,
             GetApprenticeshipVacancyQueryHandler handler)
         {
-            // arrange
+            // Arrange
             mockVacancyIndexRepository
                 .Setup(repository => repository.Get(query.VacancyReference))
                 .ReturnsAsync((ApprenticeshipVacancyItem)null);
 
             mockVacancyIndexRepository
-                .Setup(repository => repository.GetAll(new List<string>{ query.VacancyReference }))
+                .Setup(repository => repository.GetAll(It.Is<List<VacancyReference>>(refs => refs.SequenceEqual(new List<VacancyReference> { query.VacancyReference.ToShortString() }))))
                 .ReturnsAsync(mockApprenticeshipSearchItems);
-            
-            // act
+
+            // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
-            // assert
+            // Assert
             result.ApprenticeshipVacancy.Should().BeEquivalentTo(mockApprenticeshipSearchItems.FirstOrDefault());
         }
-
 
         [Test, MoqAutoData]
         public async Task Then_Get_Vacancy_Is_Null_And_No_Match_By_Reference_From_Azure_Repository_When_Source_Is_Null(
@@ -57,16 +60,19 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IAcsVacancySearchRepository> mockVacancyIndexRepository,
             GetApprenticeshipVacancyQueryHandler handler)
         {
+            // Arrange
             mockVacancyIndexRepository
                 .Setup(repository => repository.Get(query.VacancyReference))
                 .ReturnsAsync((ApprenticeshipVacancyItem)null);
 
             mockVacancyIndexRepository
-                .Setup(repository => repository.GetAll(new List<string> { query.VacancyReference }))
+                .Setup(repository => repository.GetAll(It.Is<List<VacancyReference>>(refs => refs.SequenceEqual(new List<VacancyReference> { query.VacancyReference.ToShortString() }))))
                 .ReturnsAsync((List<ApprenticeshipSearchItem>)null);
 
+            // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
+            // Assert
             result.ApprenticeshipVacancy.Should().BeNull();
         }
     }
