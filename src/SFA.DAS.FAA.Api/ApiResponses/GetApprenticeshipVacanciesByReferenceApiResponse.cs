@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
+using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
 {
@@ -21,6 +22,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
             public List<Address>? OtherAddresses { get; set; } = [];
             public string? EmploymentLocationInformation { get; set; }
             public string? AvailableWhere { get; set; }
+            public ApprenticeshipTypes ApprenticeshipType { get; set; }
         }
 
         public class Address
@@ -63,6 +65,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                     IsPrimaryLocation = x.IsPrimaryLocation,
                     AvailableWhere = x.AvailableWhere,
                     EmploymentLocationInformation = x.EmploymentLocationInformation,
+                    ApprenticeshipType = x.ApprenticeshipType
                 })
             };
         }

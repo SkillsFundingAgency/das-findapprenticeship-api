@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using AutoFixture.NUnit3;
-using Moq;
-using NUnit.Framework;
+﻿using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
-using SFA.DAS.Testing.AutoFixture;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
-using FluentAssertions;
-using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
 {
@@ -33,7 +28,8 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                 x.Title,
                 x.EmployerName,
                 x.VacancyReference,
-                x.ClosingDate
+                x.ClosingDate,
+                x.ApprenticeshipType
             }));
         }
     }
