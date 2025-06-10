@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
 {
