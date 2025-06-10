@@ -14,7 +14,9 @@ public class GetSavedSearchesByUserReferenceQueryHandler(ISavedSearchRepository 
         var results = await savedSearchRepository.GetByUserReference(request.UserReference, cancellationToken);
         return new GetSavedSearchesByUserReferenceQueryResult
         {
-            SavedSearches = results.Select(SavedSearch.From).ToList()
+            SavedSearches = results
+                .Where(x => !string.IsNullOrEmpty(x.SearchParameters))
+                .Select(SavedSearch.From).ToList()
         };
     }
 }

@@ -108,6 +108,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 WageType = source.Wage is { WageType: not null } ? (int)source.Wage.WageType : source.WageType ?? 0,
                 WageUnit = source.Wage != null ? 4 : source.WageUnit ?? 0,//Always annual for v2 TODO look at removing
                 WorkingWeek = source.WorkingWeek ?? source.Wage?.WorkingWeekDescription,
+                ApprenticeshipType = source.ApprenticeshipType ?? ApprenticeshipTypes.Standard,
             };
         }
 

@@ -49,7 +49,7 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
         {
             var result = await mediator.Send(new GetSavedSearchQuery(id));
 
-            if (result.SavedSearch == null)
+            if (result?.SavedSearch?.SearchParameters == null)
             {
                 return NotFound();
             }

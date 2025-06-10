@@ -12,7 +12,10 @@ public class GetSavedSearchesByUserReferenceResponse
     {
         return new GetSavedSearchesByUserReferenceResponse
         {
-            SavedSearches = source.SavedSearches.Select(SavedSearchDto.From).ToList()
+            SavedSearches = source
+                .SavedSearches
+                .Where(x => x.SearchParameters != null)
+                .Select(SavedSearchDto.From).ToList()
         };
     }
 }

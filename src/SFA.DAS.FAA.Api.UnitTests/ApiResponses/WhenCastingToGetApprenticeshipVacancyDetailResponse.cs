@@ -14,6 +14,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         {
             source.Course = null;
             source.Wage = null;
+            source.ApprenticeshipType = ApprenticeshipTypes.Foundation;
             
             var actual = GetApprenticeshipVacancyDetailResponse.From(source);
 
@@ -38,6 +39,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             source.Location.Lon = 0;
             source.Location.Lat = 0;
             source.StandardLarsCode = null;
+            source.ApprenticeshipType = null;
             
             var response = GetApprenticeshipVacancyDetailResponse.From(source);
 
@@ -61,6 +63,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 .Excluding(c => c.AdditionalTrainingDescription)
                 .Excluding(c => c.Address.Country)
                 .Excluding(c => c.OtherAddresses)
+                .Excluding(c => c.ApprenticeshipType)
             );
             response.StandardTitle.Should().Be(source.Course.Title);
             response.Category.Should().Be(source.Course.Title);
@@ -78,6 +81,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             response.Between21AndUnder25NationalMinimumWage.Should().Be(source.Wage.Between21AndUnder25NationalMinimumWage);
             response.WageAdditionalInformation.Should().Be(source.Wage.WageAdditionalInformation);
             response.IsPrimaryLocation.Should().Be(source.IsPrimaryLocation);
+            response.ApprenticeshipType.Should().Be(ApprenticeshipTypes.Standard);
         }
         
         [Test, AutoData]

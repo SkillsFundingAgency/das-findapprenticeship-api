@@ -18,6 +18,8 @@ public record SavedSearchDto(
     {
         public static SavedSearchDto From(SavedSearch source)
         {
+            if (source?.SearchParameters == null) return null;
+
             return new SavedSearchDto(
                 source.Id,
                 source.UserReference,
