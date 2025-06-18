@@ -29,7 +29,8 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                 x.Title,
                 x.EmployerName,
                 x.VacancyReference,
-                x.ClosingDate
+                x.ClosingDate,
+                x.ApprenticeshipType
             }));
         }
     }

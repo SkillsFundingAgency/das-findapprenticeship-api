@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList
@@ -29,6 +30,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
             public List<Address>? OtherAddresses { get; set; } = [];
             public string? EmploymentLocationInformation { get; set; }
             public string? AvailableWhere { get; set; }
+            public ApprenticeshipTypes ApprenticeshipType { get; set; }
         }
 
         public class Address
@@ -75,7 +77,8 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
                         OtherAddresses = x.OtherAddresses?.Select(add => (GetApprenticeshipVacanciesByReferenceQueryResult.Address)add).ToList(),
                         ApplicationUrl = x.ApplicationUrl,
                         AvailableWhere = x.AvailableWhere,
-                        EmploymentLocationInformation = x.EmploymentLocationInformation
+                        EmploymentLocationInformation = x.EmploymentLocationInformation,
+                        ApprenticeshipType = x.ApprenticeshipType ?? ApprenticeshipTypes.Standard,
                     }).ToList()
             };
         }
