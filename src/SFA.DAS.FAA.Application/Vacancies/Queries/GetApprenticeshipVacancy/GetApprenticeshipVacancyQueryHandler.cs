@@ -20,7 +20,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy
                     ApprenticeshipVacancy = vacancy
                 };
             
-            var results = await acsVacancySearchRepository.GetAll([request.VacancyReference.ToShortString()]);
+            var results = await acsVacancySearchRepository.GetAll([request.VacancyReference]);
             if (results is {Count: > 0})
             {
                 return new GetApprenticeshipVacancyResult
