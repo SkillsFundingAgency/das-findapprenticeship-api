@@ -1,27 +1,23 @@
-﻿using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using FluentAssertions;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
-using SFA.DAS.Testing.AutoFixture;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2;
 public class WhenGettingVacancy
 {
     [Test, MoqAutoData]
     public async Task Then_Gets_Result_From_Mediator(
-        string vacancyReference,
         GetApprenticeshipVacancyResult mediatorResult,
         [Frozen] Mock<IMediator> mockMediator,
         [Greedy] VacanciesController controller)
     {
+        var vacancyReference = new VacancyReference("VAC1234");
         mockMediator
             .Setup(mediator => mediator.Send(
                 It.Is<GetApprenticeshipVacancyQuery>(query =>
@@ -40,10 +36,10 @@ public class WhenGettingVacancy
     
     [Test, MoqAutoData]
     public async Task And_Null_From_Mediator_Then_Returns_NotFound(
-        string vacancyReference,
         [Frozen] Mock<IMediator> mockMediator,
         [Greedy] VacanciesController controller)
     {
+        var vacancyReference = new VacancyReference("VAC12345");
         mockMediator
             .Setup(mediator => mediator.Send(
                 It.Is<GetApprenticeshipVacancyQuery>(query =>

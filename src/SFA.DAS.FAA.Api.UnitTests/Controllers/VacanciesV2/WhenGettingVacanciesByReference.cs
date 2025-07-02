@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
+using SFA.DAS.FAA.Api.UnitTests.Extensions;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesByIdList;
 using System.Net;
 using System.Threading;
