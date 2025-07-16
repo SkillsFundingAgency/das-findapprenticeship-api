@@ -15,7 +15,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
-using SFA.DAS.Common.Domain.Models;
 using SFA.DAS.FAA.Domain.Constants;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
@@ -102,11 +101,11 @@ public class AzureSearchHelper : IAzureSearchHelper
         };
     }
 
-    public async Task<ApprenticeshipVacancyItem> Get(VacancyReference vacancyReference)
+    public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
     {
         try
         {
-            var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference.ToShortString());
+            var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
             return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
         }
         catch (RequestFailedException)
@@ -115,7 +114,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         }
     }
 
-    public async Task<List<ApprenticeshipSearchItem>> Get(List<VacancyReference> vacancyReferences)
+    public async Task<List<ApprenticeshipSearchItem>> Get(List<string> vacancyReferences)
     {
         var filters = new StringBuilder();
         var count = 0;
@@ -126,7 +125,7 @@ public class AzureSearchHelper : IAzureSearchHelper
                 filters.Append(" or ");
 
             count++;
-            filters.Append($"VacancyReference eq '{reference.ToString()}' and IsPrimaryLocation eq true");
+            filters.Append($"VacancyReference eq '{reference}' and IsPrimaryLocation eq true");
         }
 
         var searchOptions = new SearchOptions { Filter = filters.ToString(),QueryType = SearchQueryType.Full, Size = 500};

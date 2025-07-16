@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
 {
@@ -19,7 +18,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
             [Frozen] Mock<IAzureSearchHelper> azureSearchHelper,
             GetApprenticeshipVacanciesByReferenceQueryHandler handler)
         {
-            azureSearchHelper.Setup(x => x.Get(It.Is<List<VacancyReference>>(y => y == query.VacancyReferences)))
+            azureSearchHelper.Setup(x => x.Get(It.Is<List<string>>(y => y == query.VacancyReferences)))
                 .ReturnsAsync(helperResult);
 
             var result = await handler.Handle(query, CancellationToken.None);

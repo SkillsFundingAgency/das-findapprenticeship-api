@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
 {
@@ -44,7 +43,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                 .ReturnsAsync((ApprenticeshipVacancyItem)null);
 
             mockVacancyIndexRepository
-                .Setup(repository => repository.GetAll(It.Is<List<VacancyReference>>(refs => refs.SequenceEqual(new List<VacancyReference> { query.VacancyReference.ToShortString() }))))
+                .Setup(repository => repository.GetAll(It.Is<List<string>>(refs => refs.SequenceEqual(new List<string> { query.VacancyReference }))))
                 .ReturnsAsync(mockApprenticeshipSearchItems);
 
             // Act
@@ -66,7 +65,7 @@ namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
                 .ReturnsAsync((ApprenticeshipVacancyItem)null);
 
             mockVacancyIndexRepository
-                .Setup(repository => repository.GetAll(It.Is<List<VacancyReference>>(refs => refs.SequenceEqual(new List<VacancyReference> { query.VacancyReference.ToShortString() }))))
+                .Setup(repository => repository.GetAll(It.Is<List<string>>(refs => refs.SequenceEqual(new List<string> { query.VacancyReference }))))
                 .ReturnsAsync((List<ApprenticeshipSearchItem>)null);
 
             // Act

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiRequests;
@@ -10,8 +11,6 @@ using SFA.DAS.FAA.Domain.Models;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Asp.Versioning;
-using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.Controllers
 {
@@ -23,7 +22,7 @@ namespace SFA.DAS.FAA.Api.Controllers
     {
         [HttpGet]
         [Route("{vacancyReference}")]
-        public async Task<IActionResult> Get(VacancyReference vacancyReference)
+        public async Task<IActionResult> Get(string vacancyReference)
         {
             var result = await mediator.Send(new GetApprenticeshipVacancyQuery
             {

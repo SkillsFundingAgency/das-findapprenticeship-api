@@ -11,7 +11,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipsVacanciesB
 {
     public class GetApprenticeshipVacanciesByReferenceQuery : IRequest<GetApprenticeshipVacanciesByReferenceQueryResult>
     {
-        public List<Common.Domain.Models.VacancyReference> VacancyReferences { get; set; }
+        public List<string> VacancyReferences { get; set; }
     }
 
     public class GetApprenticeshipVacanciesByReferenceQueryResult
