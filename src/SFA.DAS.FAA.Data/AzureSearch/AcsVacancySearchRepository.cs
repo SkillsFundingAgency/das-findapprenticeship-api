@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
 public class AcsVacancySearchRepository(ILogger<AcsVacancySearchRepository> logger, IAzureSearchHelper searchHelper)
@@ -21,12 +20,12 @@ public class AcsVacancySearchRepository(ILogger<AcsVacancySearchRepository> logg
         return await searchHelper.Find(findVacanciesModel);
     }
 
-    public async Task<ApprenticeshipVacancyItem> Get(VacancyReference vacancyReference)
+    public async Task<ApprenticeshipVacancyItem> Get(string vacancyReference)
     {
         return await searchHelper.Get(vacancyReference);
     }
 
-    public async Task<List<ApprenticeshipSearchItem>> GetAll(List<VacancyReference> vacancyReferences)
+    public async Task<List<ApprenticeshipSearchItem>> GetAll(List<string> vacancyReferences)
     {
         return (await searchHelper.Get(vacancyReferences)).Select(vacancyItem => (ApprenticeshipSearchItem)vacancyItem).ToList();
     }

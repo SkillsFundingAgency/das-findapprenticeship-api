@@ -3,14 +3,13 @@ using SFA.DAS.FAA.Domain.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Domain.Interfaces;
 public interface IAzureSearchHelper
 {
     Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel);
-    Task<ApprenticeshipVacancyItem> Get(VacancyReference vacancyReference);
+    Task<ApprenticeshipVacancyItem> Get(string vacancyReference);
     Task<int> Count(FindVacanciesCountModel countModel);
-    Task<List<ApprenticeshipSearchItem>> Get(List<VacancyReference> vacancyReferences);
+    Task<List<ApprenticeshipSearchItem>> Get(List<string> vacancyReferences);
     Task<string> GetIndexName(CancellationToken cancellationToken);
 }

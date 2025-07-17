@@ -6,7 +6,6 @@ using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.Common.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2;
 public class WhenGettingVacancy
@@ -17,7 +16,7 @@ public class WhenGettingVacancy
         [Frozen] Mock<IMediator> mockMediator,
         [Greedy] VacanciesController controller)
     {
-        var vacancyReference = new VacancyReference("VAC1234");
+        var vacancyReference = new string("VAC1234");
         mockMediator
             .Setup(mediator => mediator.Send(
                 It.Is<GetApprenticeshipVacancyQuery>(query =>
@@ -39,7 +38,7 @@ public class WhenGettingVacancy
         [Frozen] Mock<IMediator> mockMediator,
         [Greedy] VacanciesController controller)
     {
-        var vacancyReference = new VacancyReference("VAC12345");
+        var vacancyReference = new string("VAC12345");
         mockMediator
             .Setup(mediator => mediator.Send(
                 It.Is<GetApprenticeshipVacancyQuery>(query =>
