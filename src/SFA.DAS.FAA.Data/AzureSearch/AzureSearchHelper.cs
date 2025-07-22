@@ -105,6 +105,7 @@ public class AzureSearchHelper : IAzureSearchHelper
     {
         try
         {
+            vacancyReference = vacancyReference.StartsWith("VAC") ? vacancyReference.Replace("VAC","") : vacancyReference;
             var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
             return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
         }
@@ -125,7 +126,7 @@ public class AzureSearchHelper : IAzureSearchHelper
                 filters.Append(" or ");
 
             count++;
-            filters.Append($"VacancyReference eq '{reference}' and IsPrimaryLocation eq true");
+            filters.Append($"VacancyReference eq '{(reference.StartsWith("VAC") ? reference.Replace("VAC","") : reference)}' and IsPrimaryLocation eq true");
         }
 
         var searchOptions = new SearchOptions { Filter = filters.ToString(),QueryType = SearchQueryType.Full, Size = 500};
