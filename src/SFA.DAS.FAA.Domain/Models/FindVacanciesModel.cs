@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Domain.Models
 {
@@ -20,6 +21,7 @@ namespace SFA.DAS.FAA.Domain.Models
         public bool DisabilityConfident { get; set; }
         public WageType? SkipWageType { get; set; }
         public List<DataSource> AdditionalDataSources { get; set; }
+        public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
     }
 
     public class FindFilteredVacanciesModel

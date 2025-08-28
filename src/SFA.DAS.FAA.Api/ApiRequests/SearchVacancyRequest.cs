@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.Extensions;
+using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiRequests;
@@ -48,4 +49,6 @@ public class SearchVacancyRequest
     public bool DisabilityConfident { get; set; }
     [FromQuery]
     public List<DataSource> AdditionalDataSources { get; set; } = null;
+    [FromQuery]
+    public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; } = null;
 }

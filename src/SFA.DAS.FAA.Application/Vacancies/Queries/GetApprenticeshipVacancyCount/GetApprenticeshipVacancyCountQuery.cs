@@ -1,6 +1,7 @@
 using MediatR;
 using SFA.DAS.FAA.Domain.Models;
 using System.Collections.Generic;
+using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount
 {
@@ -17,5 +18,6 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
         public WageType? WageType { get; init; }
         public bool DisabilityConfident { get; set; }
         public List<DataSource> DataSources { get; set; }
+        public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
     }
 }
