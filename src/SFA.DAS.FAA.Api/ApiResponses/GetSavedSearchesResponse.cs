@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
+using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiResponses;
@@ -41,7 +42,8 @@ public record SavedSearchDto(
         List<int>? SelectedLevelIds,
         string? Location,
         string? Latitude,
-        string? Longitude
+        string? Longitude,
+        List<ApprenticeshipTypes>? SelectedApprenticeshipTypes
     )
     {
         public static SearchParametersDto From(SearchParameters source)
@@ -55,7 +57,8 @@ public record SavedSearchDto(
                 source.SelectedLevelIds,
                 source.Location,
                 source.Latitude,
-                source.Longitude
+                source.Longitude,
+                source.SelectedApprenticeshipTypes
             );
         }
     }

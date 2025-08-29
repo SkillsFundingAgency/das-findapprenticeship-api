@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Domain.Models;
 
@@ -12,7 +13,8 @@ public record SearchParameters(
     string? Location,
     string? Latitude,
     string? Longitude,
-    bool ExcludeNational)
+    bool ExcludeNational,
+    List<ApprenticeshipTypes>? SelectedApprenticeshipTypes)
 {
     public static SearchParameters From(string source)
     {
@@ -20,7 +22,7 @@ public record SearchParameters(
             return null;
         try
         {
-            return JsonConvert.DeserializeObject<SearchParameters>(source);
+            return JsonSerializer.Deserialize<SearchParameters>(source);
         }
         catch (JsonException)
         {
@@ -30,6 +32,6 @@ public record SearchParameters(
 
     public string ToJson()
     {
-        return JsonConvert.SerializeObject(this);
+        return JsonSerializer.Serialize(this);
     }
 };
