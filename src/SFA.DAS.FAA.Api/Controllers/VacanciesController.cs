@@ -42,21 +42,13 @@ namespace SFA.DAS.FAA.Api.Controllers
         [Route("")]
         public async Task<IActionResult> GetByVacancyReferences([FromBody] GetVacanciesByReferenceRequest request)
         {
-            try
+            var result = await mediator.Send(new GetApprenticeshipVacanciesByReferenceQuery
             {
-                var result = await mediator.Send(new GetApprenticeshipVacanciesByReferenceQuery
-                {
-                    VacancyReferences = request.VacancyReferences
-                });
+                VacancyReferences = request.VacancyReferences
+            });
 
-                var apiResponse = (GetApprenticeshipVacanciesByReferenceApiResponse)result;
-                return Ok(apiResponse);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            var apiResponse = (GetApprenticeshipVacanciesByReferenceApiResponse)result;
+            return Ok(apiResponse);
         }
 
         [HttpGet]
@@ -67,32 +59,31 @@ namespace SFA.DAS.FAA.Api.Controllers
             {
                 var result = await mediator.Send(new SearchApprenticeshipVacanciesQuery
                 {
-                    SearchTerm = request.SearchTerm,
+                    AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
+                    AccountPublicHashedId = request.AccountPublicHashedId,
+                    AdditionalDataSources = request.AdditionalDataSources,
+                    ApprenticeshipTypes = request.ApprenticeshipTypes,
+                    Categories = request.Categories,
+                    DisabilityConfident = request.DisabilityConfident,
+                    DistanceInMiles = request.DistanceInMiles,
+                    EmployerName = request.EmployerName,
+                    ExcludeNational = request.ExcludeNational,
+                    Lat = request.Lat,
+                    Levels = request.Levels,
+                    Lon = request.Lon,
                     PageNumber = request.PageNumber,
                     PageSize = request.PageSize,
-                    Ukprn = request.Ukprn,
-                    AccountPublicHashedId = request.AccountPublicHashedId,
-                    AccountLegalEntityPublicHashedId = request.AccountLegalEntityPublicHashedId,
-                    EmployerName = request.EmployerName,
-                    Categories = request.Categories,
-                    RouteIds = request.RouteIds,
-                    Levels = request.Levels,
-                    Lat = request.Lat,
-                    Lon = request.Lon,
-                    DistanceInMiles = request.DistanceInMiles,
-                    ExcludeNational = request.ExcludeNational,
-                    StandardLarsCode = request.StandardLarsCode,
                     PostedInLastNumberOfDays = request.PostedInLastNumberOfDays,
-                    VacancySort = request.Sort ?? VacancySort.AgeDesc,
+                    RouteIds = request.RouteIds,
+                    SearchTerm = request.SearchTerm,
                     SkipWageType = request.SkipWageType,
-                    DisabilityConfident = request.DisabilityConfident,
-                    AdditionalDataSources = request.AdditionalDataSources
+                    StandardLarsCode = request.StandardLarsCode,
+                    Ukprn = request.Ukprn,
+                    VacancySort = request.Sort ?? VacancySort.AgeDesc,
                 });
 
                 var apiResponse = (GetSearchApprenticeshipVacanciesResponse)result;
-
                 return Ok(apiResponse);
-
             }
             catch (Exception ex)
             {
@@ -108,17 +99,18 @@ namespace SFA.DAS.FAA.Api.Controllers
             {
                 var result = await mediator.Send(new GetApprenticeshipVacancyCountQuery
                 {
-                    SearchTerm = request.SearchTerm,
+                    ApprenticeshipTypes = request.ApprenticeshipTypes,
                     Categories = request.Categories,
-                    RouteIds = request.RouteIds,
-                    Levels = request.Levels,
-                    Lat = request.Lat,
-                    Lon = request.Lon,
+                    DataSources = request.DataSources,
+                    DisabilityConfident = request.DisabilityConfident,
                     DistanceInMiles = request.DistanceInMiles,
                     ExcludeNational = request.ExcludeNational,
+                    Lat = request.Lat,
+                    Levels = request.Levels,
+                    Lon = request.Lon,
+                    RouteIds = request.RouteIds,
+                    SearchTerm = request.SearchTerm,
                     WageType = request.WageType,
-                    DisabilityConfident = request.DisabilityConfident,
-                    DataSources = request.DataSources
                 });
                 return Ok(new GetCountApprenticeshipVacanciesResponse { TotalVacancies = result });
             }

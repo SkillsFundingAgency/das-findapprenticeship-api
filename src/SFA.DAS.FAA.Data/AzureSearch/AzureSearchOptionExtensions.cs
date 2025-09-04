@@ -238,6 +238,13 @@ public static class AzureSearchOptionExtensions
                 searchFilters.Add($"Wage/WageType ne '{findVacanciesModel.SkipWageType}'");
             }
         }       
+        
+        if (findVacanciesModel.ApprenticeshipTypes is { Count: not 0 })
+        {
+            var apprenticeshipTypeClauses = new List<string>();
+            findVacanciesModel.ApprenticeshipTypes.ForEach(x => apprenticeshipTypeClauses.Add($"ApprenticeshipType eq '{x}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. apprenticeshipTypeClauses])})");
+        }
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
 
@@ -313,6 +320,13 @@ public static class AzureSearchOptionExtensions
         if (findVacanciesModel.WageType is not null)
         {
             searchFilters.Add($"Wage/WageType eq '{findVacanciesModel.WageType}'");
+        }
+        
+        if (findVacanciesModel.ApprenticeshipTypes is { Count: not 0 })
+        {
+            var apprenticeshipTypeClauses = new List<string>();
+            findVacanciesModel.ApprenticeshipTypes.ForEach(x => apprenticeshipTypeClauses.Add($"ApprenticeshipType eq '{x}'"));
+            searchFilters.Add($"({string.Join(" or ", [.. apprenticeshipTypeClauses])})");
         }
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());

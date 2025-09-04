@@ -13,16 +13,17 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCoun
         {
             var model = new FindVacanciesCountModel
             {
-                SearchTerm = request.SearchTerm,
+                ApprenticeshipTypes = request.ApprenticeshipTypes,
                 Categories = request.Categories,
-                RouteIds = request.RouteIds,
-                Lat = request.Lat,
-                Lon = request.Lon,
+                DataSources = request.DataSources,
+                DisabilityConfident = request.DisabilityConfident,
                 DistanceInMiles = request.DistanceInMiles,
                 ExcludeNational = request.ExcludeNational,
+                Lat = request.Lat,
                 Levels = request.Levels,
-                DisabilityConfident = request.DisabilityConfident,
-                DataSources = request.DataSources,
+                Lon = request.Lon,
+                RouteIds = request.RouteIds,
+                SearchTerm = request.SearchTerm,
                 WageType = request.WageType,
             };
             return await acsVacancySearchRepository.Count(model);

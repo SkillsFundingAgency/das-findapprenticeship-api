@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.UpsertSaveSearch;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Constants;
 using SFA.DAS.FAA.Domain.Entities;
-using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.UnitTests.SavedSearches.Commands;
 
@@ -37,7 +36,7 @@ public class WhenHandlingSaveSearchCommand
         result.Id.Should().Be(savedSearchEntity.Id);
         passedEntity.UserRef.Should().Be(request.UserReference);
         passedEntity.UnsubscribeToken.Should().Be(request.UnsubscribeToken);
-        passedEntity.SearchParameters.Should().BeEquivalentTo(JsonConvert.SerializeObject(request.SearchParameters));
+        passedEntity.SearchParameters.Should().BeEquivalentTo(JsonSerializer.Serialize(request.SearchParameters));
     }
     
     [Test, MoqAutoData]

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MediatR;
+using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies
@@ -26,5 +27,6 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
         public WageType? SkipWageType { get ; init ; }
         public bool DisabilityConfident { get; set; }
         public List<DataSource> AdditionalDataSources { get; set; }
+        public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
     }
 }

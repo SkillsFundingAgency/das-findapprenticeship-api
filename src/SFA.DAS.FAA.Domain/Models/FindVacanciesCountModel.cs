@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Domain.Models
 {
@@ -12,5 +13,6 @@ namespace SFA.DAS.FAA.Domain.Models
         public bool DisabilityConfident { get; set; }
         public WageType? WageType { get; set; }
         public List<DataSource> DataSources { get; set; }
+        public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
     }
 }
