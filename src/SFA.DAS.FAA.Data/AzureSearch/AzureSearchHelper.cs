@@ -15,6 +15,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
+using SFA.DAS.Common.Domain.Models;
 using SFA.DAS.FAA.Domain.Constants;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
@@ -117,19 +118,18 @@ public class AzureSearchHelper : IAzureSearchHelper
 
     public async Task<List<ApprenticeshipSearchItem>> Get(List<string> vacancyReferences)
     {
-        var filters = new StringBuilder();
-        var count = 0;
-
-        foreach (var reference in vacancyReferences)
+        if (vacancyReferences is not { Count: > 0 })
         {
-            if (count > 0)
-                filters.Append(" or ");
-
-            count++;
-            filters.Append($"VacancyReference eq '{(reference.StartsWith("VAC") ? reference.Replace("VAC","") : reference)}' and IsPrimaryLocation eq true");
+            return [];
         }
 
-        var searchOptions = new SearchOptions { Filter = filters.ToString(),QueryType = SearchQueryType.Full, Size = 500};
+        var filters = vacancyReferences.Select(x => $"VacancyReference eq '{new VacancyReference(x).ToString()}'").ToList();
+        var searchOptions = new SearchOptions
+        {
+            Filter = $"({string.Join(" or ", filters)}) and IsPrimaryLocation eq true",
+            QueryType = SearchQueryType.Full,
+            Size = 500
+        };
         var searchResults = await _searchClient.SearchAsync<SearchDocument>("*", searchOptions);
         var results = searchResults.Value.GetResults().ToList()
             .Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString()))
