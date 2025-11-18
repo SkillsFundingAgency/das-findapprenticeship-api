@@ -44,7 +44,6 @@ jobs:
             ParametersPath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/azure/template.parameters.json
             IsMultiRepoCheckout: true
             TemplateSecrets:
-              LoggingRedisConnectionString: $(LoggingRedisConnectionString)
               ConfigurationStorageConnectionString: $(ConfigurationStorageConnectionString)
               ApplicationInsightsConnectionString: $(ApplicationInsightsConnectionString)
         - template: azure-pipelines-templates/deploy/step/generate-config.yml@das-platform-building-blocks
