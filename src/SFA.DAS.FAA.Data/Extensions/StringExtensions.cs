@@ -12,5 +12,10 @@ namespace SFA.DAS.FAA.Data.Extensions
             }
             return source;
         }
+
+        public static string SearchIn(this List<string> values, string fieldName)
+        {
+            return $"search.in({fieldName}, '{string.Join(',', values)}')";
+        }
     }
 }
