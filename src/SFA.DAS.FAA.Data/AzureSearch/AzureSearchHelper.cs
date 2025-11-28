@@ -15,7 +15,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
-using SFA.DAS.Common.Domain.Models;
+using SFA.DAS.FAA.Data.Extensions;
 using SFA.DAS.FAA.Domain.Constants;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
@@ -123,10 +123,9 @@ public class AzureSearchHelper : IAzureSearchHelper
             return [];
         }
 
-        var filters = vacancyReferences.Select(x => $"VacancyReference eq '{new VacancyReference(x).ToString()}'").ToList();
         var searchOptions = new SearchOptions
         {
-            Filter = $"({string.Join(" or ", filters)}) and IsPrimaryLocation eq true",
+            Filter = $"{vacancyReferences.SearchIn("VacancyReference")} and IsPrimaryLocation eq true",
             QueryType = SearchQueryType.Full,
             Size = 500
         };
@@ -134,7 +133,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         var results = searchResults.Value.GetResults().ToList()
             .Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString()))
             .ToList();
-
+        
         return results;
     }
 
