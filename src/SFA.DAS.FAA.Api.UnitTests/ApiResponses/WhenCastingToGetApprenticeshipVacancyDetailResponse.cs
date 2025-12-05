@@ -1,6 +1,3 @@
-using AutoFixture.NUnit3;
-using FluentAssertions;
-using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
@@ -15,7 +12,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             source.Course = null;
             source.Wage = null;
             source.ApprenticeshipType = ApprenticeshipTypes.Foundation;
-            
+            source.VacancySource = DataSource.Raa.ToString();
+
             var actual = GetApprenticeshipVacancyDetailResponse.From(source);
 
             actual.Should().BeEquivalentTo(source, options=> options
@@ -140,15 +138,16 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         
         [Test]
         [InlineAutoData(1, "year", "1 year")]
-        [InlineAutoData(3, "month", "3 months")]
+        [InlineAutoData(3, "month", "3 Months")]
         [InlineAutoData(3, "weeks", "3 weeks")]
-        [InlineAutoData(3, null, "3 ")]
+        [InlineAutoData(3, null, "3")]
         public void Then_The_Expected_Duration_Is_Set_If_No_ExpectedDuration(int duration, string unit, string expectedText, ApprenticeshipVacancyItem source)
         {
             source.ExpectedDuration = null;
             source.Duration = duration;
             source.DurationUnit = unit;
             source.Wage = null;
+            source.VacancySource = DataSource.Raa.ToString();
             var response = GetApprenticeshipVacancyDetailResponse.From(source);
 
             response.ExpectedDuration.Should().Be(expectedText);
@@ -171,6 +170,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
                 WageUnit = unit,
                 Duration = duration
             };
+            source.VacancySource = DataSource.Raa.ToString();
             var response = GetApprenticeshipVacancyDetailResponse.From(source);
 
             response.ExpectedDuration.Should().Be(expectedText);

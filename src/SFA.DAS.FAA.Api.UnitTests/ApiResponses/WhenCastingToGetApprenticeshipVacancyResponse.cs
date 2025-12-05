@@ -1,5 +1,6 @@
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
 {
@@ -8,6 +9,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         [Test, AutoData]
         public void Then_Maps_Fields(ApprenticeshipSearchItem source)
         {
+            source.VacancySource = DataSource.Raa.ToString();
             source.ExpectedDuration = null;
             source.Course = null;
             source.Wage = null;
@@ -66,7 +68,8 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
             source.SearchGeoPoint.Lat = 54.5;
             source.SearchGeoPoint.Lon = -2.43;
             source.Distance = null;
-            
+            source.VacancySource = DataSource.Raa.ToString();
+
             var response = (GetApprenticeshipVacancyResponse)source;
 
             response.Should().BeEquivalentTo(source, options => options
@@ -102,14 +105,15 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         [InlineAutoData(1, "year", "1 year")]
         [InlineAutoData(3, "month", "3 months")]
         [InlineAutoData(3, "weeks", "3 weeks")]
-        [InlineAutoData(3, null, "3 ")]
+        [InlineAutoData(3, null, "3")]
         public void Then_The_Expected_Duration_Is_Set(int duration, string unit, string expectedText, ApprenticeshipSearchItem source)
         {
             source.Wage = null;
             source.ExpectedDuration = null;
             source.Duration = duration;
             source.DurationUnit = unit;
-            
+            source.VacancySource = DataSource.Raa.ToString();
+
             var response = (GetApprenticeshipVacancyResponse)source;
 
             response.ExpectedDuration.Should().Be(expectedText);
@@ -118,6 +122,7 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         [Test, AutoData]
         public void Then_If_Has_ExpectedDuration_Then_Used(ApprenticeshipSearchItem source)
         {
+            source.VacancySource = DataSource.Raa.ToString();
             var response = (GetApprenticeshipVacancyResponse)source;
 
             response.Should().BeEquivalentTo(source, options=>options
