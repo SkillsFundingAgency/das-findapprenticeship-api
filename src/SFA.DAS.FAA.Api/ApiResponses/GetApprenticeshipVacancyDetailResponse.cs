@@ -1,9 +1,9 @@
+using SFA.DAS.FAA.Api.Extensions;
+using SFA.DAS.FAA.Domain.Entities;
+using SFA.DAS.FAA.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Extensions;
-using SFA.DAS.FAA.Domain.Entities;
-using SFA.DAS.FAA.Domain.Models;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
 {
@@ -58,7 +58,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 EmployerName = source.EmployerName,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
                 EmploymentLocationInformation = source.EmploymentLocationInformation,
-                ExpectedDuration = source.VacancySource.Equals(DataSource.Nhs.ToString(), StringComparison.CurrentCultureIgnoreCase) ? string.Empty : GetDuration(source),
+                ExpectedDuration = Enum.TryParse<DataSource>(source.VacancySource, true, out var src) && src == DataSource.Raa
+                    ? WageExtensions.GetDuration(source)
+                    : string.Empty,
                 FrameworkLarsCode = source.FrameworkLarsCode,
                 HoursPerWeek = source.HoursPerWeek,
                 Id = source.Id,
@@ -78,7 +80,7 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ProviderContactName = source.ProviderContactName,
                 ProviderContactPhone = source.ProviderContactPhone,
                 ProviderName = source.ProviderName,
-                Qualifications = source.Qualifications.Select(c => (Qualification)c).ToList(),
+                Qualifications = source.Qualifications?.Select(c => (Qualification)c).ToList(),
                 RouteCode = source.Course?.RouteCode,
                 Score = source.Score,
                 Skills = source.Skills,
@@ -111,41 +113,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 ApprenticeshipType = source.ApprenticeshipType ?? ApprenticeshipTypes.Standard,
             };
         }
-
-        private static string GetDuration(ApprenticeshipVacancyItem source)
-        {
-            if (!string.IsNullOrEmpty(source.ExpectedDuration))
-            {
-                return source.ExpectedDuration;
-            }
-
-            var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
-
-            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit.GetDisplayName() : source.DurationUnit;
-
-            if (durationUnit == Domain.Models.WageUnit.Month.GetDisplayName())
-            {
-                var wholeYears = duration / 12;
-                var remainingMonths = duration % 12;
-
-                switch (wholeYears)
-                {
-                    case 0:
-                        return remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
-                    case 1 when remainingMonths == 0:
-                        return "1 Year";
-                    case 1:
-                    {
-                        var months = remainingMonths == 1 ? "1 Month" : $"{remainingMonths} Months";
-                        return $"1 Year {months}";
-                    }
-                    default:
-                        return remainingMonths == 0 ? $"{wholeYears} Years" : $"{wholeYears} Years {remainingMonths} Months";
-                }
-            }
-
-            return $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}";
-        }
     }
     
     public class Qualification
@@ -157,6 +124,8 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 
         public static implicit operator Qualification(VacancyQualification source)
         {
+            if (source is null) return null;
+
             return new Qualification
             {
                 Grade = source.Grade,
