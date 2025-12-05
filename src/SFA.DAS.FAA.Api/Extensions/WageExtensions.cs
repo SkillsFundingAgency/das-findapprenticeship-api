@@ -24,7 +24,7 @@ public static class WageExtensions
             return duration.ToString();
         }
 
-        if (durationUnit.Equals(Domain.Models.WageUnit.Month.GetDisplayName(), StringComparison.OrdinalIgnoreCase))
+        if (durationUnit.Equals(Domain.Models.WageUnit.Month.GetDisplayName(), StringComparison.InvariantCultureIgnoreCase))
         {
             var years = duration / 12;
             var months = duration % 12;
@@ -49,9 +49,11 @@ public static class WageExtensions
 
         var pluralUnit = duration == 1
             ? durationUnit.TrimEnd('s')
-            : durationUnit.EndsWith("s", StringComparison.OrdinalIgnoreCase)
+            : durationUnit.EndsWith("s", StringComparison.InvariantCultureIgnoreCase)
                 ? durationUnit
                 : $"{durationUnit}s";
+
+        pluralUnit = char.ToUpper(pluralUnit[0]) + pluralUnit[1..];
 
         return $"{duration} {pluralUnit}";
     }

@@ -137,9 +137,9 @@ namespace SFA.DAS.FAA.Api.UnitTests.ApiResponses
         
         
         [Test]
-        [InlineAutoData(1, "year", "1 year")]
+        [InlineAutoData(1, "year", "1 Year")]
         [InlineAutoData(3, "month", "3 Months")]
-        [InlineAutoData(3, "weeks", "3 weeks")]
+        [InlineAutoData(3, "weeks", "3 Weeks")]
         [InlineAutoData(3, null, "3")]
         public void Then_The_Expected_Duration_Is_Set_If_No_ExpectedDuration(int duration, string unit, string expectedText, ApprenticeshipVacancyItem source)
         {
