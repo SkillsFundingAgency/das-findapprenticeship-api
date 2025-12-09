@@ -11,6 +11,7 @@ namespace SFA.DAS.FAA.Data.Extensions
             {
                 DataSource.Raa => "RAA",
                 DataSource.Nhs => "NHS",
+                DataSource.Csj => "Csj",
                 _ => throw new InvalidOperationException("Unable to map data source to azure search term")
             };
         }
