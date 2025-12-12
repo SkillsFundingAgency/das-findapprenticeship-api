@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.OpenApi.Extensions;
+﻿using SFA.DAS.FAA.Api.Extensions;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.FAA.Api.ApiResponses
 {
@@ -78,9 +78,6 @@ namespace SFA.DAS.FAA.Api.ApiResponses
 
         public static implicit operator GetApprenticeshipVacancyResponse(ApprenticeshipSearchItem source)
         {
-            var duration = source.Duration == 0 ? source.Wage.Duration : source.Duration;
-            var durationUnit = string.IsNullOrEmpty(source.DurationUnit) ? source.Wage?.WageUnit?.GetDisplayName() : source.DurationUnit;
-
             var sourceLocation = source.Location is { Lat: 0, Lon: 0 } 
                 ? new GeoPoint{Lon = source.Address.Longitude, Lat = source.Address.Latitude} 
                 : source.Location;
@@ -114,7 +111,9 @@ namespace SFA.DAS.FAA.Api.ApiResponses
                 EmployerName = source.EmployerName,
                 EmployerWebsiteUrl = source.EmployerWebsiteUrl,
                 EmploymentLocationInformation = source.EmploymentLocationInformation,
-                ExpectedDuration = !string.IsNullOrEmpty(source.ExpectedDuration) ? source.ExpectedDuration : $"{duration} {(duration == 1 || string.IsNullOrEmpty(durationUnit) || durationUnit.EndsWith("s") ? durationUnit : $"{durationUnit}s")}",
+                ExpectedDuration = Enum.TryParse<DataSource>(source.VacancySource, true, out var src) && src == DataSource.Raa
+                    ? WageExtensions.GetDuration(source)
+                    : string.Empty,
                 FrameworkLarsCode = source.FrameworkLarsCode,
                 HoursPerWeek = source.HoursPerWeek,
                 Id = source.Id,
