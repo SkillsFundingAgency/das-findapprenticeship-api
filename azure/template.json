@@ -351,7 +351,7 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "[concat(variables('apiAppServiceName'), '-sql-database-', parameters('utcValue'))]",
+            "name": "[concat(variables('databaseName'), '-sql-database-', parameters('utcValue'))]",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
