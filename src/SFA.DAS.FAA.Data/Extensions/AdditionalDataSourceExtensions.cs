@@ -12,6 +12,7 @@ namespace SFA.DAS.FAA.Data.Extensions
             {
                 DataSource.Raa => "RAA", // Note: 'RAA' is the correct casing for Azure Search. FAI-2998
                 DataSource.Nhs => "Nhs", // Note: 'Nhs' is the correct casing for Azure Search. FAI-2998
+                DataSource.Csj => "Csj",
                 _ => throw new InvalidOperationException("Unable to map data source to azure search term")
             };
         }
