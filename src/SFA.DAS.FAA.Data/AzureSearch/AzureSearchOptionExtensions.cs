@@ -329,6 +329,8 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"({string.Join(" or ", [.. apprenticeshipTypeClauses])})");
         }
 
+        searchFilters.Add("not (AvailableWhere eq 'MultipleLocations' and not (Address/Latitude ne null or Address/Latitude ne 0.0 or Address/Longitude ne null or Address/Longitude ne 0.0))");
+
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
 
         return searchOptions;
