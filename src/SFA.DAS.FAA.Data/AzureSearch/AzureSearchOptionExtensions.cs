@@ -211,7 +211,9 @@ public static class AzureSearchOptionExtensions
                 $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
                 "Location eq null"
             ];
-            
+
+            searchFilters.Add("not (AvailableWhere eq 'MultipleLocations' and not (Address/Latitude ne null or Address/Latitude ne 0.0 or Address/Longitude ne null or Address/Longitude ne 0.0))");
+
             searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
         }
 
@@ -303,7 +305,9 @@ public static class AzureSearchOptionExtensions
                 $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
                 "Location eq null"
             ];
-            
+
+            searchFilters.Add("not (AvailableWhere eq 'MultipleLocations' and not (Address/Latitude ne null or Address/Latitude ne 0.0 or Address/Longitude ne null or Address/Longitude ne 0.0))");
+
             searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
         }
 
@@ -328,8 +332,6 @@ public static class AzureSearchOptionExtensions
             findVacanciesModel.ApprenticeshipTypes.ForEach(x => apprenticeshipTypeClauses.Add($"ApprenticeshipType eq '{x}'"));
             searchFilters.Add($"({string.Join(" or ", [.. apprenticeshipTypeClauses])})");
         }
-
-        searchFilters.Add("not (AvailableWhere eq 'MultipleLocations' and not (Address/Latitude ne null or Address/Latitude ne 0.0 or Address/Longitude ne null or Address/Longitude ne 0.0))");
 
         searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
 
