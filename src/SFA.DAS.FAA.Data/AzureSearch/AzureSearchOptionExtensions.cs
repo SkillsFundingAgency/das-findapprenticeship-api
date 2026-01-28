@@ -202,17 +202,20 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"({string.Join(" or ", [.. levelClauses])})");
         }
 
-        if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue && findVacanciesModel.DistanceInMiles.HasValue)
+        if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
         {
-            var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
-            var distanceInKm = (distanceInMiles - (distanceInMiles / 5)) * 2;
+            if (findVacanciesModel.DistanceInMiles.HasValue)
+            {
+                var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
+                var distanceInKm = (distanceInMiles - distanceInMiles / 5) * 2;
 
-            List<string> geoFilters = [
-                $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
-                "Location eq null"
-            ];
-            
-            searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
+                List<string> geoFilters = [
+                    $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
+                    "Location eq null"
+                ];
+
+                searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
+            }
 
             searchFilters.Add("not ((AvailableWhere eq 'MultipleLocations' or AvailableWhere eq 'OneLocation') and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
         }
@@ -297,16 +300,19 @@ public static class AzureSearchOptionExtensions
             searchFilters.Add($"({string.Join(" or ", [.. levelClauses])})");
         }
 
-        if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue && findVacanciesModel.DistanceInMiles.HasValue)
+        if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
         {
-            var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
-            var distanceInKm = (distanceInMiles - (distanceInMiles / 5)) * 2;
-            List<string> geoFilters = [
-                $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
-                "Location eq null"
-            ];
+            if (findVacanciesModel.DistanceInMiles.HasValue)
+            {
+                var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
+                var distanceInKm = (distanceInMiles - distanceInMiles / 5) * 2;
+                List<string> geoFilters = [
+                    $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
+                    "Location eq null"
+                ];
 
-            searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
+                searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
+            }
 
             searchFilters.Add("not ((AvailableWhere eq 'MultipleLocations' or AvailableWhere eq 'OneLocation') and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
         }
