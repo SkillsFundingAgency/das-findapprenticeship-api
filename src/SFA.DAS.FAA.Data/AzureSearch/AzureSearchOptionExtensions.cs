@@ -214,7 +214,7 @@ public static class AzureSearchOptionExtensions
             
             searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
 
-            searchFilters.Add("not (AvailableWhere eq 'MultipleLocations' and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
+            searchFilters.Add("not ((AvailableWhere eq 'MultipleLocations' or AvailableWhere eq 'OneLocation') and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
         }
 
         if (findVacanciesModel.ExcludeNational is true)
@@ -308,7 +308,7 @@ public static class AzureSearchOptionExtensions
 
             searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
 
-            searchFilters.Add("not (AvailableWhere eq 'MultipleLocations' and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
+            searchFilters.Add("not ((AvailableWhere eq 'MultipleLocations' or AvailableWhere eq 'OneLocation') and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
         }
 
         if (findVacanciesModel.ExcludeNational is true)
