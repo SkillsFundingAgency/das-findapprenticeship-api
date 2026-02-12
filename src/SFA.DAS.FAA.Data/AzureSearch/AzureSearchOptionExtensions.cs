@@ -97,7 +97,7 @@ public static class AzureSearchOptionExtensions
         return searchOptions;
     }
 
-    public static void BuildSortTiesBreakers(this SearchOptions searchOptions)
+    private static void BuildSortTiesBreakers(this SearchOptions searchOptions)
     {
         searchOptions.OrderBy.Add("Title asc");
         searchOptions.OrderBy.Add("Course/Title asc");
@@ -116,8 +116,7 @@ public static class AzureSearchOptionExtensions
         return searchOptions;
     }
 
-    public static SearchOptions BuildFiltersForTotalCount(this SearchOptions searchOptions,
-        List<DataSource> additionalDataSources)
+    public static SearchOptions BuildFiltersForTotalCount(this SearchOptions searchOptions, List<DataSource> additionalDataSources)
     {
         List<string> searchFilters = [];
 

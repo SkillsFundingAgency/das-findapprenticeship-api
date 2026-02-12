@@ -56,7 +56,7 @@ public class AzureSearchHelper : IAzureSearchHelper
                 {
                     Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
                 }),
-                new VisualStudioCodeCredential(options: new VisualStudioCodeCredentialOptions()
+                new VisualStudioCodeCredential(options: new VisualStudioCodeCredentialOptions
                 {
                     Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
                 })), 
@@ -157,24 +157,23 @@ public class AzureSearchHelper : IAzureSearchHelper
         return Convert.ToInt32(searchResults.Value.TotalCount);
     }
 
-    private string BuildSearchTerm(string? searchTerm)
+    private static string BuildSearchTerm(string? searchTerm)
     {
         if (string.IsNullOrEmpty(searchTerm))
         {
             return "*";
         }
-        if (searchTerm.Contains(' '))
+
+        if (!searchTerm.Contains(' ')) return $"{searchTerm}*";
+
+        var searchTermArray = searchTerm.Split(' ');
+        var newSearch = new StringBuilder();
+        foreach (var s in searchTermArray)
         {
-            var searchTermArray = searchTerm.Split(' ');
-            var newSearch = new StringBuilder();
-            foreach (var s in searchTermArray)
-            {
-                newSearch.Append('+');
-                newSearch.Append(s);
-                newSearch.Append('*');
-            }
-            return newSearch.ToString();
+            newSearch.Append('+');
+            newSearch.Append(s);
+            newSearch.Append('*');
         }
-        return $"{searchTerm}*";
+        return newSearch.ToString();
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.FAA.Domain.Constants
+﻿namespace SFA.DAS.FAA.Domain.Constants;
+
+public static class AzureSearchIndex
 {
-    public static class AzureSearchIndex
-    {
-        public const string IndexName = "apprenticeships";
-    }
+    public const string IndexName = "apprenticeships";
 }

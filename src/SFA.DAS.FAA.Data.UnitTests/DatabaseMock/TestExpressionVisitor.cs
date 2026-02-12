@@ -1,8 +1,7 @@
 ﻿using System.Linq.Expressions;
 
-namespace SFA.DAS.FAA.Data.UnitTests.DatabaseMock
+namespace SFA.DAS.FAA.Data.UnitTests.DatabaseMock;
+
+public class TestExpressionVisitor : ExpressionVisitor
 {
-    public class TestExpressionVisitor : ExpressionVisitor
-    {
-    }
 }

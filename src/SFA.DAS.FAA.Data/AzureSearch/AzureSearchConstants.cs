@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.FAA.Data.AzureSearch
+﻿namespace SFA.DAS.FAA.Data.AzureSearch;
+
+public static class AzureSearchConstants
 {
-    public static class AzureSearchConstants
-    {
-        public const string VacancySourceEqualsRaa = "VacancySource eq 'RAA'";
-    }
+    public const string VacancySourceEqualsRaa = "VacancySource eq 'RAA'";
 }

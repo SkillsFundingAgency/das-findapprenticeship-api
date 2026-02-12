@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.FAA.Domain.Configuration
+﻿namespace SFA.DAS.FAA.Domain.Configuration;
+
+public class EnvironmentConfiguration(string environmentName)
 {
-    public class EnvironmentConfiguration(string environmentName)
-    {
-        public string EnvironmentName { get; } = environmentName;
-    }
+    public string EnvironmentName { get; } = environmentName;
 }

@@ -1,9 +1,8 @@
-﻿namespace SFA.DAS.FAA.Domain.Models
+﻿namespace SFA.DAS.FAA.Domain.Models;
+
+public enum DataSource
 {
-    public enum DataSource
-    {
-        Raa,
-        Nhs,
-        Csj,
-    }
+    Raa,
+    Nhs,
+    Csj,
 }

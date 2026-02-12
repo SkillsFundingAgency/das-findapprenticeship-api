@@ -4,36 +4,35 @@ using SFA.DAS.FAA.Domain.Models;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
+namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries;
+
+public class WhenGettingApprenticeshipVacancyCount
 {
-    public class WhenGettingApprenticeshipVacancyCount
+    [Test, MoqAutoData]
+    public async Task Then_Gets_Vacancies_From_AzureSearch(
+        GetApprenticeshipVacancyCountQuery query,
+        int vacancyCount,
+        [Frozen] Mock<IAcsVacancySearchRepository> mockRepository,
+        GetApprenticeshipVacancyCountQueryHandler handler)
     {
-        [Test, MoqAutoData]
-        public async Task Then_Gets_Vacancies_From_AzureSearch(
-            GetApprenticeshipVacancyCountQuery query,
-            int vacancyCount,
-            [Frozen] Mock<IAcsVacancySearchRepository> mockRepository,
-            GetApprenticeshipVacancyCountQueryHandler handler)
-        {
-            mockRepository
-                .Setup(repository => repository.Count(It.Is<FindVacanciesCountModel>(c =>
-                    c.Categories.Equals(query.Categories) &&
-                    c.Levels.Equals(query.Levels) &&
-                    c.Lat.Equals(query.Lat) &&
-                    c.Lon.Equals(query.Lon) &&
-                    c.DistanceInMiles.Equals(query.DistanceInMiles) &&
-                    c.ExcludeNational.Equals(query.ExcludeNational) &&
-                    c.SearchTerm.Equals(query.SearchTerm) &&
-                    c.WageType.Equals(query.WageType) &&
-                    c.DisabilityConfident.Equals(query.DisabilityConfident) &&
-                    c.DataSources.Equals(query.DataSources)
-                )))
-                .ReturnsAsync(vacancyCount);
+        mockRepository
+            .Setup(repository => repository.Count(It.Is<FindVacanciesCountModel>(c =>
+                c.Categories.Equals(query.Categories) &&
+                c.Levels.Equals(query.Levels) &&
+                c.Lat.Equals(query.Lat) &&
+                c.Lon.Equals(query.Lon) &&
+                c.DistanceInMiles.Equals(query.DistanceInMiles) &&
+                c.ExcludeNational.Equals(query.ExcludeNational) &&
+                c.SearchTerm.Equals(query.SearchTerm) &&
+                c.WageType.Equals(query.WageType) &&
+                c.DisabilityConfident.Equals(query.DisabilityConfident) &&
+                c.DataSources.Equals(query.DataSources)
+            )))
+            .ReturnsAsync(vacancyCount);
 
-            var result = await handler.Handle(query, CancellationToken.None);
+        var result = await handler.Handle(query, CancellationToken.None);
 
-            result
-                .Should().Be(vacancyCount);
-        }
+        result
+            .Should().Be(vacancyCount);
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace SFA.DAS.FAA.Domain.Configuration
+﻿namespace SFA.DAS.FAA.Domain.Configuration;
+
+public class FindApprenticeshipsApiConfiguration
 {
-    public class FindApprenticeshipsApiConfiguration
-    {
-        public string AzureSearchBaseUrl { get; set; }
-        public string DatabaseConnectionString { get; set; }
-    }
+    public string AzureSearchBaseUrl { get; set; }
+    public string DatabaseConnectionString { get; set; }
 }

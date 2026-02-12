@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy
+namespace SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancy;
+
+public class GetApprenticeshipVacancyQuery : IRequest<GetApprenticeshipVacancyResult>
 {
-    public class GetApprenticeshipVacancyQuery : IRequest<GetApprenticeshipVacancyResult>
-    {
-        public string VacancyReference { get; init; }
-    }
+    public string VacancyReference { get; init; }
 }

@@ -16,55 +16,54 @@ using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
 
-namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearches
+namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearches;
+
+[TestFixture]
+public class WhenGettingSavedSearches
 {
-    [TestFixture]
-    public class WhenGettingSavedSearches
+    [Test, MoqAutoData]
+    public async Task Then_Gets_Result_From_Mediator(
+        DateTime lastRunDateFilter,
+        SearchParameters searchParameters,
+        PaginatedList<SavedSearchEntity> paginatedResults,
+        [Frozen] Mock<IMediator> mockMediator,
+        [Greedy] SavedSearchesController controller)
     {
-        [Test, MoqAutoData]
-        public async Task Then_Gets_Result_From_Mediator(
-            DateTime lastRunDateFilter,
-            SearchParameters searchParameters,
-            PaginatedList<SavedSearchEntity> paginatedResults,
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] SavedSearchesController controller)
-        {
-            paginatedResults.Items.ForEach(x => x.SearchParameters = searchParameters.ToJson());
-            var mediatorResult = (GetSavedSearchesQueryResult)paginatedResults;
+        paginatedResults.Items.ForEach(x => x.SearchParameters = searchParameters.ToJson());
+        var mediatorResult = (GetSavedSearchesQueryResult)paginatedResults;
             
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.Is<GetSavedSearchesQuery>(query =>
-                        query.LastRunDateFilter == lastRunDateFilter),
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(mediatorResult);
+        mockMediator
+            .Setup(mediator => mediator.Send(
+                It.Is<GetSavedSearchesQuery>(query =>
+                    query.LastRunDateFilter == lastRunDateFilter),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(mediatorResult);
 
-            var result = await controller.Get(lastRunDateFilter) as OkObjectResult;
+        var result = await controller.Get(lastRunDateFilter) as OkObjectResult;
 
-            result.Should().NotBeNull();
-            result!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            var apiModel = result.Value as GetSavedSearchesResponse;
-            apiModel.Should().NotBeNull();
-            apiModel.Should().BeEquivalentTo(mediatorResult);
-        }
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        var apiModel = result.Value as GetSavedSearchesResponse;
+        apiModel.Should().NotBeNull();
+        apiModel.Should().BeEquivalentTo(mediatorResult);
+    }
 
-        [Test, MoqAutoData]
-        public async Task Then_Gets_Error_Returns_Status_Code_Result_InternalServerError(
-            DateTime lastRunDateFilter,
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] SavedSearchesController controller)
-        {
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.Is<GetSavedSearchesQuery>(query =>
-                        query.LastRunDateFilter == lastRunDateFilter),
-                    It.IsAny<CancellationToken>()))
-                 .ThrowsAsync(new Exception());
+    [Test, MoqAutoData]
+    public async Task Then_Gets_Error_Returns_Status_Code_Result_InternalServerError(
+        DateTime lastRunDateFilter,
+        [Frozen] Mock<IMediator> mockMediator,
+        [Greedy] SavedSearchesController controller)
+    {
+        mockMediator
+            .Setup(mediator => mediator.Send(
+                It.Is<GetSavedSearchesQuery>(query =>
+                    query.LastRunDateFilter == lastRunDateFilter),
+                It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new Exception());
 
-            var result = await controller.Get(lastRunDateFilter) as StatusCodeResult;
+        var result = await controller.Get(lastRunDateFilter) as StatusCodeResult;
 
-            result.Should().NotBeNull();
-            result!.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
-        }
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
     }
 }

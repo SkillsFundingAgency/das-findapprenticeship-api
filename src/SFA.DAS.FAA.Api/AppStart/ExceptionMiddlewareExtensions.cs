@@ -4,26 +4,25 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 
-namespace SFA.DAS.FAA.Api.AppStart
+namespace SFA.DAS.FAA.Api.AppStart;
+
+public static class ExceptionMiddlewareExtensions
 {
-    public static class ExceptionMiddlewareExtensions
+    public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILogger logger)
     {
-        public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILogger logger)
+        app.UseExceptionHandler(appError =>
         {
-            app.UseExceptionHandler(appError =>
+            appError.Run(context =>
             {
-                appError.Run(context =>
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.ContentType = "application/json";
+                var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+                if (contextFeature != null)
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.ContentType = "application/json";
-                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-                    if (contextFeature != null)
-                    {
-                        logger.LogError(contextFeature.Error, $"Unexpected error occurred");
-                    }
-                    return Task.CompletedTask;
-                });
+                    logger.LogError(contextFeature.Error, $"Unexpected error occurred");
+                }
+                return Task.CompletedTask;
             });
-        }
+        });
     }
 }

@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using SFA.DAS.FAA.Domain.Entities;
 
-namespace SFA.DAS.FAA.Domain.Models
+namespace SFA.DAS.FAA.Domain.Models;
+
+public class FindVacanciesCountModel : FindFilteredVacanciesModel
 {
-    public class FindVacanciesCountModel : FindFilteredVacanciesModel
-    {
-        public string? SearchTerm { get; init; }
-        public int? Ukprn { get; init; }
-        public List<string> Categories { get; set; }
-        public List<int> RouteIds { get; set; }
-        public List<string> Levels { get; init; }
-        public bool DisabilityConfident { get; set; }
-        public WageType? WageType { get; set; }
-        public List<DataSource> DataSources { get; set; }
-        public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
-    }
+    public string? SearchTerm { get; init; }
+    public int? Ukprn { get; init; }
+    public List<string> Categories { get; set; }
+    public List<int> RouteIds { get; set; }
+    public List<string> Levels { get; init; }
+    public bool DisabilityConfident { get; set; }
+    public WageType? WageType { get; set; }
+    public List<DataSource> DataSources { get; set; }
+    public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
 }

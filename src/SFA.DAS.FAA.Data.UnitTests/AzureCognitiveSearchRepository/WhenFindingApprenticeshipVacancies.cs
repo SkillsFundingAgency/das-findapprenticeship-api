@@ -1,12 +1,6 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
+﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
-using SFA.DAS.Testing.AutoFixture;
 using System.Threading.Tasks;
 using SFA.DAS.FAA.Data.AzureSearch;
 

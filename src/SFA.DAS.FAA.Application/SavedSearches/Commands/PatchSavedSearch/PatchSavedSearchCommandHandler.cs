@@ -1,6 +1,5 @@
 using MediatR;
 using SFA.DAS.FAA.Data.SavedSearch;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.FAA.Domain.Models;

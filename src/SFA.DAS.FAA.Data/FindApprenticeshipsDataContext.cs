@@ -9,53 +9,52 @@ using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
 
-namespace SFA.DAS.FAA.Data
+namespace SFA.DAS.FAA.Data;
+
+public interface IFindApprenticeshipsDataContext
 {
-    public interface IFindApprenticeshipsDataContext
+    DbContext GetContext();
+    DbSet<SavedSearchEntity> SavedSearchEntities { get; set; }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken)); 
+}
+
+public class FindApprenticeshipsDataContext : DbContext, IFindApprenticeshipsDataContext
+{
+    private readonly EnvironmentConfiguration _environmentConfiguration;
+    public DbSet<SavedSearchEntity> SavedSearchEntities { get; set; }
+
+    public DbContext GetContext() => this;
+
+    private readonly FindApprenticeshipsApiConfiguration? _configuration;
+    public FindApprenticeshipsDataContext() { }
+
+    public FindApprenticeshipsDataContext(DbContextOptions options) : base(options) { }
+
+    public FindApprenticeshipsDataContext(IOptions<FindApprenticeshipsApiConfiguration> config,
+        DbContextOptions options,
+        EnvironmentConfiguration environmentConfiguration) : base(options)
     {
-        DbContext GetContext();
-        DbSet<SavedSearchEntity> SavedSearchEntities { get; set; }
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken)); 
+        _environmentConfiguration = environmentConfiguration;
+        _configuration = config.Value;
     }
-
-    public class FindApprenticeshipsDataContext : DbContext, IFindApprenticeshipsDataContext
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        private readonly EnvironmentConfiguration _environmentConfiguration;
-        public DbSet<SavedSearchEntity> SavedSearchEntities { get; set; }
+        optionsBuilder.UseLazyLoadingProxies();
 
-        public DbContext GetContext() => this;
-
-        private readonly FindApprenticeshipsApiConfiguration? _configuration;
-        public FindApprenticeshipsDataContext() { }
-
-        public FindApprenticeshipsDataContext(DbContextOptions options) : base(options) { }
-
-        public FindApprenticeshipsDataContext(IOptions<FindApprenticeshipsApiConfiguration> config,
-            DbContextOptions options,
-            EnvironmentConfiguration environmentConfiguration) : base(options)
+        optionsBuilder.UseSqlServer(new SqlConnection
         {
-            _environmentConfiguration = environmentConfiguration;
-            _configuration = config.Value;
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseLazyLoadingProxies();
+            ConnectionString = _configuration!.DatabaseConnectionString,
+        }, options => options
+            .EnableRetryOnFailure(
+                5,
+                TimeSpan.FromSeconds(20),
+                null
+            ));
 
-            optionsBuilder.UseSqlServer(new SqlConnection
-            {
-                ConnectionString = _configuration!.DatabaseConnectionString,
-            }, options => options
-                .EnableRetryOnFailure(
-                    5,
-                    TimeSpan.FromSeconds(20),
-                    null
-                ));
-
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new SavedSearchEntityConfiguration());
-            base.OnModelCreating(modelBuilder);
-        }
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new SavedSearchEntityConfiguration());
+        base.OnModelCreating(modelBuilder);
     }
 }

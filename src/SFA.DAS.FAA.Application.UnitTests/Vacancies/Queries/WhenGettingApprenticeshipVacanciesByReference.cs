@@ -6,31 +6,30 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries
+namespace SFA.DAS.FAA.Application.UnitTests.Vacancies.Queries;
+
+[TestFixture]
+public class WhenGettingApprenticeshipVacanciesByReference
 {
-    [TestFixture]
-    public class WhenGettingApprenticeshipVacanciesByReference
+    [Test, MoqAutoData]
+    public async Task Then_Gets_Vacancies_From_Azure_Search_Helper(
+        GetApprenticeshipVacanciesByReferenceQuery query,
+        List<ApprenticeshipSearchItem> helperResult,
+        [Frozen] Mock<IAzureSearchHelper> azureSearchHelper,
+        GetApprenticeshipVacanciesByReferenceQueryHandler handler)
     {
-        [Test, MoqAutoData]
-        public async Task Then_Gets_Vacancies_From_Azure_Search_Helper(
-            GetApprenticeshipVacanciesByReferenceQuery query,
-            List<ApprenticeshipSearchItem> helperResult,
-            [Frozen] Mock<IAzureSearchHelper> azureSearchHelper,
-            GetApprenticeshipVacanciesByReferenceQueryHandler handler)
+        azureSearchHelper.Setup(x => x.Get(It.Is<List<string>>(y => y == query.VacancyReferences)))
+            .ReturnsAsync(helperResult);
+
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        result.ApprenticeshipVacancies.Should().BeEquivalentTo(helperResult.Select(x => new
         {
-            azureSearchHelper.Setup(x => x.Get(It.Is<List<string>>(y => y == query.VacancyReferences)))
-                .ReturnsAsync(helperResult);
-
-            var result = await handler.Handle(query, CancellationToken.None);
-
-            result.ApprenticeshipVacancies.Should().BeEquivalentTo(helperResult.Select(x => new
-            {
-                x.Title,
-                x.EmployerName,
-                x.VacancyReference,
-                x.ClosingDate,
-                x.ApprenticeshipType
-            }));
-        }
+            x.Title,
+            x.EmployerName,
+            x.VacancyReference,
+            x.ClosingDate,
+            x.ApprenticeshipType
+        }));
     }
 }
