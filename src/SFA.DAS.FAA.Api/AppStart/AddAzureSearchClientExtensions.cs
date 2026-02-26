@@ -4,6 +4,7 @@ using Azure.Identity;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using SFA.DAS.FAA.Data.AzureSearch;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Constants;
@@ -15,7 +16,7 @@ namespace SFA.DAS.FAA.Api.AppStart;
 
 public static class AddAzureSearchClientExtensions
 {
-    public static void AddAzureSearchClient(this IServiceCollection services, FindApprenticeshipsApiConfiguration config)
+    public static void AddAzureSearchClient(this IServiceCollection services)
     {
         services.AddSingleton<TokenCredential>(_ =>
         {
@@ -43,8 +44,9 @@ public static class AddAzureSearchClientExtensions
             );
         });
 
-        services.AddSingleton(sp =>
+        services.AddSingleton<SearchClient>(sp =>
         {
+            var cfg = sp.GetRequiredService<IOptions<FindApprenticeshipsApiConfiguration>>().Value;
             var credential = sp.GetRequiredService<TokenCredential>();
             var options = new SearchClientOptions
             {
@@ -54,15 +56,16 @@ public static class AddAzureSearchClientExtensions
                 })
             };
             return new SearchClient(
-                new Uri(config.AzureSearchBaseUrl),
+                new Uri(cfg.AzureSearchBaseUrl),
                 AzureSearchIndex.IndexName,
                 credential,
                 options);
         });
-        services.AddSingleton(sp =>
+        services.AddSingleton<SearchIndexClient>(sp =>
         {
+            var cfg = sp.GetRequiredService<IOptions<FindApprenticeshipsApiConfiguration>>().Value;
             var credential = sp.GetRequiredService<TokenCredential>();
-            return new SearchIndexClient(new Uri(config.AzureSearchBaseUrl), credential);
+            return new SearchIndexClient(new Uri(cfg.AzureSearchBaseUrl), credential);
         });
         services.AddScoped<IAzureSearchHelper, AzureSearchHelper>();
     }

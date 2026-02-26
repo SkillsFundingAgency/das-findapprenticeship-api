@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Configuration;
 using SFA.DAS.FAA.Domain.Entities;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.FAA.Data;
 

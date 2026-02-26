@@ -65,15 +65,19 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddOptions();
-        services.Configure<FindApprenticeshipsApiConfiguration>(_configuration.GetSection("FindApprenticeshipsApi"));
-        services.AddSingleton(cfg => cfg.GetService<IOptions<FindApprenticeshipsApiConfiguration>>().Value);
+        services
+            .AddOptions<FindApprenticeshipsApiConfiguration>()
+            .Bind(_configuration.GetSection("FindApprenticeshipsApi"))
+            .Validate(c => !string.IsNullOrWhiteSpace(c.AzureSearchBaseUrl), "AzureSearchBaseUrl is required")
+            .ValidateOnStart();
         services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
         services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
 
         var findApprenticeshipsApiConfiguration = _configuration
             .GetSection("FindApprenticeshipsApi")
             .Get<FindApprenticeshipsApiConfiguration>();
-        services.AddAzureSearchClient(findApprenticeshipsApiConfiguration);
+
+        services.AddAzureSearchClient();
         services.AddDatabaseRegistration(findApprenticeshipsApiConfiguration!, _configuration["Environment"]);
 
         if (!ConfigurationIsLocalOrDev())
