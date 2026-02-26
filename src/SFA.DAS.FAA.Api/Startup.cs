@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,24 +9,23 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
+using SFA.DAS.Common.Domain.Json;
+using SFA.DAS.Common.Domain.Models;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.FAA.Api.AppStart;
 using SFA.DAS.FAA.Api.HealthCheck;
+using SFA.DAS.FAA.Api.Infrastructure;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+using SFA.DAS.FAA.Data;
 using SFA.DAS.FAA.Domain.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
-using Asp.Versioning;
-using Newtonsoft.Json.Converters;
-using SFA.DAS.Common.Domain.Json;
-using SFA.DAS.Common.Domain.Models;
-using SFA.DAS.FAA.Api.Infrastructure;
-using SFA.DAS.FAA.Data;
 
 namespace SFA.DAS.FAA.Api;
 
@@ -86,6 +87,9 @@ public class Startup
             };
 
             services.AddAuthentication(azureAdConfiguration, policies);
+            services
+                .AddOpenTelemetry()
+                .UseAzureMonitor();
         }
 
         if (_configuration["Environment"] != "DEV")
@@ -95,7 +99,6 @@ public class Startup
                 .AddDbContextCheck<FindApprenticeshipsDataContext>()
                 .AddCheck<AzureSearchHealthCheck>("Azure search re-indexing health",
                     failureStatus: HealthStatus.Degraded, tags: ["ready"]);
-                
         }
 
         services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(SearchApprenticeshipVacanciesQuery).Assembly));
@@ -119,8 +122,6 @@ public class Startup
                 options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 options.SerializerSettings.Converters.Add(new VacancyReferenceJsonConverter());
             });
-
-        services.AddApplicationInsightsTelemetry();
 
         services.AddSwaggerGen(c =>
         {
