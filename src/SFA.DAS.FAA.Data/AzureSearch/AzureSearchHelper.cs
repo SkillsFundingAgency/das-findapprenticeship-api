@@ -1,9 +1,9 @@
-using Azure.Core.Serialization;
-using Azure.Identity;
+using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Models;
-using SFA.DAS.FAA.Domain.Configuration;
+using SFA.DAS.FAA.Data.Extensions;
+using SFA.DAS.FAA.Domain.Constants;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Interfaces;
 using SFA.DAS.FAA.Domain.Models;
@@ -14,56 +14,12 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure;
-using SFA.DAS.FAA.Data.Extensions;
-using SFA.DAS.FAA.Domain.Constants;
 
 namespace SFA.DAS.FAA.Data.AzureSearch;
-public class AzureSearchHelper : IAzureSearchHelper
+public class AzureSearchHelper(SearchClient searchClient,
+    SearchIndexClient searchIndexClient) 
+    : IAzureSearchHelper
 {
-    private readonly SearchClient _searchClient;
-    private readonly SearchIndexClient _searchIndexerClient;
-    private const int MaxRetries = 2;
-    private readonly TimeSpan _networkTimeout = TimeSpan.FromSeconds(1);
-    private readonly TimeSpan _delay = TimeSpan.FromMilliseconds(100);
-
-    public AzureSearchHelper(FindApprenticeshipsApiConfiguration configuration)
-    {
-        var clientOptions = new SearchClientOptions
-        {
-            Serializer = new JsonObjectSerializer(new JsonSerializerOptions
-            {
-                Converters =
-                {
-                    new MicrosoftSpatialGeoJsonConverter()
-                }
-            })
-        };
-
-        _searchClient = new SearchClient(
-            new Uri(configuration.AzureSearchBaseUrl), 
-            AzureSearchIndex.IndexName, 
-            new ChainedTokenCredential(
-                new ManagedIdentityCredential(options: new TokenCredentialOptions
-                {
-                    Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
-                }),
-                new AzureCliCredential(options: new AzureCliCredentialOptions
-                {
-                    Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
-                }),
-                new VisualStudioCredential(options: new VisualStudioCredentialOptions
-                {
-                    Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
-                }),
-                new VisualStudioCodeCredential(options: new VisualStudioCodeCredentialOptions
-                {
-                    Retry = { NetworkTimeout = _networkTimeout, MaxRetries = MaxRetries, Delay = _delay }
-                })), 
-            clientOptions);
-
-        _searchIndexerClient = new SearchIndexClient(new Uri(configuration.AzureSearchBaseUrl), new DefaultAzureCredential());
-    }
     public async Task<ApprenticeshipSearchResponse> Find(FindVacanciesModel findVacanciesModel)
     {
         var searchOptions = new SearchOptions()
@@ -77,10 +33,10 @@ public class AzureSearchHelper : IAzureSearchHelper
 
         var searchTerm = BuildSearchTerm(findVacanciesModel.SearchTerm);
 
-        var searchResultsTask = _searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
+        var searchResultsTask = searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
 
         var totalCountSearchOptions = new SearchOptions().BuildFiltersForTotalCount(findVacanciesModel.AdditionalDataSources);
-        var totalVacanciesCountTask = _searchClient.SearchAsync<SearchDocument>("*", totalCountSearchOptions);
+        var totalVacanciesCountTask = searchClient.SearchAsync<SearchDocument>("*", totalCountSearchOptions);
 
         await Task.WhenAll(searchResultsTask, totalVacanciesCountTask);
 
@@ -107,7 +63,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         try
         {
             vacancyReference = vacancyReference.StartsWith("VAC") ? vacancyReference.Replace("VAC","") : vacancyReference;
-            var searchResults = await _searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
+            var searchResults = await searchClient.GetDocumentAsync<SearchDocument>(vacancyReference);
             return JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResults.Value.ToString());
         }
         catch (RequestFailedException)
@@ -129,7 +85,7 @@ public class AzureSearchHelper : IAzureSearchHelper
             QueryType = SearchQueryType.Full,
             Size = 500
         };
-        var searchResults = await _searchClient.SearchAsync<SearchDocument>("*", searchOptions);
+        var searchResults = await searchClient.SearchAsync<SearchDocument>("*", searchOptions);
         var results = searchResults.Value.GetResults().ToList()
             .Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString()))
             .ToList();
@@ -139,7 +95,7 @@ public class AzureSearchHelper : IAzureSearchHelper
 
     public async Task<string> GetIndexName(CancellationToken cancellationToken)
     {
-        var result = await _searchIndexerClient.GetIndexAsync(AzureSearchIndex.IndexName, cancellationToken);
+        var result = await searchIndexClient.GetIndexAsync(AzureSearchIndex.IndexName, cancellationToken);
         return result.Value.Name;
     }
 
@@ -152,7 +108,7 @@ public class AzureSearchHelper : IAzureSearchHelper
         searchOptions.QueryType = SearchQueryType.Simple;
 
         var searchTerm = BuildSearchTerm(findVacanciesModel.SearchTerm);
-        var searchResults = await _searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
+        var searchResults = await searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
         
         return Convert.ToInt32(searchResults.Value.TotalCount);
     }

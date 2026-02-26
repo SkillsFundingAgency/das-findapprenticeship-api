@@ -10,7 +10,6 @@ public static class AddServiceRegistrationExtension
     public static void AddServiceRegistration(this IServiceCollection services)
     {
         services.AddTransient<IAcsVacancySearchRepository, AcsVacancySearchRepository>();
-        services.AddTransient<IAzureSearchHelper, AzureSearchHelper>();
         services.AddTransient<ISavedSearchRepository, SavedSearchRepository>();
     }
 }
