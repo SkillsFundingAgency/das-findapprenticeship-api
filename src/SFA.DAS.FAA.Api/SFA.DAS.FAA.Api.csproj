@@ -11,13 +11,13 @@
 		<PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.5.0" />
 		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="10.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.3" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.3" />
 		<PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="17.1.138" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.3" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\SFA.DAS.FAA.Application\SFA.DAS.FAA.Application.csproj" />
