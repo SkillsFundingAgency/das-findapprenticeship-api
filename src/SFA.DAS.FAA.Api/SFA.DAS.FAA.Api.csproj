@@ -15,7 +15,7 @@
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.3" />
-		<PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="17.1.138" />
+		<PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="17.1.165" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.3" />
 	</ItemGroup>
