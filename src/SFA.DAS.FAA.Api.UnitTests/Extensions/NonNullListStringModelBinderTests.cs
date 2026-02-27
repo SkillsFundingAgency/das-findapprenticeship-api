@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using AutoFixture.NUnit3;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Moq;
-using NUnit.Framework;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SFA.DAS.FAA.Api.Extensions;
+using System.Collections.Generic;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Extensions;
 

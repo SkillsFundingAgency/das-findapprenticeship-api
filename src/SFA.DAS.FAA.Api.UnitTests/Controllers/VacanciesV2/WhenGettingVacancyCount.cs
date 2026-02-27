@@ -2,17 +2,12 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.ApiRequests;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
-using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.VacanciesV2;
 

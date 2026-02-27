@@ -6,6 +6,7 @@ using SFA.DAS.FAA.Domain.Models;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit4;
 
 namespace SFA.DAS.FAA.Data.UnitTests.AzureCognitiveSearchRepository;
 

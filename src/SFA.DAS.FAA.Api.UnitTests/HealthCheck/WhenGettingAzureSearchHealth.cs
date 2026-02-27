@@ -1,11 +1,6 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Moq;
-using NUnit.Framework;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SFA.DAS.FAA.Api.HealthCheck;
 using SFA.DAS.FAA.Domain.Interfaces;
-using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 

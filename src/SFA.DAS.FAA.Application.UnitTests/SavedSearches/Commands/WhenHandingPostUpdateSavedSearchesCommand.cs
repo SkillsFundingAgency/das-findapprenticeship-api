@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
-using Newtonsoft.Json;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Entities;
