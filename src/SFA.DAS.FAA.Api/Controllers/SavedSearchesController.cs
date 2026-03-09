@@ -65,7 +65,7 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
         }
     }
 
-    [HttpPatch]
+    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
     [Route("{id}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
