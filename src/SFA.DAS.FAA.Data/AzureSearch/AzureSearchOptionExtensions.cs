@@ -9,353 +9,355 @@ namespace SFA.DAS.FAA.Data.AzureSearch;
 
 public static class AzureSearchOptionExtensions
 {
-    public static SearchOptions BuildSort(this SearchOptions searchOptions, FindVacanciesModel searchVacanciesModel)
+    extension(SearchOptions searchOptions)
     {
-        switch (searchVacanciesModel.VacancySort)
+        public SearchOptions BuildSort(FindVacanciesModel searchVacanciesModel)
         {
-            case VacancySort.AgeAsc:
-                searchOptions.OrderBy.Add("PostedDate desc");
-                break;
-            case VacancySort.AgeDesc:
-                searchOptions.OrderBy.Add("PostedDate asc");
-                break;
-            case VacancySort.ExpectedStartDateAsc:
-                searchOptions.OrderBy.Add("StartDate asc");
-                break;
-            case VacancySort.ExpectedStartDateDesc:
-                searchOptions.OrderBy.Add("StartDate desc");
-                break;
-            case VacancySort.ClosingAsc:
-                searchOptions.OrderBy.Add("ClosingDate asc");
-                break;
-            case VacancySort.ClosingDesc:
-                searchOptions.OrderBy.Add("ClosingDate desc");
-                break;
-            case VacancySort.SalaryAsc:
-                if (searchVacanciesModel.SkipWageType is null)
-                {
-                    if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
+            switch (searchVacanciesModel.VacancySort)
+            {
+                case VacancySort.AgeAsc:
+                    searchOptions.OrderBy.Add("PostedDate desc");
+                    break;
+                case VacancySort.AgeDesc:
+                    searchOptions.OrderBy.Add("PostedDate asc");
+                    break;
+                case VacancySort.ExpectedStartDateAsc:
+                    searchOptions.OrderBy.Add("StartDate asc");
+                    break;
+                case VacancySort.ExpectedStartDateDesc:
+                    searchOptions.OrderBy.Add("StartDate desc");
+                    break;
+                case VacancySort.ClosingAsc:
+                    searchOptions.OrderBy.Add("ClosingDate asc");
+                    break;
+                case VacancySort.ClosingDesc:
+                    searchOptions.OrderBy.Add("ClosingDate desc");
+                    break;
+                case VacancySort.SalaryAsc:
+                    if (searchVacanciesModel.SkipWageType is null)
                     {
-                        searchOptions.OrderBy.Add("Wage/WageType asc");
-                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
-                        searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
-                        searchOptions.OrderBy.Add("PostedDate asc");
-                        searchOptions.OrderBy.Add("ClosingDate asc");
+                        if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
+                        {
+                            searchOptions.OrderBy.Add("Wage/WageType asc");
+                            searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                            searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
+                            searchOptions.OrderBy.Add("PostedDate asc");
+                            searchOptions.OrderBy.Add("ClosingDate asc");
+                        }
+                        else
+                        {
+                            searchOptions.OrderBy.Add("Wage/WageType asc");
+                            searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
+                            searchOptions.OrderBy.Add("PostedDate asc");
+                            searchOptions.OrderBy.Add("ClosingDate asc");
+                        }
                     }
                     else
                     {
-                        searchOptions.OrderBy.Add("Wage/WageType asc");
                         searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
-                        searchOptions.OrderBy.Add("PostedDate asc");
-                        searchOptions.OrderBy.Add("ClosingDate asc");
                     }
-                }
-                else
-                {
-                    searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage asc");
-                }
-                break;
-            case VacancySort.SalaryDesc:
-                if (searchVacanciesModel.SkipWageType is null)
-                {
-                    if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
+                    break;
+                case VacancySort.SalaryDesc:
+                    if (searchVacanciesModel.SkipWageType is null)
                     {
-                        searchOptions.OrderBy.Add("Wage/WageType asc");
-                        searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
-                        searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
-                        searchOptions.OrderBy.Add("PostedDate asc");
-                        searchOptions.OrderBy.Add("ClosingDate asc");
+                        if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
+                        {
+                            searchOptions.OrderBy.Add("Wage/WageType asc");
+                            searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                            searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
+                            searchOptions.OrderBy.Add("PostedDate asc");
+                            searchOptions.OrderBy.Add("ClosingDate asc");
+                        }
+                        else
+                        {
+                            searchOptions.OrderBy.Add("Wage/WageType asc");
+                            searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
+                            searchOptions.OrderBy.Add("PostedDate asc");
+                            searchOptions.OrderBy.Add("ClosingDate asc");
+                        }
                     }
                     else
                     {
-                        searchOptions.OrderBy.Add("Wage/WageType asc");
                         searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
-                        searchOptions.OrderBy.Add("PostedDate asc");
-                        searchOptions.OrderBy.Add("ClosingDate asc");
                     }
-                }
-                else
-                {
-                    searchOptions.OrderBy.Add("Wage/Between18AndUnder21NationalMinimumWage desc");
-                }
-                break;
-            case VacancySort.DistanceAsc:
-                if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
-                {
-                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
-                }
-                break;
-            case VacancySort.DistanceDesc:
-                if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
-                {
-                    searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') desc");
-                }
-                break;
-        }
-
-        searchOptions.BuildSortTiesBreakers();
-        return searchOptions;
-    }
-
-    public static void BuildSortTiesBreakers(this SearchOptions searchOptions)
-    {
-        searchOptions.OrderBy.Add("Title asc");
-        searchOptions.OrderBy.Add("Course/Title asc");
-        searchOptions.OrderBy.Add("TypicalJobTitles asc");
-        searchOptions.OrderBy.Add("EmployerName asc");
-        searchOptions.OrderBy.Add("ProviderName asc");
-        searchOptions.OrderBy.Add("Ukprn asc");
-        searchOptions.OrderBy.Add("VacancyReference asc");
-    }
-
-    public static SearchOptions BuildPaging(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
-    {
-        findVacanciesModel.PageNumber = findVacanciesModel.PageNumber < 2 ? 1 : findVacanciesModel.PageNumber;
-        searchOptions.Skip = (findVacanciesModel.PageNumber - 1) * findVacanciesModel.PageSize;
-        searchOptions.Size = findVacanciesModel.PageSize;
-        return searchOptions;
-    }
-
-    public static SearchOptions BuildFiltersForTotalCount(this SearchOptions searchOptions,
-        List<DataSource> additionalDataSources)
-    {
-        List<string> searchFilters = [];
-
-        if (additionalDataSources != null && additionalDataSources.Count != 0)
-        {
-            var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
-            additionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
-            searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
-        }
-        else
-        {
-            searchFilters.Add(AzureSearchConstants.VacancySourceEqualsRaa);
-        }
-
-        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
-        searchOptions.IncludeTotalCount = true;
-        return searchOptions;
-    }
-
-    public static SearchOptions BuildFilters(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
-    {
-        List<string> searchFilters = [];
-
-        if (findVacanciesModel.AdditionalDataSources != null
-            && findVacanciesModel.AdditionalDataSources.Count != 0
-            && findVacanciesModel.VacancySort != VacancySort.ExpectedStartDateAsc && findVacanciesModel.VacancySort != VacancySort.ExpectedStartDateDesc)
-        {
-            var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
-            findVacanciesModel.AdditionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
-            searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
-        }
-        else
-        {
-            searchFilters.Add(AzureSearchConstants.VacancySourceEqualsRaa);
-        }
-
-        if (findVacanciesModel.Ukprn.HasValue)
-        {
-            searchFilters.Add($"Ukprn eq '{findVacanciesModel.Ukprn}'");
-        }
-
-        if (!string.IsNullOrEmpty(findVacanciesModel.AccountPublicHashedId))
-        {
-            searchFilters.Add($"AccountPublicHashedId eq '{findVacanciesModel.AccountPublicHashedId}'");
-        }
-
-        if (!string.IsNullOrEmpty(findVacanciesModel.AccountLegalEntityPublicHashedId))
-        {
-            searchFilters.Add($"AccountLegalEntityPublicHashedId eq '{findVacanciesModel.AccountLegalEntityPublicHashedId}'");
-        }
-
-        if (!string.IsNullOrEmpty(findVacanciesModel.EmployerName))
-        {
-            searchFilters.Add($"EmployerName eq '{findVacanciesModel.EmployerName}'");
-        }
-
-        if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Count != 0)
-        {
-            var larsCodeClauses = new List<string>();
-            findVacanciesModel.StandardLarsCode.ForEach(larsCode => larsCodeClauses.Add($"Course/LarsCode eq {larsCode}"));
-            searchFilters.Add($"({string.Join(" or ", [.. larsCodeClauses])})");
-        }
-
-        if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Count != 0)
-        {
-            var categoryClauses = new List<string>();
-            findVacanciesModel.Categories.ForEach(category => categoryClauses.Add($"Route eq '{category}'"));
-            searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
-        }
-
-        if (findVacanciesModel.RouteIds is { Count: not 0 })
-        {
-            var routeIdClauses = new List<string>();
-            findVacanciesModel.RouteIds.ForEach(route => routeIdClauses.Add($"Course/RouteCode eq {route}"));
-            searchFilters.Add($"({string.Join(" or ", [.. routeIdClauses])})");
-        }
-
-        if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
-        {
-            var levelClauses = new List<string>();
-            findVacanciesModel.Levels.ForEach(level => levelClauses.Add($"Course/Level eq '{level}'"));
-            searchFilters.Add($"({string.Join(" or ", [.. levelClauses])})");
-        }
-
-        if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
-        {
-            if (findVacanciesModel.DistanceInMiles.HasValue)
-            {
-                var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
-                var distanceInKm = (distanceInMiles - distanceInMiles / 5) * 2;
-
-                List<string> geoFilters = [
-                    $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
-                    "Location eq null"
-                ];
-
-                searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
+                    break;
+                case VacancySort.DistanceAsc:
+                    if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
+                    {
+                        searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') asc");
+                    }
+                    break;
+                case VacancySort.DistanceDesc:
+                    if (searchVacanciesModel.Lat.HasValue || searchVacanciesModel.Lon.HasValue)
+                    {
+                        searchOptions.OrderBy.Add($"geo.distance(Location, geography'POINT({searchVacanciesModel.Lon} {searchVacanciesModel.Lat})') desc");
+                    }
+                    break;
             }
 
-            searchFilters.Add("not ((AvailableWhere eq 'MultipleLocations' or AvailableWhere eq 'OneLocation') and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
+            searchOptions.BuildSortTiesBreakers();
+            return searchOptions;
         }
 
-        if (findVacanciesModel.ExcludeNational is true)
+        private void BuildSortTiesBreakers()
         {
-            searchFilters.Add("VacancyLocationType ne 'National'");
+            searchOptions.OrderBy.Add("Title asc");
+            searchOptions.OrderBy.Add("Course/Title asc");
+            searchOptions.OrderBy.Add("TypicalJobTitles asc");
+            searchOptions.OrderBy.Add("EmployerName asc");
+            searchOptions.OrderBy.Add("ProviderName asc");
+            searchOptions.OrderBy.Add("Ukprn asc");
+            searchOptions.OrderBy.Add("VacancyReference asc");
         }
 
-        if (findVacanciesModel.PostedInLastNumberOfDays.HasValue)
+        public SearchOptions BuildPaging(FindVacanciesModel findVacanciesModel)
         {
-            var numberOfDays = Convert.ToDouble(findVacanciesModel.PostedInLastNumberOfDays);
-            searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays):O}");
+            findVacanciesModel.PageNumber = findVacanciesModel.PageNumber < 2 ? 1 : findVacanciesModel.PageNumber;
+            searchOptions.Skip = (findVacanciesModel.PageNumber - 1) * findVacanciesModel.PageSize;
+            searchOptions.Size = findVacanciesModel.PageSize;
+            return searchOptions;
         }
 
-        if (findVacanciesModel.DisabilityConfident)
+        public SearchOptions BuildFiltersForTotalCount(List<DataSource> additionalDataSources)
         {
-            searchFilters.Add("IsDisabilityConfident eq true");
-        }
+            List<string> searchFilters = [];
 
-        if (findVacanciesModel.VacancySort is VacancySort.SalaryAsc or VacancySort.SalaryDesc)
-        {
-            if (findVacanciesModel.SkipWageType is not null)
+            if (additionalDataSources != null && additionalDataSources.Count != 0)
             {
-                searchFilters.Add($"Wage/WageType ne '{findVacanciesModel.SkipWageType}'");
+                var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
+                additionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
+                searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
             }
-        }       
+            else
+            {
+                searchFilters.Add(AzureSearchConstants.VacancySourceEqualsRaa);
+            }
+
+            searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+            searchOptions.IncludeTotalCount = true;
+            return searchOptions;
+        }
+
+        public SearchOptions BuildFilters(FindVacanciesModel findVacanciesModel)
+        {
+            List<string> searchFilters = [];
+
+            if (findVacanciesModel.AdditionalDataSources != null
+                && findVacanciesModel.AdditionalDataSources.Count != 0
+                && findVacanciesModel.VacancySort != VacancySort.ExpectedStartDateAsc && findVacanciesModel.VacancySort != VacancySort.ExpectedStartDateDesc)
+            {
+                var sourceClauses = new List<string> { AzureSearchConstants.VacancySourceEqualsRaa };
+                findVacanciesModel.AdditionalDataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
+                searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
+            }
+            else
+            {
+                searchFilters.Add(AzureSearchConstants.VacancySourceEqualsRaa);
+            }
+
+            if (findVacanciesModel.Ukprn.HasValue)
+            {
+                searchFilters.Add($"Ukprn eq '{findVacanciesModel.Ukprn}'");
+            }
+
+            if (!string.IsNullOrEmpty(findVacanciesModel.AccountPublicHashedId))
+            {
+                searchFilters.Add($"AccountPublicHashedId eq '{findVacanciesModel.AccountPublicHashedId}'");
+            }
+
+            if (!string.IsNullOrEmpty(findVacanciesModel.AccountLegalEntityPublicHashedId))
+            {
+                searchFilters.Add($"AccountLegalEntityPublicHashedId eq '{findVacanciesModel.AccountLegalEntityPublicHashedId}'");
+            }
+
+            if (!string.IsNullOrEmpty(findVacanciesModel.EmployerName))
+            {
+                searchFilters.Add($"EmployerName eq '{findVacanciesModel.EmployerName}'");
+            }
+
+            if (findVacanciesModel.StandardLarsCode != null && findVacanciesModel.StandardLarsCode.Count != 0)
+            {
+                var larsCodeClauses = new List<string>();
+                findVacanciesModel.StandardLarsCode.ForEach(larsCode => larsCodeClauses.Add($"Course/LarsCode eq {larsCode}"));
+                searchFilters.Add($"({string.Join(" or ", [.. larsCodeClauses])})");
+            }
+
+            if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Count != 0)
+            {
+                var categoryClauses = new List<string>();
+                findVacanciesModel.Categories.ForEach(category => categoryClauses.Add($"Route eq '{category}'"));
+                searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
+            }
+
+            if (findVacanciesModel.RouteIds is { Count: not 0 })
+            {
+                var routeIdClauses = new List<string>();
+                findVacanciesModel.RouteIds.ForEach(route => routeIdClauses.Add($"Course/RouteCode eq {route}"));
+                searchFilters.Add($"({string.Join(" or ", [.. routeIdClauses])})");
+            }
+
+            if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
+            {
+                var levelClauses = new List<string>();
+                findVacanciesModel.Levels.ForEach(level => levelClauses.Add($"Course/Level eq '{level}'"));
+                searchFilters.Add($"({string.Join(" or ", [.. levelClauses])})");
+            }
+
+            if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
+            {
+                if (findVacanciesModel.DistanceInMiles.HasValue)
+                {
+                    var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
+                    var distanceInKm = (distanceInMiles - distanceInMiles / 5) * 2;
+
+                    List<string> geoFilters = [
+                        $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
+                        "Location eq null"
+                    ];
+
+                    searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
+                }
+
+                searchFilters.Add("not ((AvailableWhere eq 'MultipleLocations' or AvailableWhere eq 'OneLocation') and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
+            }
+
+            if (findVacanciesModel.ExcludeNational is true)
+            {
+                searchFilters.Add("VacancyLocationType ne 'National'");
+            }
+
+            if (findVacanciesModel.PostedInLastNumberOfDays.HasValue)
+            {
+                var numberOfDays = Convert.ToDouble(findVacanciesModel.PostedInLastNumberOfDays);
+                searchFilters.Add($"PostedDate ge {DateTime.UtcNow.AddDays(-numberOfDays):O}");
+            }
+
+            if (findVacanciesModel.DisabilityConfident)
+            {
+                searchFilters.Add("IsDisabilityConfident eq true");
+            }
+
+            if (findVacanciesModel.VacancySort is VacancySort.SalaryAsc or VacancySort.SalaryDesc)
+            {
+                if (findVacanciesModel.SkipWageType is not null)
+                {
+                    searchFilters.Add($"Wage/WageType ne '{findVacanciesModel.SkipWageType}'");
+                }
+            }       
         
-        if (findVacanciesModel.ApprenticeshipTypes is { Count: not 0 })
-        {
-            var apprenticeshipTypeClauses = new List<string>();
-            findVacanciesModel.ApprenticeshipTypes.ForEach(x => apprenticeshipTypeClauses.Add($"ApprenticeshipType eq '{x}'"));
-            searchFilters.Add($"({string.Join(" or ", [.. apprenticeshipTypeClauses])})");
-        }
-
-        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
-
-        return searchOptions;
-    }
-
-    public static SearchOptions BuildFiltersForTotalSearchCount(this SearchOptions searchOptions, FindVacanciesCountModel findVacanciesModel)
-    {
-        List<string> searchFilters =
-        [
-            "IsPrimaryLocation eq true"
-        ];
-
-        if (findVacanciesModel.DataSources != null && findVacanciesModel.DataSources.Count != 0)
-        {
-            var sourceClauses = new List<string>();
-            findVacanciesModel.DataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
-            searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
-        }
-        else
-        {
-            searchFilters.Add(AzureSearchConstants.VacancySourceEqualsRaa);
-        }
-
-        if (findVacanciesModel.Ukprn.HasValue)
-        {
-            searchFilters.Add($"Ukprn eq '{findVacanciesModel.Ukprn}'");
-        }
-
-        if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Count != 0)
-        {
-            var categoryClauses = new List<string>();
-            findVacanciesModel.Categories.ForEach(category => categoryClauses.Add($"Route eq '{category}'"));
-            searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
-        }
-
-        if (findVacanciesModel.RouteIds is { Count: not 0 })
-        {
-            var routeIdClauses = new List<string>();
-            findVacanciesModel.RouteIds.ForEach(route => routeIdClauses.Add($"Course/RouteCode eq {route}"));
-            searchFilters.Add($"({string.Join(" or ", [.. routeIdClauses])})");
-        }
-
-        if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
-        {
-            var levelClauses = new List<string>();
-            findVacanciesModel.Levels.ForEach(level => levelClauses.Add($"Course/Level eq '{level}'"));
-            searchFilters.Add($"({string.Join(" or ", [.. levelClauses])})");
-        }
-
-        if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
-        {
-            if (findVacanciesModel.DistanceInMiles.HasValue)
+            if (findVacanciesModel.ApprenticeshipTypes is { Count: not 0 })
             {
-                var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
-                var distanceInKm = (distanceInMiles - distanceInMiles / 5) * 2;
-                List<string> geoFilters = [
-                    $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
-                    "Location eq null"
-                ];
-
-                searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
+                var apprenticeshipTypeClauses = new List<string>();
+                findVacanciesModel.ApprenticeshipTypes.ForEach(x => apprenticeshipTypeClauses.Add($"ApprenticeshipType eq '{x}'"));
+                searchFilters.Add($"({string.Join(" or ", [.. apprenticeshipTypeClauses])})");
             }
 
-            searchFilters.Add("not ((AvailableWhere eq 'MultipleLocations' or AvailableWhere eq 'OneLocation') and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
+            searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+
+            return searchOptions;
         }
 
-        if (findVacanciesModel.ExcludeNational is true)
+        public SearchOptions BuildFiltersForTotalSearchCount(FindVacanciesCountModel findVacanciesModel)
         {
-            searchFilters.Add("VacancyLocationType ne 'National'");
-        }
+            List<string> searchFilters =
+            [
+                "IsPrimaryLocation eq true"
+            ];
 
-        if (findVacanciesModel.DisabilityConfident != false)
-        {
-            searchFilters.Add("IsDisabilityConfident eq true");
-        }
+            if (findVacanciesModel.DataSources != null && findVacanciesModel.DataSources.Count != 0)
+            {
+                var sourceClauses = new List<string>();
+                findVacanciesModel.DataSources.ForEach(source => sourceClauses.Add($"VacancySource eq '{source.GetAzureSearchTerm()}'"));
+                searchFilters.Add($"({string.Join(" or ", [.. sourceClauses])})");
+            }
+            else
+            {
+                searchFilters.Add(AzureSearchConstants.VacancySourceEqualsRaa);
+            }
 
-        if (findVacanciesModel.WageType is not null)
-        {
-            searchFilters.Add($"Wage/WageType eq '{findVacanciesModel.WageType}'");
-        }
+            if (findVacanciesModel.Ukprn.HasValue)
+            {
+                searchFilters.Add($"Ukprn eq '{findVacanciesModel.Ukprn}'");
+            }
+
+            if (findVacanciesModel.Categories != null && findVacanciesModel.Categories.Count != 0)
+            {
+                var categoryClauses = new List<string>();
+                findVacanciesModel.Categories.ForEach(category => categoryClauses.Add($"Route eq '{category}'"));
+                searchFilters.Add($"({string.Join(" or ", [.. categoryClauses])})");
+            }
+
+            if (findVacanciesModel.RouteIds is { Count: not 0 })
+            {
+                var routeIdClauses = new List<string>();
+                findVacanciesModel.RouteIds.ForEach(route => routeIdClauses.Add($"Course/RouteCode eq {route}"));
+                searchFilters.Add($"({string.Join(" or ", [.. routeIdClauses])})");
+            }
+
+            if (findVacanciesModel.Levels != null && findVacanciesModel.Levels.Count != 0)
+            {
+                var levelClauses = new List<string>();
+                findVacanciesModel.Levels.ForEach(level => levelClauses.Add($"Course/Level eq '{level}'"));
+                searchFilters.Add($"({string.Join(" or ", [.. levelClauses])})");
+            }
+
+            if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
+            {
+                if (findVacanciesModel.DistanceInMiles.HasValue)
+                {
+                    var distanceInMiles = Convert.ToDecimal(findVacanciesModel.DistanceInMiles);
+                    var distanceInKm = (distanceInMiles - distanceInMiles / 5) * 2;
+                    List<string> geoFilters = [
+                        $"geo.distance(Location, geography'POINT({findVacanciesModel.Lon} {findVacanciesModel.Lat})') le {distanceInKm}",
+                        "Location eq null"
+                    ];
+
+                    searchFilters.Add($"({string.Join(" or ", [.. geoFilters])})");
+                }
+
+                searchFilters.Add("not ((AvailableWhere eq 'MultipleLocations' or AvailableWhere eq 'OneLocation') and not (Address/Latitude ne null and Address/Latitude ne 0 and Address/Longitude ne null and Address/Longitude ne 0))");
+            }
+
+            if (findVacanciesModel.ExcludeNational is true)
+            {
+                searchFilters.Add("VacancyLocationType ne 'National'");
+            }
+
+            if (findVacanciesModel.DisabilityConfident != false)
+            {
+                searchFilters.Add("IsDisabilityConfident eq true");
+            }
+
+            if (findVacanciesModel.WageType is not null)
+            {
+                searchFilters.Add($"Wage/WageType eq '{findVacanciesModel.WageType}'");
+            }
         
-        if (findVacanciesModel.ApprenticeshipTypes is { Count: not 0 })
-        {
-            var apprenticeshipTypeClauses = new List<string>();
-            findVacanciesModel.ApprenticeshipTypes.ForEach(x => apprenticeshipTypeClauses.Add($"ApprenticeshipType eq '{x}'"));
-            searchFilters.Add($"({string.Join(" or ", [.. apprenticeshipTypeClauses])})");
+            if (findVacanciesModel.ApprenticeshipTypes is { Count: not 0 })
+            {
+                var apprenticeshipTypeClauses = new List<string>();
+                findVacanciesModel.ApprenticeshipTypes.ForEach(x => apprenticeshipTypeClauses.Add($"ApprenticeshipType eq '{x}'"));
+                searchFilters.Add($"({string.Join(" or ", [.. apprenticeshipTypeClauses])})");
+            }
+
+            searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+
+            return searchOptions;
         }
 
-        searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
+        public SearchOptions BuildSearch(FindVacanciesModel findVacanciesModel)
+        {
+            findVacanciesModel.Ukprn.ToString();
 
-        return searchOptions;
-    }
+            searchOptions.QueryType = SearchQueryType.Full;
+            searchOptions.SearchFields.Add("Title");
+            searchOptions.SearchFields.Add("Course/Title");
+            searchOptions.SearchFields.Add("EmployerName");
+            searchOptions.SearchFields.Add("ProviderName");
+            searchOptions.SearchFields.Add("Ukprn");
+            searchOptions.SearchFields.Add("SearchTags");
 
-    public static SearchOptions BuildSearch(this SearchOptions searchOptions, FindVacanciesModel findVacanciesModel)
-    {
-        findVacanciesModel.Ukprn.ToString();
-
-        searchOptions.QueryType = SearchQueryType.Full;
-        searchOptions.SearchFields.Add("Title");
-        searchOptions.SearchFields.Add("Course/Title");
-        searchOptions.SearchFields.Add("EmployerName");
-        searchOptions.SearchFields.Add("ProviderName");
-        searchOptions.SearchFields.Add("Ukprn");
-        searchOptions.SearchFields.Add("SearchTags");
-
-        return searchOptions;
+            return searchOptions;
+        }
     }
 }

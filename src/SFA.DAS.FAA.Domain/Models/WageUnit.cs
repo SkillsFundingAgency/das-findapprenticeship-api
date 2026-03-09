@@ -1,9 +1,8 @@
-﻿namespace SFA.DAS.FAA.Domain.Models
+﻿namespace SFA.DAS.FAA.Domain.Models;
+
+public enum WageUnit
 {
-    public enum WageUnit
-    {
-        Week,
-        Month,
-        Year
-    }
+    Week,
+    Month,
+    Year
 }

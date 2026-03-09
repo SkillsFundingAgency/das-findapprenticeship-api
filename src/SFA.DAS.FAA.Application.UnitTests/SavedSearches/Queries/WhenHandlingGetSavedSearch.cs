@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
-using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearchesByUserReference;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;

@@ -3,15 +3,13 @@ using SFA.DAS.FAA.Data.AzureSearch;
 using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Interfaces;
 
-namespace SFA.DAS.FAA.Api.AppStart
+namespace SFA.DAS.FAA.Api.AppStart;
+
+public static class AddServiceRegistrationExtension
 {
-    public static class AddServiceRegistrationExtension
+    public static void AddServiceRegistration(this IServiceCollection services)
     {
-        public static void AddServiceRegistration(this IServiceCollection services)
-        {
-            services.AddTransient<IAcsVacancySearchRepository, AcsVacancySearchRepository>();
-            services.AddTransient<IAzureSearchHelper, AzureSearchHelper>();
-            services.AddTransient<ISavedSearchRepository, SavedSearchRepository>();
-        }
+        services.AddTransient<IAcsVacancySearchRepository, AcsVacancySearchRepository>();
+        services.AddTransient<ISavedSearchRepository, SavedSearchRepository>();
     }
 }

@@ -6,7 +6,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.ApiResponses;
 using SFA.DAS.FAA.Api.Controllers;
-using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetUserSavedSearch;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.Users;

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,20 +13,20 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Azure.Identity" Version="1.11.4" />
+      <PackageReference Include="Azure.Identity" Version="1.18.0" />
       <PackageReference Include="Azure.Search.Documents" Version="11.5.0-beta.5" />
       <PackageReference Include="Microsoft.Azure.Core.Spatial" Version="1.1.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-      <PackageReference Include="Microsoft.Spatial" Version="7.20.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="SFA.DAS.Api.Common" Version="1.0.28" />
-      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.7" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
-      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.6.3" />
-      <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.6.3" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.3" />
-      <PackageReference Include="System.Text.Json" Version="8.0.5" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
+      <PackageReference Include="Microsoft.Spatial" Version="8.4.3" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+      <PackageReference Include="SFA.DAS.Api.Common" Version="17.1.165" />
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.3" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.0.1" />
+      <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.0.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+      <PackageReference Include="System.Text.Json" Version="10.0.3" />
     </ItemGroup>
 
 </Project>

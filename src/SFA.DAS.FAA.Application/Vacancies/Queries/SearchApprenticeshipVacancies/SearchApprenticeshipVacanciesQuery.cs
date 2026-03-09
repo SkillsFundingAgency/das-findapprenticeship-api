@@ -3,30 +3,29 @@ using MediatR;
 using SFA.DAS.FAA.Domain.Entities;
 using SFA.DAS.FAA.Domain.Models;
 
-namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies
+namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
+
+public class SearchApprenticeshipVacanciesQuery : IRequest<SearchApprenticeshipVacanciesResult>
 {
-    public class SearchApprenticeshipVacanciesQuery : IRequest<SearchApprenticeshipVacanciesResult>
-    {
-        public string? SearchTerm { get; init; }
-        public int PageNumber { get; init; }
-        public int PageSize { get; init; }
-        public int? Ukprn { get; init; }
-        public string AccountPublicHashedId { get; init; }
-        public string AccountLegalEntityPublicHashedId { get ; init ; }
-        public string EmployerName { get; init; }
-        public List<int> StandardLarsCode { get ; init ; }
-        public bool? ExcludeNational { get ; init ; }
-        public uint? DistanceInMiles { get ; init ; }
-        public uint? PostedInLastNumberOfDays { get ; init ; }
-        public List<string> Categories { get ; init ; }
-        public List<int> RouteIds { get; init; }
-        public List<string> Levels { get; init; }
-        public double? Lat { get ; init ; }
-        public double? Lon { get ; init ; }
-        public VacancySort VacancySort { get ; init ; }
-        public WageType? SkipWageType { get ; init ; }
-        public bool DisabilityConfident { get; set; }
-        public List<DataSource> AdditionalDataSources { get; set; }
-        public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
-    }
+    public string? SearchTerm { get; init; }
+    public int PageNumber { get; init; }
+    public int PageSize { get; init; }
+    public int? Ukprn { get; init; }
+    public string AccountPublicHashedId { get; init; }
+    public string AccountLegalEntityPublicHashedId { get ; init ; }
+    public string EmployerName { get; init; }
+    public List<int> StandardLarsCode { get ; init ; }
+    public bool? ExcludeNational { get ; init ; }
+    public uint? DistanceInMiles { get ; init ; }
+    public uint? PostedInLastNumberOfDays { get ; init ; }
+    public List<string> Categories { get ; init ; }
+    public List<int> RouteIds { get; init; }
+    public List<string> Levels { get; init; }
+    public double? Lat { get ; init ; }
+    public double? Lon { get ; init ; }
+    public VacancySort VacancySort { get ; init ; }
+    public WageType? SkipWageType { get ; init ; }
+    public bool DisabilityConfident { get; set; }
+    public List<DataSource> AdditionalDataSources { get; set; }
+    public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
 }

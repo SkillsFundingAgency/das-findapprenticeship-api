@@ -64,7 +64,7 @@ In the web project, if it does not exist already, add `AppSettings.Development.j
 ```
 
 ## Technologies
-* .NetCore 8.0
+* .NetCore 10.0
 * Azure Storage Account
 * Azure Search
 * MS-SQL Server

@@ -2,22 +2,21 @@
 using System.Linq;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 
-namespace SFA.DAS.FAA.Api.ApiResponses
-{
-    public class GetSearchApprenticeshipVacanciesResponse
-    {
-        public int Total { get; set; }
-        public int TotalFound { get; set; }
-        public IEnumerable<GetApprenticeshipVacancyResponse> ApprenticeshipVacancies { get; set; }
+namespace SFA.DAS.FAA.Api.ApiResponses;
 
-        public static implicit operator GetSearchApprenticeshipVacanciesResponse(SearchApprenticeshipVacanciesResult source)
+public class GetSearchApprenticeshipVacanciesResponse
+{
+    public int Total { get; set; }
+    public int TotalFound { get; set; }
+    public IEnumerable<GetApprenticeshipVacancyResponse> ApprenticeshipVacancies { get; set; }
+
+    public static implicit operator GetSearchApprenticeshipVacanciesResponse(SearchApprenticeshipVacanciesResult source)
+    {
+        return new GetSearchApprenticeshipVacanciesResponse
         {
-            return new GetSearchApprenticeshipVacanciesResponse
-            {
-                ApprenticeshipVacancies = source.ApprenticeshipVacancies.Select(item => (GetApprenticeshipVacancyResponse)item),
-                TotalFound = source.TotalFound,
-                Total = source.Total
-            };
-        }
+            ApprenticeshipVacancies = source.ApprenticeshipVacancies.Select(item => (GetApprenticeshipVacancyResponse)item),
+            TotalFound = source.TotalFound,
+            Total = source.Total
+        };
     }
 }

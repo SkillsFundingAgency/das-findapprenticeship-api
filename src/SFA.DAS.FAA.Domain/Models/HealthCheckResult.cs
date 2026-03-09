@@ -1,9 +1,8 @@
-﻿namespace SFA.DAS.FAA.Domain.Models
+﻿namespace SFA.DAS.FAA.Domain.Models;
+
+public enum HealthCheckResult
 {
-    public enum HealthCheckResult
-    {
-        Healthy = 0,
-        UnHealthy = 1,
-        Degraded = 2
-    }
+    Healthy = 0,
+    UnHealthy = 1,
+    Degraded = 2
 }

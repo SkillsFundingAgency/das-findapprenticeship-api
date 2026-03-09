@@ -1,14 +1,9 @@
-using AutoFixture.NUnit3;
-using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
 using SFA.DAS.FAA.Domain.Entities;
-using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Net;
 using System.Threading;

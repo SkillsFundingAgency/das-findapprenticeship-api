@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace SFA.DAS.FAA.Api.ApiRequests
+namespace SFA.DAS.FAA.Api.ApiRequests;
+
+public class GetVacanciesByReferenceRequest
 {
-    public class GetVacanciesByReferenceRequest
-    {
-        public List<string> VacancyReferences { get; set; }
-    }
+    public List<string> VacancyReferences { get; set; }
 }
