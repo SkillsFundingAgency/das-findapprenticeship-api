@@ -51,4 +51,6 @@ public class SearchVacancyRequest
     public List<DataSource> AdditionalDataSources { get; set; } = null;
     [FromQuery]
     public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; } = null;
+    [FromQuery]
+    public bool OnlyPrimaryLocations { get; set; }
 }
