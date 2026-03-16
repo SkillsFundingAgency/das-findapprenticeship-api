@@ -22,6 +22,7 @@ public class FindVacanciesModel : FindFilteredVacanciesModel
     public WageType? SkipWageType { get; set; }
     public List<DataSource> AdditionalDataSources { get; set; }
     public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
+    public bool OnlyPrimaryLocations { get; set; }
 }
 
 public class FindFilteredVacanciesModel
