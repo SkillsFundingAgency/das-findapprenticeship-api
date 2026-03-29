@@ -80,6 +80,7 @@ public class VacanciesController(IMediator mediator) : ControllerBase
                 StandardLarsCode = request.StandardLarsCode,
                 Ukprn = request.Ukprn,
                 VacancySort = request.Sort ?? VacancySort.AgeDesc,
+                OnlyPrimaryLocations = request.OnlyPrimaryLocations
             });
 
             var apiResponse = (GetSearchApprenticeshipVacanciesResponse)result;

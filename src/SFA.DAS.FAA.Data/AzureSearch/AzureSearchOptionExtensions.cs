@@ -252,6 +252,11 @@ public static class AzureSearchOptionExtensions
                 searchFilters.Add($"({string.Join(" or ", [.. apprenticeshipTypeClauses])})");
             }
 
+            if (findVacanciesModel.OnlyPrimaryLocations)
+            {
+                searchFilters.Add("IsPrimaryLocation eq true");
+            }
+
             searchOptions.Filter = string.Join(" and ", searchFilters.ToArray());
 
             return searchOptions;

@@ -35,7 +35,8 @@ public class WhenSearchingApprenticeshipVacancies
                 c.VacancySort.Equals(query.VacancySort) &&
                 c.SearchTerm.Equals(query.SearchTerm) &&
                 c.DisabilityConfident.Equals(query.DisabilityConfident) &&
-                c.AdditionalDataSources.Equals(query.AdditionalDataSources)
+                c.AdditionalDataSources.Equals(query.AdditionalDataSources) &&
+                c.OnlyPrimaryLocations.Equals(query.OnlyPrimaryLocations)
             )))
             .ReturnsAsync(responseFromRepository);
 

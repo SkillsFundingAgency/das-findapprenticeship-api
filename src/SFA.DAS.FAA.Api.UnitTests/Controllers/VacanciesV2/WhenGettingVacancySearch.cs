@@ -40,7 +40,8 @@ public class WhenGettingVacancySearch
                     query.PostedInLastNumberOfDays == request.PostedInLastNumberOfDays &&
                     query.VacancySort.Equals(request.Sort) &&
 					query.SearchTerm == request.SearchTerm &&
-                    query.AdditionalDataSources == request.AdditionalDataSources
+                    query.AdditionalDataSources == request.AdditionalDataSources &&
+                    query.OnlyPrimaryLocations == request.OnlyPrimaryLocations
                 ),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(mediatorResult);

@@ -34,6 +34,7 @@ public class SearchApprenticeshipVacanciesQueryHandler(IAcsVacancySearchReposito
             StandardLarsCode = request.StandardLarsCode,
             Ukprn = request.Ukprn,
             VacancySort = request.VacancySort,
+            OnlyPrimaryLocations = request.OnlyPrimaryLocations
         };
 
         var searchResult = await acsVacancySearchRepository.Find(model);
