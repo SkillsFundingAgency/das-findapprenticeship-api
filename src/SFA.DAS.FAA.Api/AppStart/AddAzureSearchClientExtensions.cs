@@ -16,7 +16,7 @@ namespace SFA.DAS.FAA.Api.AppStart;
 
 public static class AddAzureSearchClientExtensions
 {
-    public static void AddAzureSearchClient(this IServiceCollection services)
+    public static void AddAzureSearchClient(this IServiceCollection services, bool isLocal)
     {
         services.AddSingleton<TokenCredential>(_ =>
         {
@@ -24,8 +24,26 @@ public static class AddAzureSearchClientExtensions
             var networkTimeout = TimeSpan.FromSeconds(1);
             var delay = TimeSpan.FromMilliseconds(100);
 
+            if (isLocal)
+            {
+                return new ChainedTokenCredential(
+                    new AzureCliCredential(new AzureCliCredentialOptions
+                    {
+                        Retry = { NetworkTimeout = networkTimeout, MaxRetries = maxRetries, Delay = delay }
+                    }),
+                    new VisualStudioCredential(new VisualStudioCredentialOptions
+                    {
+                        Retry = { NetworkTimeout = networkTimeout, MaxRetries = maxRetries, Delay = delay }
+                    }),
+                    new VisualStudioCodeCredential(new VisualStudioCodeCredentialOptions
+                    {
+                        Retry = { NetworkTimeout = networkTimeout, MaxRetries = maxRetries, Delay = delay }
+                    })
+                );
+            }
+
             return new ChainedTokenCredential(
-                new ManagedIdentityCredential(options: new TokenCredentialOptions
+                new ManagedIdentityCredential(options: new ManagedIdentityCredentialOptions
                 {
                     Retry = { NetworkTimeout = networkTimeout, MaxRetries = maxRetries, Delay = delay }
                 }),
@@ -42,6 +60,7 @@ public static class AddAzureSearchClientExtensions
                     Retry = { NetworkTimeout = networkTimeout, MaxRetries = maxRetries, Delay = delay }
                 })
             );
+
         });
 
         services.AddSingleton<SearchClient>(sp =>
