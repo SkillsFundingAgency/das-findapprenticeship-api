@@ -42,7 +42,8 @@ public class WhenGettingVacancySearch
                     query.VacancySort.Equals(request.Sort) &&
 					query.SearchTerm == request.SearchTerm &&
                     query.AdditionalDataSources == request.AdditionalDataSources &&
-                    query.OnlyPrimaryLocations == request.OnlyPrimaryLocations
+                    query.OnlyPrimaryLocations == request.OnlyPrimaryLocations &&
+                    query.IncludeDetails == request.IncludeDetails
                 ),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(mediatorResult);

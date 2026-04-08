@@ -81,6 +81,7 @@ public class VacanciesController(IMediator mediator) : ControllerBase
                 Ukprn = request.Ukprn,
                 VacancySort = request.Sort ?? VacancySort.AgeDesc,
                 OnlyPrimaryLocations = request.OnlyPrimaryLocations,
+                IncludeDetails = request.IncludeDetails
             });
 
             if (request.IncludeDetails && request.PageSize <= 100)
