@@ -20,6 +20,7 @@ public class WhenGettingVacancySearch
     [Greedy] VacanciesController controller)
     {
         request.Sort = VacancySort.DistanceDesc;
+        request.IncludeDetails = false;
         mockMediator
             .Setup(mediator => mediator.Send(
                 It.Is<SearchApprenticeshipVacanciesQuery>(query =>
@@ -44,6 +45,50 @@ public class WhenGettingVacancySearch
                     query.OnlyPrimaryLocations == request.OnlyPrimaryLocations
                 ),
                 It.IsAny<CancellationToken>()))
+            .ReturnsAsync(mediatorResult);
+
+        var result = await controller.Search(request) as OkObjectResult;
+
+        result.Should().NotBeNull();
+        result?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        var apiModel = result?.Value as GetSearchApprenticeshipVacanciesResponse;
+        apiModel.Should().NotBeNull();
+        apiModel.Should().BeEquivalentTo((GetSearchApprenticeshipVacanciesResponse)mediatorResult);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_Returns_Details_Response_When_IncludeDetails_Is_True_And_PageSize_Is_Within_Limit(
+        SearchVacancyRequest request,
+        SearchApprenticeshipVacanciesResult mediatorResult,
+        [Frozen] Mock<IMediator> mockMediator,
+        [Greedy] VacanciesController controller)
+    {
+        request.IncludeDetails = true;
+        request.PageSize = 10;
+        mockMediator
+            .Setup(mediator => mediator.Send(It.IsAny<SearchApprenticeshipVacanciesQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(mediatorResult);
+
+        var result = await controller.Search(request) as OkObjectResult;
+
+        result.Should().NotBeNull();
+        result?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        var apiModel = result?.Value as GetSearchApprenticeshipVacanciesDetailsResponse;
+        apiModel.Should().NotBeNull();
+        apiModel.Should().BeEquivalentTo((GetSearchApprenticeshipVacanciesDetailsResponse)mediatorResult);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_Returns_Standard_Response_When_IncludeDetails_Is_True_But_PageSize_Exceeds_Limit(
+        SearchVacancyRequest request,
+        SearchApprenticeshipVacanciesResult mediatorResult,
+        [Frozen] Mock<IMediator> mockMediator,
+        [Greedy] VacanciesController controller)
+    {
+        request.IncludeDetails = true;
+        request.PageSize = 101;
+        mockMediator
+            .Setup(mediator => mediator.Send(It.IsAny<SearchApprenticeshipVacanciesQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(mediatorResult);
 
         var result = await controller.Search(request) as OkObjectResult;
