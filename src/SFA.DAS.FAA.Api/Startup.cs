@@ -77,7 +77,7 @@ public class Startup
             .GetSection("FindApprenticeshipsApi")
             .Get<FindApprenticeshipsApiConfiguration>();
 
-        services.AddAzureSearchClient();
+        services.AddAzureSearchClient(_configuration["ResourceEnvironmentName"] == "LOCAL");
         services.AddDatabaseRegistration(findApprenticeshipsApiConfiguration!, _configuration["Environment"]);
 
         if (!ConfigurationIsLocalOrDev())
