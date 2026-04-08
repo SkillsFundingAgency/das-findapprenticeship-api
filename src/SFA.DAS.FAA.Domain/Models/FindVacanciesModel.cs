@@ -3,7 +3,7 @@ using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Domain.Models;
 
-public class FindVacanciesModel : FindFilteredVacanciesModel
+public record FindVacanciesModel : FindFilteredVacanciesModel
 {
     public string? SearchTerm { get; init; }
     public int PageNumber { get; set; }
@@ -23,9 +23,10 @@ public class FindVacanciesModel : FindFilteredVacanciesModel
     public List<DataSource> AdditionalDataSources { get; set; }
     public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
     public bool OnlyPrimaryLocations { get; set; }
+    public bool IncludeDetails { get; set; }
 }
 
-public class FindFilteredVacanciesModel
+public record FindFilteredVacanciesModel
 {
     public double? Lat { get; set; }
     public double? Lon { get; set; }
