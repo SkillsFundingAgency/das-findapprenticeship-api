@@ -34,7 +34,8 @@ public class SearchApprenticeshipVacanciesQueryHandler(IAcsVacancySearchReposito
             StandardLarsCode = request.StandardLarsCode,
             Ukprn = request.Ukprn,
             VacancySort = request.VacancySort,
-            OnlyPrimaryLocations = request.OnlyPrimaryLocations
+            OnlyPrimaryLocations = request.OnlyPrimaryLocations,
+            IncludeDetails = request.IncludeDetails
         };
 
         var searchResult = await acsVacancySearchRepository.Find(model);
@@ -42,6 +43,7 @@ public class SearchApprenticeshipVacanciesQueryHandler(IAcsVacancySearchReposito
         return new SearchApprenticeshipVacanciesResult
         {
             ApprenticeshipVacancies = searchResult.ApprenticeshipVacancies,
+            ApprenticeshipVacanciesWithDetails = searchResult.ApprenticeshipVacanciesWithDetails,
             TotalFound = searchResult.TotalFound,
             Total = searchResult.Total
         };
