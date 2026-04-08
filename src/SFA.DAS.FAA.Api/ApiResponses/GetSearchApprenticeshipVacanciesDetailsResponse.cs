@@ -14,7 +14,7 @@ public class GetSearchApprenticeshipVacanciesDetailsResponse
     {
         return new GetSearchApprenticeshipVacanciesDetailsResponse
         {
-            ApprenticeshipVacancies = source.ApprenticeshipVacancies.Select(item => (GetApprenticeshipVacancyDetailResponse)item),
+            ApprenticeshipVacancies = source.ApprenticeshipVacanciesWithDetails.Select(GetApprenticeshipVacancyDetailResponse.From),
             TotalFound = source.TotalFound,
             Total = source.Total
         };
