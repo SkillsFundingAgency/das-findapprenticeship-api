@@ -14,7 +14,7 @@
 
     <ItemGroup>
       <PackageReference Include="Azure.Identity" Version="1.20.0" />
-      <PackageReference Include="Azure.Search.Documents" Version="11.7.0" />
+      <PackageReference Include="Azure.Search.Documents" Version="11.8.0-beta.1" />
       <PackageReference Include="Microsoft.Azure.Core.Spatial" Version="1.1.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
       <PackageReference Include="Microsoft.Spatial" Version="8.4.3" />
