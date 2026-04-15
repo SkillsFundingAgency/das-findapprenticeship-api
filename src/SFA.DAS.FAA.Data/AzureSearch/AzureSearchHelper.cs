@@ -42,12 +42,13 @@ public class AzureSearchHelper(SearchClient searchClient,
 
         var searchResults = searchResultsTask.Result;
         var totalVacanciesCount = totalVacanciesCountTask.Result;
-        var result = !findVacanciesModel.IncludeDetails ? searchResults.Value.GetResults().ToList().Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString())).ToList() : [];
-
+        
         var detailsResult = findVacanciesModel.IncludeDetails && findVacanciesModel.PageSize <= 100
             ? searchResults.Value.GetResults().ToList().Select(searchResult =>
                 JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResult.Document.ToString())).ToList()
             : [];
+        
+        var result = detailsResult.Count == 0 ? searchResults.Value.GetResults().ToList().Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString())).ToList() : [];
         
         if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
         {
