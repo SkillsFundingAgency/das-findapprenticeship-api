@@ -6,6 +6,7 @@ namespace SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancie
 public class SearchApprenticeshipVacanciesResult
 {
     public IEnumerable<ApprenticeshipSearchItem> ApprenticeshipVacancies { get; set; }
+    public IEnumerable<ApprenticeshipVacancyItem> ApprenticeshipVacanciesWithDetails { get; set; }
     public int TotalFound { get; set; }
     public int Total { get; set; }
 }

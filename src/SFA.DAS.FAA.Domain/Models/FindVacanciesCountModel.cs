@@ -3,7 +3,7 @@ using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Domain.Models;
 
-public class FindVacanciesCountModel : FindFilteredVacanciesModel
+public record FindVacanciesCountModel : FindFilteredVacanciesModel
 {
     public string? SearchTerm { get; init; }
     public int? Ukprn { get; init; }

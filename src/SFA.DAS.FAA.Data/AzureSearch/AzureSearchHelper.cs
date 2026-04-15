@@ -42,17 +42,25 @@ public class AzureSearchHelper(SearchClient searchClient,
 
         var searchResults = searchResultsTask.Result;
         var totalVacanciesCount = totalVacanciesCountTask.Result;
-        var result = searchResults.Value.GetResults().ToList().Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString())).ToList();
-
+        
+        var detailsResult = findVacanciesModel.IncludeDetails && findVacanciesModel.PageSize <= 100
+            ? searchResults.Value.GetResults().ToList().Select(searchResult =>
+                JsonSerializer.Deserialize<ApprenticeshipVacancyItem>(searchResult.Document.ToString())).ToList()
+            : [];
+        
+        var result = detailsResult.Count == 0 ? searchResults.Value.GetResults().ToList().Select(searchResult => JsonSerializer.Deserialize<ApprenticeshipSearchItem>(searchResult.Document.ToString())).ToList() : [];
+        
         if (findVacanciesModel.Lat.HasValue && findVacanciesModel.Lon.HasValue)
         {
             result.ForEach(c => c.SearchGeoPoint = new GeoPoint { Lat = findVacanciesModel.Lat.Value, Lon = findVacanciesModel.Lon.Value });
+            detailsResult.ForEach(c => c.SearchGeoPoint = new GeoPoint { Lat = findVacanciesModel.Lat.Value, Lon = findVacanciesModel.Lon.Value });
         }
 
         return new ApprenticeshipSearchResponse
         {
             ApprenticeshipVacancies = result.Select(c => c)
                 .ToList(),
+            ApprenticeshipVacanciesWithDetails = detailsResult.Select(c => c).ToList(),
             TotalFound = Convert.ToInt32(searchResults.Value.TotalCount),
             Total = Convert.ToInt32(totalVacanciesCount.Value.TotalCount)
         };

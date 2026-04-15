@@ -29,4 +29,5 @@ public class SearchApprenticeshipVacanciesQuery : IRequest<SearchApprenticeshipV
     public List<DataSource> AdditionalDataSources { get; set; }
     public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
     public bool OnlyPrimaryLocations { get; set; }
+    public bool IncludeDetails { get; set; }
 }

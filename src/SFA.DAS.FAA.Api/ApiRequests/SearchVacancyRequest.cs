@@ -53,4 +53,6 @@ public class SearchVacancyRequest
     public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; } = null;
     [FromQuery]
     public bool OnlyPrimaryLocations { get; set; }
+    [FromQuery] 
+    public bool IncludeDetails { get; set; } = false;
 }

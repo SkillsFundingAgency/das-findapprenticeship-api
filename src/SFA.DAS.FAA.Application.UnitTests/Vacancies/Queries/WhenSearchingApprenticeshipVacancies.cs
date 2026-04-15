@@ -36,7 +36,8 @@ public class WhenSearchingApprenticeshipVacancies
                 c.SearchTerm.Equals(query.SearchTerm) &&
                 c.DisabilityConfident.Equals(query.DisabilityConfident) &&
                 c.AdditionalDataSources.Equals(query.AdditionalDataSources) &&
-                c.OnlyPrimaryLocations.Equals(query.OnlyPrimaryLocations)
+                c.OnlyPrimaryLocations.Equals(query.OnlyPrimaryLocations) &&
+                c.IncludeDetails.Equals(query.IncludeDetails)
             )))
             .ReturnsAsync(responseFromRepository);
 
@@ -44,6 +45,8 @@ public class WhenSearchingApprenticeshipVacancies
 
         result.ApprenticeshipVacancies
             .Should().BeEquivalentTo(responseFromRepository.ApprenticeshipVacancies);
+        result.ApprenticeshipVacanciesWithDetails
+            .Should().BeEquivalentTo(responseFromRepository.ApprenticeshipVacanciesWithDetails);
         result.TotalFound.Should().Be(responseFromRepository.TotalFound);
         result.Total.Should().Be(responseFromRepository.Total);
     }
