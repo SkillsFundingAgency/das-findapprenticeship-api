@@ -19,4 +19,5 @@ public class GetApprenticeshipVacancyCountQuery : IRequest<int>
     public bool DisabilityConfident { get; set; }
     public List<DataSource> DataSources { get; set; }
     public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
+    public bool OnlyPrimaryLocations { get; set; } = true;
 }

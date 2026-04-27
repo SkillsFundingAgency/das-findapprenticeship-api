@@ -264,10 +264,12 @@ public static class AzureSearchOptionExtensions
 
         public SearchOptions BuildFiltersForTotalSearchCount(FindVacanciesCountModel findVacanciesModel)
         {
-            List<string> searchFilters =
-            [
-                "IsPrimaryLocation eq true"
-            ];
+            List<string> searchFilters = [];
+
+            if (findVacanciesModel.OnlyPrimaryLocations)
+            {
+                searchFilters.Add("IsPrimaryLocation eq true");
+            }
 
             if (findVacanciesModel.DataSources != null && findVacanciesModel.DataSources.Count != 0)
             {

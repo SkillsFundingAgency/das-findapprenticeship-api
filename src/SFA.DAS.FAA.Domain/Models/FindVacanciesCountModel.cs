@@ -14,4 +14,5 @@ public record FindVacanciesCountModel : FindFilteredVacanciesModel
     public WageType? WageType { get; set; }
     public List<DataSource> DataSources { get; set; }
     public List<ApprenticeshipTypes> ApprenticeshipTypes { get; set; }
+    public bool OnlyPrimaryLocations { get; set; } = true;
 }

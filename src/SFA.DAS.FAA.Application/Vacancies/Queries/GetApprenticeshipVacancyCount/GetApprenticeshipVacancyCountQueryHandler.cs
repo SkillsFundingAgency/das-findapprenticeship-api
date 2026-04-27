@@ -22,6 +22,7 @@ public class GetApprenticeshipVacancyCountQueryHandler(IAcsVacancySearchReposito
             Lat = request.Lat,
             Levels = request.Levels,
             Lon = request.Lon,
+            OnlyPrimaryLocations = request.OnlyPrimaryLocations,
             RouteIds = request.RouteIds,
             SearchTerm = request.SearchTerm,
             WageType = request.WageType,
