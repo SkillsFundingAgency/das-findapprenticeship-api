@@ -9,8 +9,13 @@ using SFA.DAS.FAA.Application.Vacancies.Queries.GetApprenticeshipVacancyCount;
 using SFA.DAS.FAA.Application.Vacancies.Queries.SearchApprenticeshipVacancies;
 using SFA.DAS.FAA.Domain.Models;
 using System;
+using System.Globalization;
+using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.FAA.Domain.Constants;
+using SFA.DAS.FAA.Domain.Interfaces;
 
 namespace SFA.DAS.FAA.Api.Controllers;
 
@@ -114,6 +119,7 @@ public class VacanciesController(IMediator mediator) : ControllerBase
                 Lat = request.Lat,
                 Levels = request.Levels,
                 Lon = request.Lon,
+                OnlyPrimaryLocations = request.OnlyPrimaryLocations,
                 RouteIds = request.RouteIds,
                 SearchTerm = request.SearchTerm,
                 WageType = request.WageType,
@@ -124,5 +130,35 @@ public class VacanciesController(IMediator mediator) : ControllerBase
         {
             return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
         }
+    }
+
+    [HttpGet]
+    [Route("statistics")]
+    public async Task<IActionResult> GetSearchIndexStatistics([FromServices] IAzureSearchHelper searchHelper, CancellationToken cancellationToken)
+    {
+        var requests = Enum
+            .GetValues<DataSource>()
+            .ToDictionary(
+                x => x,
+                x => searchHelper.Count(new FindVacanciesCountModel
+                {
+                    OnlyPrimaryLocations = false,
+                    DataSources = [x]
+                })
+            );
+
+        var indexName = await searchHelper.GetIndexName(cancellationToken);
+        var indexCreatedDateTime = DateTime.ParseExact(indexName.Replace($"{AzureSearchIndex.IndexName}-", string.Empty), "yyyy-MM-dd-HH-mm", CultureInfo.InvariantCulture);
+
+        var now = DateTime.UtcNow;
+        await Task.WhenAll(requests.Select(x => x.Value));
+        var stats = new GetSearchIndexStatisticsResponse
+        {
+            CreatedDate = indexCreatedDateTime,
+            IndexStatistics = requests.Select(x => new VacancySourceStatistic(x.Key.ToString(), x.Value.Result)).ToList(),
+            LastUpdatedDate = now.AddTicks(-(now.Ticks % TimeSpan.TicksPerSecond)) // truncate down to a second
+        };
+        
+        return Ok(stats);
     }
 }

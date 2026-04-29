@@ -114,6 +114,7 @@ public class AzureSearchHelper(SearchClient searchClient,
         searchOptions.IncludeTotalCount = true;
         searchOptions.SearchMode = SearchMode.All;
         searchOptions.QueryType = SearchQueryType.Simple;
+        searchOptions.Size = 0;
 
         var searchTerm = BuildSearchTerm(findVacanciesModel.SearchTerm);
         var searchResults = await searchClient.SearchAsync<SearchDocument>($"{searchTerm}", searchOptions);
