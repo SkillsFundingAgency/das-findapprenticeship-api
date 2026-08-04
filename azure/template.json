@@ -61,14 +61,6 @@
         "tenant": {
             "type": "string"
         },
-        "aspSize": {
-            "type": "string",
-            "defaultValue": "1"
-        },
-        "aspInstances": {
-            "type": "int",
-            "defaultValue": 1
-        },
         "sharedSQLServerName": {
             "type": "string"
         },
@@ -83,22 +75,6 @@
         "databaseTier": {
             "type": "string",
             "defaultValue": "Standard"
-        },
-        "nonASETier": {
-            "type": "string",
-            "defaultValue": "PremiumV2"
-        },
-        "sharedEnvVirtualNetworkName": {
-            "type": "string"
-        },
-        "subnetObject": {
-            "type": "object"
-        },
-        "subnetServiceEndpointList": {
-            "type": "array"
-        },
-        "subnetDelegations": {
-            "type": "array"
         },
         "healthCheckPath": {
             "type": "string",
@@ -127,19 +103,6 @@
             "defaultValue": false,
             "metadata": {
                 "description": "Enables alerting on app insights failed requests"
-            }
-        },
-        "EnableRouteTableAssociation": {
-            "type": "bool",
-            "defaultValue": false,
-            "metadata": {
-                "description": "Determines whether to enable route table association on subnet"
-            }
-        },
-        "SharedRouteTableName": {
-            "type": "string",
-            "metadata": {
-                "description": "Determines whether to enable route table association on subnet"
             }
         }
     },
