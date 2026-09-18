@@ -104,6 +104,10 @@
             "metadata": {
                 "description": "Enables alerting on app insights failed requests"
             }
+        },
+        "vnetRouteAllEnabled": {
+            "type": "bool",
+            "defaultValue": false
         }
     },
     "variables": {
@@ -219,6 +223,9 @@
                     },
                     "healthCheckPath": {
                         "value": "[parameters('healthCheckPath')]"
+                    },
+                    "vnetRouteAllEnabled": {
+                        "value": "[parameters('vnetRouteAllEnabled')]"
                     }
                 }
             }
