@@ -30,13 +30,13 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
         return await dataContext.SavedSearchEntities.FirstOrDefaultAsync(fil => fil.Id == id, token);
     }
 
-    public async Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token)
+    public async Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime nearCutOffDate, int pageNumber, int pageSize, CancellationToken token)
     {
         // Query
         var query = dataContext
             .SavedSearchEntities
             .AsNoTracking()
-            .Where(fil => fil.LastRunDate == null || fil.LastRunDate > dateFilter)
+            .Where(fil => fil.LastRunDate == null || fil.LastRunDate < nearCutOffDate)
             .OrderByDescending(fil => fil.DateCreated)
             .ThenBy(fil => fil.UserRef);
 

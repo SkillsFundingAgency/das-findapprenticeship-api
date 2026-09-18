@@ -12,7 +12,32 @@ public class WhenGettingSavedSearches
 {
     [Test]
     [RecursiveMoqAutoData]
-    public async Task And_Then_SavedSearch_Result_Is_Returned(
+    public async Task Then_Saved_Searches_Before_Near_Cut_Off_Date_Are_Returned(
+        int pageNumber,
+        int pageSize,
+        DateTime lastRunDateTime,
+        PaginatedList<SavedSearchEntity> savedSearchEntities,
+        [Frozen] Mock<IFindApprenticeshipsDataContext> context,
+        SavedSearchRepository repository)
+    {
+        //Arrange
+        foreach (var savedSearchEntity in savedSearchEntities.Items)
+        {
+            savedSearchEntity.LastRunDate = lastRunDateTime.AddDays(-1);
+        }
+            
+        context.Setup(x => x.SavedSearchEntities).ReturnsDbSet(savedSearchEntities.Items);
+
+        //Act
+        var result = await repository.GetAll(lastRunDateTime, 1, 1000, default);
+
+        //Assert
+        result.Items.Should().BeEquivalentTo(savedSearchEntities.Items);
+    }
+    
+    [Test]
+    [RecursiveMoqAutoData]
+    public async Task Then_Saved_Searches_After_Near_Cut_Off_Date_Are_Not_Returned(
         int pageNumber,
         int pageSize,
         DateTime lastRunDateTime,
@@ -32,7 +57,7 @@ public class WhenGettingSavedSearches
         var result = await repository.GetAll(lastRunDateTime, 1, 1000, default);
 
         //Assert
-        result.Items.Should().BeEquivalentTo(savedSearchEntities.Items);
+        result.Items.Should().HaveCount(0);
     }
 
     [Test]
