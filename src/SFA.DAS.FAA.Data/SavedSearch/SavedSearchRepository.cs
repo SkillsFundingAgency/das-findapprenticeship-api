@@ -12,7 +12,7 @@ namespace SFA.DAS.FAA.Data.SavedSearch;
 public interface ISavedSearchRepository
 {
     Task<SavedSearchEntity> GetById(Guid id, CancellationToken token);
-    Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime dateFilter, int pageNumber, int pageSize, CancellationToken token);
+    Task<PaginatedList<SavedSearchEntity>> GetAll(DateTime nearCutOffDate, int pageNumber, int pageSize, CancellationToken token);
     Task<SavedSearchEntity> Get(Guid userReference, Guid id, CancellationToken token);
     Task<List<SavedSearchEntity>> GetByUserReference(Guid userReference, CancellationToken token);
     Task Update(SavedSearchEntity savedSearch, CancellationToken token);
