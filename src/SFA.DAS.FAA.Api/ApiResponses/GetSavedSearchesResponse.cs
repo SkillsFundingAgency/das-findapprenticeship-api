@@ -74,7 +74,7 @@ public record GetSavedSearchesResponse(
     public static GetSavedSearchesResponse From(GetSavedSearchesQueryResult source)
     {
         return new GetSavedSearchesResponse(
-            source.SavedSearches.Select(SavedSearchDto.From).ToList(),
+            source.SavedSearches.Where(x => x.SearchParameters is not null).Select(SavedSearchDto.From).ToList(),
             source.TotalCount,
             source.PageIndex,
             source.PageSize,

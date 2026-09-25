@@ -11,7 +11,9 @@ public class GetSavedSearchesQueryHandler(
 {
     public async Task<GetSavedSearchesQueryResult> Handle(GetSavedSearchesQuery request, CancellationToken cancellationToken)
     {
-        return await savedSearchRepository.GetAll(request.LastRunDateFilter,
+        // we want everything from the last run date & before
+        var nearCutOffDate = request.LastRunDateFilter.AddDays(1).Date;
+        return await savedSearchRepository.GetAll(nearCutOffDate,
             request.PageNumber,
             request.PageSize,
             cancellationToken);

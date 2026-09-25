@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
@@ -24,8 +25,10 @@ public class WhenHandlingGetSavedSearchesQuery
             savedSearchEntity.SearchParameters = searchParameters.ToJson();
         }
 
+        DateTime? capturedDateTime = null;
         savedSearchRepository
-            .Setup(repository => repository.GetAll(query.LastRunDateFilter, query.PageNumber, query.PageSize, CancellationToken.None))
+            .Setup(repository => repository.GetAll(It.IsAny<DateTime>(), query.PageNumber, query.PageSize, CancellationToken.None))
+            .Callback<DateTime, int, int, CancellationToken>((nearCutOffDate, _, _, _) => capturedDateTime = nearCutOffDate)
             .ReturnsAsync(savedSearchEntities);
 
         var result = await handler.Handle(query, CancellationToken.None);
@@ -35,5 +38,8 @@ public class WhenHandlingGetSavedSearchesQuery
                 .Excluding(ex => ex.SearchParameters)
                 .Excluding(ex => ex.UserRef)
             );
+        
+        capturedDateTime.Should().NotBeNull();
+        capturedDateTime.Should().Be(query.LastRunDateFilter.AddDays(1).Date);
     }
 }
