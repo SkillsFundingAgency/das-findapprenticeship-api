@@ -19,8 +19,8 @@ public record SavedSearchDto(
     {
         public static SavedSearchDto From(SavedSearch source)
         {
-            if (source?.SearchParameters == null) return null;
-
+            if (source is null) return null;
+            
             return new SavedSearchDto(
                 source.Id,
                 source.UserReference,
@@ -48,6 +48,8 @@ public record SavedSearchDto(
     {
         public static SearchParametersDto From(SearchParameters source)
         {
+            if (source is null) return null;
+            
             return new SearchParametersDto(
                 source.SearchTerm,
                 source.SelectedRouteIds,
@@ -74,7 +76,7 @@ public record GetSavedSearchesResponse(
     public static GetSavedSearchesResponse From(GetSavedSearchesQueryResult source)
     {
         return new GetSavedSearchesResponse(
-            source.SavedSearches.Where(x => x.SearchParameters is not null).Select(SavedSearchDto.From).ToList(),
+            [.. source.SavedSearches.Select(SavedSearchDto.From)],
             source.TotalCount,
             source.PageIndex,
             source.PageSize,

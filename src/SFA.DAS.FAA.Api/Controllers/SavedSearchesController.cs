@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
@@ -11,6 +13,7 @@ using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.PatchSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearch;
 using SFA.DAS.FAA.Application.SavedSearches.Queries.GetSavedSearches;
+using SFA.DAS.FAA.Data.SavedSearch;
 using SFA.DAS.FAA.Domain.Entities;
 
 namespace SFA.DAS.FAA.Api.Controllers;
@@ -111,4 +114,14 @@ public class SavedSearchesController(IMediator mediator, ILogger<SavedSearchesCo
         }
     }
     
+    [HttpDelete]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> DeleteManyAsync(
+        [FromServices] ISavedSearchRepository savedSearchRepository,
+        [FromQuery] IEnumerable<Guid> ids,
+        CancellationToken cancellationToken)
+    {
+        await savedSearchRepository.DeleteManyAsync(ids, cancellationToken);
+        return NoContent();
+    }
 }
