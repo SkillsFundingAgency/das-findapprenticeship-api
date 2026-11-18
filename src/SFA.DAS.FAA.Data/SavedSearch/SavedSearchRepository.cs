@@ -21,6 +21,7 @@ public interface ISavedSearchRepository
     Task Delete(Guid userReference, Guid id, CancellationToken token);
     Task DeleteAll(Guid userReference, CancellationToken token);
     Task Delete(Guid id, CancellationToken token);
+    Task DeleteManyAsync(IEnumerable<Guid> ids, CancellationToken token);
 }
 
 public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) : ISavedSearchRepository
@@ -119,6 +120,12 @@ public class SavedSearchRepository(IFindApprenticeshipsDataContext dataContext) 
         
         dataContext.SavedSearchEntities.Remove(savedSearch);
         await dataContext.SaveChangesAsync(token);
+    }
+
+    public Task DeleteManyAsync(IEnumerable<Guid> ids, CancellationToken token)
+    {
+        dataContext.SavedSearchEntities.RemoveRange(dataContext.SavedSearchEntities.Where(x => ids.Contains(x.Id)));
+        return dataContext.SaveChangesAsync(token);
     }
 
     public async Task DeleteAll(Guid userReference, CancellationToken token)

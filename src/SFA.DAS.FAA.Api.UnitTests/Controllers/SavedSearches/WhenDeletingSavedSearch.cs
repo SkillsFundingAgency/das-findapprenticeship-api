@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.FAA.Api.Controllers;
 using SFA.DAS.FAA.Application.SavedSearches.Commands.DeleteSavedSearch;
+using SFA.DAS.FAA.Data.SavedSearch;
 
 namespace SFA.DAS.FAA.Api.UnitTests.Controllers.SavedSearches;
 
@@ -39,5 +41,19 @@ public class WhenDeletingSavedSearch
 
         actual.Should().NotBeNull();
         actual!.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_Multiple_Saved_Searches_Can_Be_Deleted(
+        List<Guid> ids,
+        [Frozen] Mock<ISavedSearchRepository> repository,
+        [Greedy] SavedSearchesController sut)
+    {
+        // act
+        var result = await sut.DeleteManyAsync(repository.Object, ids, CancellationToken.None) as NoContentResult;
+
+        // assert
+        result.Should().NotBeNull();
+        repository.Verify(x => x.DeleteManyAsync(ids, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
